@@ -4,145 +4,339 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LoL Stat Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg:        #07090f;
+  --bg1:       #0d1017;
+  --bg2:       #121620;
+  --bg3:       #181d2a;
+  --border:    #1f2736;
+  --border2:   #29334a;
+  --gold:      #c9973a;
+  --gold2:     #e8b84b;
+  --gold-glow: #c9973a30;
+  --blue:      #4f8ef7;
+  --blue-dim:  #4f8ef720;
+  --green:     #2ec99a;
+  --red:       #e85555;
+  --text:      #dce4f0;
+  --text2:     #8896b0;
+  --text3:     #4a566e;
+  --radius:    12px;
+  --radius-sm: 8px;
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e1a; color: #e0e4f0; min-height: 100vh; padding: 2rem 1rem; }
-.container { max-width: 920px; margin: 0 auto; }
-h1 { font-size: 22px; font-weight: 600; margin-bottom: 1.5rem; color: #c89b3c; }
-.search-box { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2.5rem 1.25rem 4rem;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, #c9973a12 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 60%, #4f8ef708 0%, transparent 60%);
+}
+
+.container { max-width: 960px; margin: 0 auto; }
+
+/* Header */
+.page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; }
+.page-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gold2) 0%, var(--gold) 60%, #a07020 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.page-header .version-tag {
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  border: 1px solid var(--border2); border-radius: 20px; padding: 2px 10px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* Search box */
+.search-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 24px #00000040;
+  position: relative;
+  overflow: hidden;
+}
+.search-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold2) 60%, transparent);
+  opacity: 0.5;
+}
 .row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .row:last-of-type { margin-bottom: 0; }
-input, select { font-family: inherit; font-size: 14px; padding: 9px 12px; border: 1px solid #1e2a3a; border-radius: 8px; background: #0d1420; color: #e0e4f0; outline: none; }
-input:focus, select:focus { border-color: #c89b3c; }
-input::placeholder { color: #4a5568; }
+
+input, select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 400;
+  padding: 10px 14px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--bg1);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+input::placeholder { color: var(--text3); }
+select option { background: var(--bg2); }
 #summoner-input { flex: 1; min-width: 130px; }
 #tag-input { width: 95px; }
-#region-select { width: 80px; }
+#region-select { width: 82px; }
 #api-key-input { flex: 1; min-width: 160px; }
-.btn { padding: 9px 18px; font-size: 14px; font-family: inherit; background: #c89b3c; color: #0a0e1a; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap; }
-.btn:hover { background: #d4aa50; }
-.btn-sm { padding: 6px 12px; font-size: 12px; background: #1e2a3a; color: #9ca3af; border: 1px solid #2a3a4a; border-radius: 6px; cursor: pointer; font-family: inherit; }
-.btn-sm:hover { background: #2a3a4a; color: #e0e4f0; }
-.btn-sm.active { background: #c89b3c22; color: #c89b3c; border-color: #c89b3c44; }
-.error { font-size: 13px; color: #f87171; min-height: 18px; margin-top: 6px; }
-.help { font-size: 12px; color: #4a5568; margin-top: 6px; }
-.help a { color: #60a5fa; }
+
+.btn {
+  padding: 10px 22px; font-size: 14px; font-weight: 600;
+  font-family: 'Syne', sans-serif; letter-spacing: 0.03em;
+  background: linear-gradient(135deg, var(--gold2), var(--gold));
+  color: #0a0800; border: none; border-radius: var(--radius-sm);
+  cursor: pointer; white-space: nowrap;
+  box-shadow: 0 2px 12px var(--gold-glow);
+  transition: opacity 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.btn:hover { opacity: 0.9; box-shadow: 0 4px 20px #c9973a50; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-sm {
+  padding: 7px 13px; font-size: 11px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.04em;
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+}
+.btn-sm:hover { background: var(--border2); color: var(--text); }
+.btn-sm.active { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+
+.error { font-size: 13px; color: var(--red); min-height: 18px; margin-top: 8px; }
+.help { font-size: 12px; color: var(--text3); margin-top: 8px; }
+.help a { color: var(--blue); text-decoration: none; }
+.help a:hover { text-decoration: underline; }
+
+/* Section labels */
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 12px;
+}
 
 /* Profile */
-.profile-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid #1e2a3a; flex-wrap: wrap; }
-.avatar { width: 56px; height: 56px; border-radius: 50%; background: #1e3a5f; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #60a5fa; flex-shrink: 0; border: 2px solid #1e2a3a; overflow: hidden; }
+.profile-header {
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 2rem; padding: 1.5rem;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); flex-wrap: wrap;
+  box-shadow: 0 4px 24px #00000030;
+  position: relative; overflow: hidden;
+}
+.profile-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold2) 60%, transparent);
+  opacity: 0.4;
+}
+.avatar {
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--bg3); display: flex; align-items: center;
+  justify-content: center; font-family: 'Syne', sans-serif;
+  font-size: 24px; font-weight: 800; color: var(--gold);
+  flex-shrink: 0; border: 2px solid var(--gold);
+  box-shadow: 0 0 16px var(--gold-glow); overflow: hidden;
+}
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name { font-size: 20px; font-weight: 600; }
-.profile-sub { font-size: 13px; color: #9ca3af; margin-top: 3px; }
-.rank-badges { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-.rank-badge { font-size: 12px; padding: 3px 10px; border-radius: 6px; font-weight: 600; border: 1px solid; }
-.rank-CHALLENGER,.rank-GRANDMASTER,.rank-MASTER { background: #2a1a00; color: #f59e0b; border-color: #f59e0b44; }
-.rank-DIAMOND,.rank-EMERALD { background: #001a2a; color: #60a5fa; border-color: #60a5fa44; }
-.rank-PLATINUM { background: #001a1a; color: #34d399; border-color: #34d39944; }
-.rank-GOLD { background: #1a1400; color: #c89b3c; border-color: #c89b3c44; }
-.rank-SILVER { background: #1a1a1a; color: #9ca3af; border-color: #9ca3af44; }
-.rank-BRONZE,.rank-IRON { background: #1a0a00; color: #fb923c; border-color: #fb923c44; }
-.rank-default { background: #1e2a3a; color: #6b7280; border-color: #374151; }
-.profile-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.profile-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+}
+.profile-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
+.rank-badges { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.rank-badge {
+  font-size: 11px; font-weight: 600; padding: 3px 11px;
+  border-radius: 20px; border: 1px solid; letter-spacing: 0.03em;
+  font-family: 'DM Sans', sans-serif;
+}
+.rank-CHALLENGER,.rank-GRANDMASTER,.rank-MASTER { background: #2a180022; color: #f5a623; border-color: #f5a62344; }
+.rank-DIAMOND,.rank-EMERALD { background: var(--blue-dim); color: var(--blue); border-color: #4f8ef744; }
+.rank-PLATINUM { background: #00201a22; color: var(--green); border-color: #2ec99a44; }
+.rank-GOLD { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+.rank-SILVER { background: #1a1e2a; color: #8896b0; border-color: #4a566e; }
+.rank-BRONZE,.rank-IRON { background: #1a100022; color: #fb923c; border-color: #fb923c44; }
+.rank-default { background: var(--bg3); color: var(--text3); border-color: var(--border2); }
+.profile-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
 /* Stat grid */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-.stat-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 0.9rem 1rem; }
-.stat-card .lbl { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
-.stat-card .val { font-size: 24px; font-weight: 600; }
-.stat-card .sub { font-size: 12px; color: #6b7280; margin-top: 3px; }
-.win-c { color: #34d399; } .loss-c { color: #f87171; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.1rem 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+}
+.stat-card:hover { border-color: var(--border2); box-shadow: 0 4px 20px #00000030; }
+.stat-card .lbl {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+  font-family: 'DM Sans', sans-serif;
+}
+.stat-card .val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.stat-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.win-c { color: var(--green); } .loss-c { color: var(--red); }
+
+/* Highlights */
+.highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 2rem; }
+.highlight-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.25rem;
+}
+.highlight-card .hl-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+.highlight-card .hl-champ { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; }
+.highlight-card .hl-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
+
+/* LP tracker */
+.lp-section {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem;
+}
+.lp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.lp-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+.lp-input-row { display: flex; gap: 8px; }
+.lp-input-row input { flex: 1; font-size: 13px; padding: 8px 12px; }
+.lp-entries { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 150px; overflow-y: auto; }
+.lp-entry { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 10px; background: var(--bg1); border-radius: 6px; border: 1px solid var(--border); }
+.lp-entry .lp-delta.pos { color: var(--green); font-weight: 600; }
+.lp-entry .lp-delta.neg { color: var(--red); font-weight: 600; }
+
+/* Streak banner */
+.streak-banner {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+.streak-banner.win-streak { background: #2ec99a18; border: 1px solid #2ec99a44; color: var(--green); }
+.streak-banner.loss-streak { background: #e8555518; border: 1px solid #e8555544; color: var(--red); }
+
+/* Charts */
+.chart-section { margin-bottom: 1.75rem; }
+.chart-title {
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+}
+.chart-wrap {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem;
+}
+canvas { display: block; width: 100%; }
 
 /* Filters */
-.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
-.filters-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+.filters-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; font-family: 'DM Sans', sans-serif; }
 
 /* Tabs */
-.tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.tab { padding: 7px 16px; font-size: 13px; font-family: inherit; border: 1px solid #1e2a3a; border-radius: 8px; background: transparent; color: #6b7280; cursor: pointer; }
-.tab.active { background: #1e2a3a; color: #e0e4f0; font-weight: 500; border-color: #374151; }
+.tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.tab {
+  padding: 9px 20px; font-size: 13px; font-weight: 600;
+  font-family: 'Syne', sans-serif; letter-spacing: 0.03em;
+  border: none; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--text3); cursor: pointer;
+  margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+  border-radius: 0;
+}
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
 /* Match cards */
-.match-list { display: flex; flex-direction: column; gap: 10px; }
-.match-card { background: #111827; border: 1px solid #1e2a3a; border-left: 3px solid #1e2a3a; border-radius: 10px; overflow: hidden; }
-.match-card.win { border-left-color: #34d399; }
-.match-card.loss { border-left-color: #f87171; }
-.match-top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
-.match-result { width: 36px; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.match-list { display: flex; flex-direction: column; gap: 8px; }
+.match-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.match-card:hover { box-shadow: 0 4px 20px #00000040; border-color: var(--border2); }
+.match-card.win { border-left-color: var(--green); }
+.match-card.loss { border-left-color: var(--red); }
+.match-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
+.match-result { width: 38px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; flex-shrink: 0; letter-spacing: 0.02em; }
 .champ-wrap { position: relative; flex-shrink: 0; }
-.champ-icon { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid #1e2a3a; flex-shrink: 0; }
-.champ-icon img { width: 38px; height: 38px; display: block; object-fit: cover; transform: scale(1.12); }
+.champ-icon { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border2); flex-shrink: 0; }
+.champ-icon img { width: 40px; height: 40px; display: block; object-fit: cover; transform: scale(1.12); }
 .spells { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
-.spell-icon { width: 16px; height: 16px; border-radius: 3px; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; }
-.spell-icon img { width: 16px; height: 16px; display: block; }
+.spell-icon { width: 17px; height: 17px; border-radius: 4px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); }
+.spell-icon img { width: 17px; height: 17px; display: block; }
 .keystone-wrap { flex-shrink: 0; }
-.keystone-icon { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; background: #0d1420; border: 1px solid #2a3a4a; }
-.keystone-icon img { width: 28px; height: 28px; display: block; }
+.keystone-icon { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; background: var(--bg1); border: 1px solid var(--border2); }
+.keystone-icon img { width: 30px; height: 30px; display: block; }
 .match-info { flex: 1; min-width: 100px; }
-.match-champ { font-weight: 600; font-size: 14px; }
-.match-kda { font-size: 12px; color: #9ca3af; margin-top: 2px; }
-.match-stats-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
-.match-stat { font-size: 12px; color: #6b7280; }
-.match-stat span { color: #c0c8d8; }
-.match-meta { margin-left: auto; text-align: right; font-size: 12px; color: #6b7280; line-height: 1.7; flex-shrink: 0; }
-.queue-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: #1e2a3a; color: #9ca3af; }
-.queue-badge.aram { background: #1a2a4a; color: #60a5fa; }
-.queue-badge.mayhem { background: #2a1a4a; color: #a78bfa; }
-.queue-badge.ranked { background: #2a1a1a; color: #f87171; }
-.match-items { display: flex; align-items: center; gap: 4px; padding: 0 14px 10px 14px; flex-wrap: wrap; }
-.items-label { font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
-.item-slot { width: 30px; height: 30px; border-radius: 6px; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; flex-shrink: 0; }
+.match-champ { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+.match-kda { font-size: 12px; color: var(--text2); margin-top: 3px; }
+.match-stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 3px; }
+.match-stat { font-size: 12px; color: var(--text3); }
+.match-stat span { color: var(--text2); font-weight: 500; }
+.match-meta { margin-left: auto; text-align: right; font-size: 11px; color: var(--text3); line-height: 1.8; flex-shrink: 0; }
+.queue-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px; letter-spacing: 0.04em;
+  background: var(--bg3); color: var(--text3); border: 1px solid var(--border2);
+  font-family: 'DM Sans', sans-serif;
+}
+.queue-badge.aram { background: var(--blue-dim); color: var(--blue); border-color: #4f8ef744; }
+.queue-badge.mayhem { background: #6d4ef720; color: #a78bfa; border-color: #a78bfa44; }
+.queue-badge.ranked { background: #e8555520; color: var(--red); border-color: #e8555544; }
+
+/* Items */
+.match-items { display: flex; align-items: center; gap: 4px; padding: 0 16px 12px 16px; flex-wrap: wrap; }
+.items-label { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px; font-family: 'DM Sans', sans-serif; }
+.item-slot { width: 30px; height: 30px; border-radius: 6px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); flex-shrink: 0; }
 .item-slot img { width: 30px; height: 30px; display: block; }
-.item-slot.empty { opacity: 0.15; }
-.item-divider { width: 1px; height: 20px; background: #1e2a3a; margin: 0 3px; }
-.trinket-slot { width: 26px; height: 26px; border-radius: 50%; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; flex-shrink: 0; }
-.trinket-slot img { width: 26px; height: 26px; display: block; }
+.item-slot.empty { opacity: 0.12; }
+.item-divider { width: 1px; height: 22px; background: var(--border2); margin: 0 4px; }
+.trinket-slot { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; background: var(--bg1); border: 1px solid var(--border2); flex-shrink: 0; }
+.trinket-slot img { width: 28px; height: 28px; display: block; }
 
 /* Champion table */
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; font-size: 11px; font-weight: 500; color: #6b7280; padding: 6px 10px; border-bottom: 1px solid #1e2a3a; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; user-select: none; }
-th:hover { color: #c89b3c; }
-td { padding: 10px; border-bottom: 1px solid #1e2a3a; color: #e0e4f0; vertical-align: middle; }
+th {
+  text-align: left; font-size: 10px; font-weight: 700; color: var(--text3);
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  cursor: pointer; user-select: none; font-family: 'DM Sans', sans-serif;
+  transition: color 0.15s;
+}
+th:hover { color: var(--gold); }
+td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+tr:hover td { background: var(--bg3); }
 tr:last-child td { border-bottom: none; }
-.wr-bar-wrap { width: 60px; height: 5px; background: #1e2a3a; border-radius: 3px; display: inline-block; vertical-align: middle; overflow: hidden; margin-right: 6px; }
-.wr-bar { height: 5px; border-radius: 3px; }
+.wr-bar-wrap { width: 60px; height: 4px; background: var(--bg3); border-radius: 2px; display: inline-block; vertical-align: middle; overflow: hidden; margin-right: 8px; }
+.wr-bar { height: 4px; border-radius: 2px; }
 
-/* Trend chart */
-.chart-section { margin-bottom: 1.5rem; }
-.chart-title { font-size: 13px; font-weight: 500; color: #9ca3af; margin-bottom: 8px; }
-.chart-wrap { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1rem; }
-canvas { display: block; width: 100%; }
-
-/* LP tracker */
-.lp-section { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; }
-.lp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.lp-title { font-size: 13px; font-weight: 500; color: #9ca3af; }
-.lp-input-row { display: flex; gap: 8px; }
-.lp-input-row input { flex: 1; font-size: 13px; padding: 7px 10px; }
-.lp-entries { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
-.lp-entry { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 8px; background: #0d1420; border-radius: 6px; }
-.lp-entry .lp-delta.pos { color: #34d399; } .lp-entry .lp-delta.neg { color: #f87171; }
-
-/* Streak banner */
-.streak-banner { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; margin-bottom: 1rem; font-size: 13px; font-weight: 500; }
-.streak-banner.win-streak { background: #34d39922; border: 1px solid #34d39944; color: #34d399; }
-.streak-banner.loss-streak { background: #f8717122; border: 1px solid #f8717144; color: #f87171; }
-
-/* Highlights */
-.highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-.highlight-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 0.9rem 1rem; }
-.highlight-card .hl-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-.highlight-card .hl-champ { font-size: 16px; font-weight: 600; }
-.highlight-card .hl-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
-
-#loading { display: none; padding: 2rem; text-align: center; color: #6b7280; font-size: 14px; }
-.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #1e2a3a; border-top-color: #c89b3c; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+/* Loading */
+#loading { display: none; padding: 3rem; text-align: center; color: var(--text2); font-size: 14px; }
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 10px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>LoL Stat Tracker</h1>
+  <div class="page-header"><h1>LoL Stat Tracker</h1><span class="version-tag">v1.5</span></div>
 
   <div class="search-box">
     <div class="row">
@@ -761,21 +955,21 @@ function renderChampTable(matches) {
 </script>
 
 <!-- Release Notes -->
-<div style="max-width:920px;margin:3rem auto 1rem auto;border-top:1px solid #1e2a3a;padding-top:1.5rem;">
+<div style="max-width:960px;margin:3rem auto 1rem auto;border-top:1px solid var(--border);padding-top:2rem;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;cursor:pointer;" id="rn-toggle">
-    <span style="font-size:13px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;">Release Notes</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'Syne',sans-serif;">Release Notes</span>
     <span style="font-size:12px;color:#4a5568;" id="rn-chevron">▼ Show</span>
   </div>
   <div id="rn-body" style="display:none;">
     <div style="display:flex;flex-direction:column;gap:12px;">
 
-      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.5</span>
           <span style="font-size:12px;color:#6b7280;">Latest</span>
         </div>
-        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Rate Limit Fix</div>
-        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Rate Limit Fix</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Fixed "Rate Limit Exceeded" errors on search</li>
           <li>Match fetching now uses batches of 5 with a 1.2s pause between batches</li>
           <li>Reduced max matches fetched from 25 to 20 to stay within dev key limits</li>
@@ -783,12 +977,12 @@ function renderChampTable(matches) {
         </ul>
       </div>
 
-      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#60a5fa;background:#60a5fa22;border:1px solid #60a5fa44;padding:2px 9px;border-radius:5px;">v1.3</span>
         </div>
-        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Stats Overhaul & Quality of Life</div>
-        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Stats Overhaul & Quality of Life</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Summoner spell and keystone rune icons per match</li>
           <li>Damage dealt, gold earned, and vision score on match cards</li>
           <li>KDA trend chart and rolling 5-game win rate chart</li>
@@ -803,12 +997,12 @@ function renderChampTable(matches) {
         </ul>
       </div>
 
-      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#a78bfa;background:#a78bfa22;border:1px solid #a78bfa44;padding:2px 9px;border-radius:5px;">v1.2</span>
         </div>
-        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Champion Icons & Item Builds</div>
-        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Champion Icons & Item Builds</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Champion portrait icons in match history</li>
           <li>Item build row with icons from Data Dragon</li>
           <li>Trinket shown separately with circular icon</li>
@@ -817,12 +1011,12 @@ function renderChampTable(matches) {
         </ul>
       </div>
 
-      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#34d399;background:#34d39922;border:1px solid #34d39944;padding:2px 9px;border-radius:5px;">v1.1</span>
         </div>
-        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Multi-Queue Support & Bug Fixes</div>
-        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Multi-Queue Support & Bug Fixes</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Expanded match fetch to all queue types</li>
           <li>Fixed results panel not appearing after successful search</li>
           <li>Rewrote JS to avoid silent parse errors in some browsers</li>
@@ -831,12 +1025,12 @@ function renderChampTable(matches) {
         </ul>
       </div>
 
-      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#fb923c;background:#fb923c22;border:1px solid #fb923c44;padding:2px 9px;border-radius:5px;">v1.0</span>
         </div>
-        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Initial Release</div>
-        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Initial Release</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Local Node.js proxy server to bypass Riot API CORS restrictions</li>
           <li>Search by summoner name, tag, and region</li>
           <li>Win/loss rate, KDA, and CS summary stats</li>
@@ -847,7 +1041,7 @@ function renderChampTable(matches) {
       </div>
 
     </div>
-    <div style="font-size:12px;color:#374151;text-align:center;margin-top:1rem;padding-bottom:1rem;">LoL Stat Tracker — built with Riot Games API & Data Dragon</div>
+    <div style="font-size:12px;color:var(--text3);text-align:center;margin-top:1rem;padding-bottom:1rem;">LoL Stat Tracker — built with Riot Games API & Data Dragon</div>
   </div>
 </div>
 
