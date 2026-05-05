@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LoL Stat Tracker</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e1a; color: #e0e4f0; min-height: 100vh; padding: 2rem 1rem; }
+.container { max-width: 920px; margin: 0 auto; }
+h1 { font-size: 22px; font-weight: 600; margin-bottom: 1.5rem; color: #c89b3c; }
+.search-box { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.row:last-of-type { margin-bottom: 0; }
+input, select { font-family: inherit; font-size: 14px; padding: 9px 12px; border: 1px solid #1e2a3a; border-radius: 8px; background: #0d1420; color: #e0e4f0; outline: none; }
+input:focus, select:focus { border-color: #c89b3c; }
+input::placeholder { color: #4a5568; }
+#summoner-input { flex: 1; min-width: 130px; }
+#tag-input { width: 95px; }
+#region-select { width: 80px; }
+#api-key-input { flex: 1; min-width: 160px; }
+.btn { padding: 9px 18px; font-size: 14px; font-family: inherit; background: #c89b3c; color: #0a0e1a; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+.btn:hover { background: #d4aa50; }
+.btn-sm { padding: 6px 12px; font-size: 12px; background: #1e2a3a; color: #9ca3af; border: 1px solid #2a3a4a; border-radius: 6px; cursor: pointer; font-family: inherit; }
+.btn-sm:hover { background: #2a3a4a; color: #e0e4f0; }
+.btn-sm.active { background: #c89b3c22; color: #c89b3c; border-color: #c89b3c44; }
+.error { font-size: 13px; color: #f87171; min-height: 18px; margin-top: 6px; }
+.help { font-size: 12px; color: #4a5568; margin-top: 6px; }
+.help a { color: #60a5fa; }
+
+/* Profile */
+.profile-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid #1e2a3a; flex-wrap: wrap; }
+.avatar { width: 56px; height: 56px; border-radius: 50%; background: #1e3a5f; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #60a5fa; flex-shrink: 0; border: 2px solid #1e2a3a; overflow: hidden; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name { font-size: 20px; font-weight: 600; }
+.profile-sub { font-size: 13px; color: #9ca3af; margin-top: 3px; }
+.rank-badges { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.rank-badge { font-size: 12px; padding: 3px 10px; border-radius: 6px; font-weight: 600; border: 1px solid; }
+.rank-CHALLENGER,.rank-GRANDMASTER,.rank-MASTER { background: #2a1a00; color: #f59e0b; border-color: #f59e0b44; }
+.rank-DIAMOND,.rank-EMERALD { background: #001a2a; color: #60a5fa; border-color: #60a5fa44; }
+.rank-PLATINUM { background: #001a1a; color: #34d399; border-color: #34d39944; }
+.rank-GOLD { background: #1a1400; color: #c89b3c; border-color: #c89b3c44; }
+.rank-SILVER { background: #1a1a1a; color: #9ca3af; border-color: #9ca3af44; }
+.rank-BRONZE,.rank-IRON { background: #1a0a00; color: #fb923c; border-color: #fb923c44; }
+.rank-default { background: #1e2a3a; color: #6b7280; border-color: #374151; }
+.profile-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+/* Stat grid */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.stat-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 0.9rem 1rem; }
+.stat-card .lbl { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.stat-card .val { font-size: 24px; font-weight: 600; }
+.stat-card .sub { font-size: 12px; color: #6b7280; margin-top: 3px; }
+.win-c { color: #34d399; } .loss-c { color: #f87171; }
+
+/* Filters */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+.filters-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 2px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab { padding: 7px 16px; font-size: 13px; font-family: inherit; border: 1px solid #1e2a3a; border-radius: 8px; background: transparent; color: #6b7280; cursor: pointer; }
+.tab.active { background: #1e2a3a; color: #e0e4f0; font-weight: 500; border-color: #374151; }
+
+/* Match cards */
+.match-list { display: flex; flex-direction: column; gap: 10px; }
+.match-card { background: #111827; border: 1px solid #1e2a3a; border-left: 3px solid #1e2a3a; border-radius: 10px; overflow: hidden; }
+.match-card.win { border-left-color: #34d399; }
+.match-card.loss { border-left-color: #f87171; }
+.match-top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+.match-result { width: 36px; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.champ-wrap { position: relative; flex-shrink: 0; }
+.champ-icon { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid #1e2a3a; flex-shrink: 0; }
+.champ-icon img { width: 38px; height: 38px; display: block; object-fit: cover; transform: scale(1.12); }
+.spells { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.spell-icon { width: 16px; height: 16px; border-radius: 3px; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; }
+.spell-icon img { width: 16px; height: 16px; display: block; }
+.keystone-wrap { flex-shrink: 0; }
+.keystone-icon { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; background: #0d1420; border: 1px solid #2a3a4a; }
+.keystone-icon img { width: 28px; height: 28px; display: block; }
+.match-info { flex: 1; min-width: 100px; }
+.match-champ { font-weight: 600; font-size: 14px; }
+.match-kda { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+.match-stats-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
+.match-stat { font-size: 12px; color: #6b7280; }
+.match-stat span { color: #c0c8d8; }
+.match-meta { margin-left: auto; text-align: right; font-size: 12px; color: #6b7280; line-height: 1.7; flex-shrink: 0; }
+.queue-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: #1e2a3a; color: #9ca3af; }
+.queue-badge.aram { background: #1a2a4a; color: #60a5fa; }
+.queue-badge.mayhem { background: #2a1a4a; color: #a78bfa; }
+.queue-badge.ranked { background: #2a1a1a; color: #f87171; }
+.match-items { display: flex; align-items: center; gap: 4px; padding: 0 14px 10px 14px; flex-wrap: wrap; }
+.items-label { font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+.item-slot { width: 30px; height: 30px; border-radius: 6px; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; flex-shrink: 0; }
+.item-slot img { width: 30px; height: 30px; display: block; }
+.item-slot.empty { opacity: 0.15; }
+.item-divider { width: 1px; height: 20px; background: #1e2a3a; margin: 0 3px; }
+.trinket-slot { width: 26px; height: 26px; border-radius: 50%; overflow: hidden; background: #0d1420; border: 1px solid #1e2a3a; flex-shrink: 0; }
+.trinket-slot img { width: 26px; height: 26px; display: block; }
+
+/* Champion table */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 11px; font-weight: 500; color: #6b7280; padding: 6px 10px; border-bottom: 1px solid #1e2a3a; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; user-select: none; }
+th:hover { color: #c89b3c; }
+td { padding: 10px; border-bottom: 1px solid #1e2a3a; color: #e0e4f0; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.wr-bar-wrap { width: 60px; height: 5px; background: #1e2a3a; border-radius: 3px; display: inline-block; vertical-align: middle; overflow: hidden; margin-right: 6px; }
+.wr-bar { height: 5px; border-radius: 3px; }
+
+/* Trend chart */
+.chart-section { margin-bottom: 1.5rem; }
+.chart-title { font-size: 13px; font-weight: 500; color: #9ca3af; margin-bottom: 8px; }
+.chart-wrap { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1rem; }
+canvas { display: block; width: 100%; }
+
+/* LP tracker */
+.lp-section { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; }
+.lp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.lp-title { font-size: 13px; font-weight: 500; color: #9ca3af; }
+.lp-input-row { display: flex; gap: 8px; }
+.lp-input-row input { flex: 1; font-size: 13px; padding: 7px 10px; }
+.lp-entries { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
+.lp-entry { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 8px; background: #0d1420; border-radius: 6px; }
+.lp-entry .lp-delta.pos { color: #34d399; } .lp-entry .lp-delta.neg { color: #f87171; }
+
+/* Streak banner */
+.streak-banner { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; margin-bottom: 1rem; font-size: 13px; font-weight: 500; }
+.streak-banner.win-streak { background: #34d39922; border: 1px solid #34d39944; color: #34d399; }
+.streak-banner.loss-streak { background: #f8717122; border: 1px solid #f8717144; color: #f87171; }
+
+/* Highlights */
+.highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.highlight-card { background: #111827; border: 1px solid #1e2a3a; border-radius: 10px; padding: 0.9rem 1rem; }
+.highlight-card .hl-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.highlight-card .hl-champ { font-size: 16px; font-weight: 600; }
+.highlight-card .hl-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+#loading { display: none; padding: 2rem; text-align: center; color: #6b7280; font-size: 14px; }
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #1e2a3a; border-top-color: #c89b3c; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>LoL Stat Tracker</h1>
+
+  <div class="search-box">
+    <div class="row">
+      <input type="text" id="summoner-input" placeholder="Summoner name" autocomplete="off" />
+      <input type="text" id="tag-input" placeholder="Tag e.g. EUW" autocomplete="off" />
+      <select id="region-select">
+        <option value="na1">NA</option>
+        <option value="euw1">EUW</option>
+        <option value="eune1">EUNE</option>
+        <option value="kr">KR</option>
+        <option value="br1">BR</option>
+        <option value="la1">LAN</option>
+        <option value="la2">LAS</option>
+        <option value="oc1">OCE</option>
+        <option value="tr1">TR</option>
+        <option value="ru">RU</option>
+      </select>
+    </div>
+    <div class="row">
+      <input type="password" id="api-key-input" placeholder="Riot API key (RGAPI-...)" autocomplete="off" />
+      <button class="btn" id="search-btn">Search</button>
+      <button class="btn-sm" id="auto-refresh-btn" title="Auto-refresh every 5 minutes">Auto-refresh: Off</button>
+      <button class="btn-sm" id="export-btn" style="display:none;">Export CSV</button>
+    </div>
+    <div class="error" id="error-msg"></div>
+    <div class="help">Get a free API key at <a href="https://developer.riotgames.com" target="_blank">developer.riotgames.com</a> (lasts 24h).</div>
+  </div>
+
+  <div id="loading"><span class="spinner"></span>Loading match history...</div>
+
+  <div id="results" style="display:none;">
+    <div class="profile-header">
+      <div class="avatar" id="profile-icon"></div>
+      <div>
+        <div class="profile-name" id="profile-name"></div>
+        <div class="profile-sub" id="profile-sub"></div>
+        <div class="rank-badges" id="rank-badges"></div>
+      </div>
+      <div class="profile-actions">
+        <div id="streak-inline"></div>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="stat-grid"></div>
+
+    <div class="highlights" id="highlights"></div>
+
+    <!-- LP Tracker -->
+    <div class="lp-section">
+      <div class="lp-header">
+        <span class="lp-title">LP Tracker</span>
+        <button class="btn-sm" id="lp-clear-btn">Clear</button>
+      </div>
+      <div class="lp-input-row">
+        <input type="number" id="lp-input" placeholder="Enter current LP (e.g. 67)" />
+        <button class="btn-sm" id="lp-add-btn">Log LP</button>
+      </div>
+      <div class="lp-entries" id="lp-entries"></div>
+      <canvas id="lp-chart" height="80"></canvas>
+    </div>
+
+    <!-- Trend Charts -->
+    <div class="chart-section">
+      <div class="chart-title">KDA trend (last 20 games)</div>
+      <div class="chart-wrap"><canvas id="kda-chart" height="80"></canvas></div>
+    </div>
+    <div class="chart-section" style="margin-bottom:1.5rem;">
+      <div class="chart-title">Win/Loss trend (rolling 5-game win rate %)</div>
+      <div class="chart-wrap"><canvas id="wr-chart" height="80"></canvas></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" id="filters">
+      <span class="filters-label">Queue:</span>
+    </div>
+    <div class="filters" id="champ-filters" style="margin-top:-8px;">
+      <span class="filters-label">Champion:</span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tab-btn-matches">Recent matches</button>
+      <button class="tab" id="tab-btn-champions">By champion</button>
+    </div>
+    <div id="tab-matches"></div>
+    <div id="tab-champions" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+var COLORS = ['#34d399','#60a5fa','#f59e0b','#a78bfa','#f472b6','#fb923c','#67e8f9','#86efac'];
+var DD_VERSION = '14.24.1';
+var ALL_MATCHES = [];
+var ACTIVE_QUEUE_FILTER = 'All';
+var ACTIVE_CHAMP_FILTER = 'All';
+var AUTO_REFRESH_TIMER = null;
+var LP_DATA = JSON.parse(localStorage.getItem('lol_lp_data') || '[]');
+var LAST_SEARCH = JSON.parse(localStorage.getItem('lol_last_search') || 'null');
+
+// Restore last search
+window.addEventListener('load', function() {
+  if (LAST_SEARCH) {
+    document.getElementById('summoner-input').value = LAST_SEARCH.name || '';
+    document.getElementById('tag-input').value = LAST_SEARCH.tag || '';
+    document.getElementById('api-key-input').value = LAST_SEARCH.apiKey || '';
+    var rs = document.getElementById('region-select');
+    if (LAST_SEARCH.region) rs.value = LAST_SEARCH.region;
+  }
+  renderLPLog();
+});
+
+document.getElementById('search-btn').addEventListener('click', fetchStats);
+document.getElementById('summoner-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') fetchStats(); });
+document.getElementById('api-key-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') fetchStats(); });
+document.getElementById('tab-btn-matches').addEventListener('click', function() { switchTab('matches'); });
+document.getElementById('tab-btn-champions').addEventListener('click', function() { switchTab('champions'); });
+document.getElementById('export-btn').addEventListener('click', exportCSV);
+document.getElementById('lp-add-btn').addEventListener('click', logLP);
+document.getElementById('lp-clear-btn').addEventListener('click', function() { LP_DATA = []; localStorage.setItem('lol_lp_data', '[]'); renderLPLog(); drawLPChart(); });
+document.getElementById('auto-refresh-btn').addEventListener('click', toggleAutoRefresh);
+
+function switchTab(tab) {
+  document.getElementById('tab-btn-matches').classList.toggle('active', tab === 'matches');
+  document.getElementById('tab-btn-champions').classList.toggle('active', tab === 'champions');
+  document.getElementById('tab-matches').style.display = tab === 'matches' ? 'block' : 'none';
+  document.getElementById('tab-champions').style.display = tab === 'champions' ? 'block' : 'none';
+}
+
+function toggleAutoRefresh() {
+  var btn = document.getElementById('auto-refresh-btn');
+  if (AUTO_REFRESH_TIMER) {
+    clearInterval(AUTO_REFRESH_TIMER);
+    AUTO_REFRESH_TIMER = null;
+    btn.textContent = 'Auto-refresh: Off';
+    btn.classList.remove('active');
+  } else {
+    AUTO_REFRESH_TIMER = setInterval(fetchStats, 5 * 60 * 1000);
+    btn.textContent = 'Auto-refresh: On';
+    btn.classList.add('active');
+  }
+}
+
+function logLP() {
+  var val = parseInt(document.getElementById('lp-input').value);
+  if (isNaN(val) || val < 0 || val > 100) return;
+  var prev = LP_DATA.length > 0 ? LP_DATA[LP_DATA.length - 1].lp : null;
+  LP_DATA.push({ lp: val, ts: Date.now(), delta: prev !== null ? val - prev : null });
+  localStorage.setItem('lol_lp_data', JSON.stringify(LP_DATA));
+  document.getElementById('lp-input').value = '';
+  renderLPLog();
+  drawLPChart();
+}
+
+function renderLPLog() {
+  var el = document.getElementById('lp-entries');
+  if (!LP_DATA.length) { el.innerHTML = '<div style="font-size:12px;color:#4a5568;padding:4px 0;">No LP logged yet. Enter your current LP after each game.</div>'; return; }
+  var html = '';
+  var recent = LP_DATA.slice(-10).reverse();
+  recent.forEach(function(e) {
+    var deltaStr = '';
+    if (e.delta !== null) {
+      var cls = e.delta >= 0 ? 'pos' : 'neg';
+      deltaStr = '<span class="lp-delta ' + cls + '">' + (e.delta >= 0 ? '+' : '') + e.delta + ' LP</span>';
+    }
+    var date = new Date(e.ts).toLocaleString();
+    html += '<div class="lp-entry"><span>' + date + ' — <b>' + e.lp + ' LP</b></span>' + deltaStr + '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function drawLPChart() {
+  var canvas = document.getElementById('lp-chart');
+  var ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 600;
+  canvas.height = 80;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (LP_DATA.length < 2) return;
+  var vals = LP_DATA.map(function(e) { return e.lp; });
+  drawLineChart(ctx, canvas.width, canvas.height, vals, '#c89b3c', 'LP');
+}
+
+function drawLineChart(ctx, w, h, values, color, label) {
+  var pad = 30;
+  var min = Math.min.apply(null, values);
+  var max = Math.max.apply(null, values);
+  if (max === min) { min -= 5; max += 5; }
+  var range = max - min;
+  var pts = values.map(function(v, i) {
+    return { x: pad + (i / (values.length - 1)) * (w - pad * 2), y: pad + (1 - (v - min) / range) * (h - pad * 2) };
+  });
+  // Grid
+  ctx.strokeStyle = '#1e2a3a'; ctx.lineWidth = 1;
+  for (var g = 0; g <= 4; g++) {
+    var y = pad + (g / 4) * (h - pad * 2);
+    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(w - pad, y); ctx.stroke();
+    var lbl = Math.round(max - (g / 4) * range);
+    ctx.fillStyle = '#4a5568'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(lbl, pad - 4, y + 3);
+  }
+  // Fill
+  ctx.beginPath(); ctx.moveTo(pts[0].x, h - pad);
+  pts.forEach(function(p) { ctx.lineTo(p.x, p.y); });
+  ctx.lineTo(pts[pts.length-1].x, h - pad); ctx.closePath();
+  ctx.fillStyle = color + '22'; ctx.fill();
+  // Line
+  ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+  pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
+  ctx.stroke();
+  // Dots
+  pts.forEach(function(p) {
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+  });
+}
+
+function drawKDAChart(matches) {
+  var canvas = document.getElementById('kda-chart');
+  var ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 600;
+  canvas.height = 80;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (matches.length < 2) return;
+  var vals = matches.map(function(m) { return m.deaths > 0 ? parseFloat(((m.kills + m.assists) / m.deaths).toFixed(2)) : m.kills + m.assists; });
+  drawLineChart(ctx, canvas.width, canvas.height, vals, '#60a5fa', 'KDA');
+}
+
+function drawWRChart(matches) {
+  var canvas = document.getElementById('wr-chart');
+  var ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 600;
+  canvas.height = 80;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (matches.length < 5) return;
+  var vals = [];
+  for (var i = 4; i < matches.length; i++) {
+    var slice = matches.slice(i - 4, i + 1);
+    vals.push(Math.round(slice.filter(function(m) { return m.win; }).length / 5 * 100));
+  }
+  drawLineChart(ctx, canvas.width, canvas.height, vals, '#34d399', 'WR%');
+}
+
+function fetchStats() {
+  var name = document.getElementById('summoner-input').value.trim();
+  var tag = document.getElementById('tag-input').value.trim() || 'NA1';
+  var region = document.getElementById('region-select').value;
+  var apiKey = document.getElementById('api-key-input').value.trim();
+  var errEl = document.getElementById('error-msg');
+  errEl.textContent = '';
+  if (!name) { errEl.textContent = 'Please enter a summoner name.'; return; }
+  if (!apiKey) { errEl.textContent = 'Please enter your Riot API key.'; return; }
+
+  // Save last search
+  localStorage.setItem('lol_last_search', JSON.stringify({ name: name, tag: tag, region: region, apiKey: apiKey }));
+
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('export-btn').style.display = 'none';
+
+  var url = 'http://localhost:3000/api/summoner?name=' + encodeURIComponent(name) +
+    '&tag=' + encodeURIComponent(tag) + '&region=' + region + '&apiKey=' + encodeURIComponent(apiKey);
+
+  fetch(url)
+    .then(function(res) { return res.json().then(function(d) { if (!res.ok) throw new Error(d.error || 'HTTP ' + res.status); return d; }); })
+    .then(function(data) { DD_VERSION = data.ddVersion || DD_VERSION; render(data); })
+    .catch(function(e) { errEl.textContent = e.name === 'TypeError' ? 'Cannot reach server. Is "node server.js" running?' : 'Error: ' + e.message; })
+    .finally(function() { document.getElementById('loading').style.display = 'none'; });
+}
+
+function exportCSV() {
+  var rows = [['Result','Champion','Kills','Deaths','Assists','KDA','CS','Damage','Gold','Vision','Queue','Duration','Date']];
+  ALL_MATCHES.forEach(function(m) {
+    var kda = m.deaths > 0 ? ((m.kills + m.assists) / m.deaths).toFixed(2) : 'Perfect';
+    var mins = Math.floor(m.duration / 60) + ':' + String(m.duration % 60).padStart(2, '0');
+    var date = m.ts ? new Date(m.ts).toLocaleDateString() : '';
+    rows.push([m.win ? 'Win' : 'Loss', m.champion, m.kills, m.deaths, m.assists, kda, m.cs, m.damageDealt, m.goldEarned, m.visionScore, m.queueLabel, mins, date]);
+  });
+  var csv = rows.map(function(r) { return r.join(','); }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lol_matches.csv'; a.click();
+}
+
+function makeImg(src, w, h, alt) {
+  var img = document.createElement('img');
+  img.src = src; img.width = w; img.height = h; img.alt = alt || ''; img.title = alt || '';
+  return img;
+}
+
+function makeItemSlot(itemId) {
+  var slot = document.createElement('div');
+  slot.className = itemId ? 'item-slot' : 'item-slot empty';
+  if (itemId) slot.appendChild(makeImg('https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/item/' + itemId + '.png', 30, 30, 'Item'));
+  return slot;
+}
+
+function queueBadgeClass(qid) {
+  if (qid === 450) return 'queue-badge aram';
+  if (qid === 900) return 'queue-badge mayhem';
+  if (qid === 420 || qid === 440) return 'queue-badge ranked';
+  return 'queue-badge';
+}
+
+function getStreak(matches) {
+  if (!matches.length) return null;
+  var type = matches[0].win;
+  var count = 0;
+  for (var i = 0; i < matches.length; i++) {
+    if (matches[i].win === type) count++;
+    else break;
+  }
+  if (count < 2) return null;
+  return { type: type, count: count };
+}
+
+function filteredMatches() {
+  return ALL_MATCHES.filter(function(m) {
+    var qOk = ACTIVE_QUEUE_FILTER === 'All' || m.queueLabel === ACTIVE_QUEUE_FILTER;
+    var cOk = ACTIVE_CHAMP_FILTER === 'All' || m.champion === ACTIVE_CHAMP_FILTER;
+    return qOk && cOk;
+  });
+}
+
+function render(data) {
+  ALL_MATCHES = data.matches;
+  var gameName = data.gameName, tagLine = data.tagLine;
+  var rankTier = data.rankTier || '';
+  var rankedStats = data.rankedStats || {};
+
+  // Profile
+  document.getElementById('profile-icon').textContent = (gameName || '?')[0].toUpperCase();
+  document.getElementById('profile-name').textContent = gameName + ' #' + tagLine;
+  document.getElementById('profile-sub').textContent = 'Level ' + data.summonerLevel;
+
+  // Rank badges
+  var badgesEl = document.getElementById('rank-badges');
+  badgesEl.innerHTML = '';
+  if (rankedStats.solo) {
+    var sb = document.createElement('span');
+    sb.className = 'rank-badge rank-' + (rankedStats.solo.tier || 'default');
+    sb.textContent = 'Solo: ' + rankedStats.solo.tier + ' ' + rankedStats.solo.rank + ' ' + rankedStats.solo.lp + 'LP (' + rankedStats.solo.wins + 'W/' + rankedStats.solo.losses + 'L)';
+    badgesEl.appendChild(sb);
+  }
+  if (rankedStats.flex) {
+    var fb = document.createElement('span');
+    fb.className = 'rank-badge rank-' + (rankedStats.flex.tier || 'default');
+    fb.textContent = 'Flex: ' + rankedStats.flex.tier + ' ' + rankedStats.flex.rank + ' ' + rankedStats.flex.lp + 'LP';
+    badgesEl.appendChild(fb);
+  }
+  if (!rankedStats.solo && !rankedStats.flex) {
+    var ub = document.createElement('span');
+    ub.className = 'rank-badge rank-default';
+    ub.textContent = 'Unranked';
+    badgesEl.appendChild(ub);
+  }
+
+  // Streak
+  var streak = getStreak(ALL_MATCHES);
+  var streakEl = document.getElementById('streak-inline');
+  streakEl.innerHTML = '';
+  if (streak) {
+    var sb2 = document.createElement('div');
+    sb2.className = 'streak-banner ' + (streak.type ? 'win-streak' : 'loss-streak');
+    sb2.innerHTML = (streak.type ? '🔥' : '❄️') + ' ' + streak.count + '-game ' + (streak.type ? 'win' : 'loss') + ' streak';
+    streakEl.appendChild(sb2);
+  }
+
+  // Build filters
+  var queues = ['All'];
+  var champs = ['All'];
+  ALL_MATCHES.forEach(function(m) {
+    if (queues.indexOf(m.queueLabel) === -1) queues.push(m.queueLabel);
+    if (champs.indexOf(m.champion) === -1) champs.push(m.champion);
+  });
+
+  var filtersEl = document.getElementById('filters');
+  filtersEl.innerHTML = '<span class="filters-label">Queue:</span>';
+  queues.forEach(function(q) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-sm' + (q === ACTIVE_QUEUE_FILTER ? ' active' : '');
+    btn.textContent = q;
+    btn.addEventListener('click', function() { ACTIVE_QUEUE_FILTER = q; renderFiltered(); refreshFilterBtns(); });
+    filtersEl.appendChild(btn);
+  });
+
+  var champFiltersEl = document.getElementById('champ-filters');
+  champFiltersEl.innerHTML = '<span class="filters-label">Champion:</span>';
+  champs.forEach(function(c) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-sm' + (c === ACTIVE_CHAMP_FILTER ? ' active' : '');
+    btn.textContent = c;
+    btn.addEventListener('click', function() { ACTIVE_CHAMP_FILTER = c; renderFiltered(); refreshFilterBtns(); });
+    champFiltersEl.appendChild(btn);
+  });
+
+  renderFiltered();
+  drawKDAChart(ALL_MATCHES);
+  drawWRChart(ALL_MATCHES);
+  drawLPChart();
+  renderLPLog();
+
+  document.getElementById('export-btn').style.display = '';
+  document.getElementById('results').style.display = 'block';
+}
+
+function refreshFilterBtns() {
+  var fbtns = document.getElementById('filters').querySelectorAll('button');
+  fbtns.forEach(function(b) { b.classList.toggle('active', b.textContent === ACTIVE_QUEUE_FILTER); });
+  var cbtns = document.getElementById('champ-filters').querySelectorAll('button');
+  cbtns.forEach(function(b) { b.classList.toggle('active', b.textContent === ACTIVE_CHAMP_FILTER); });
+}
+
+function renderFiltered() {
+  var matches = filteredMatches();
+  renderSummaryStats(matches);
+  renderHighlights(matches);
+  renderMatchList(matches);
+  renderChampTable(matches);
+}
+
+function renderSummaryStats(matches) {
+  var wins = 0, totalK = 0, totalD = 0, totalA = 0, totalCs = 0, totalDmg = 0, totalGold = 0, totalVision = 0;
+  matches.forEach(function(m) {
+    if (m.win) wins++;
+    totalK += m.kills; totalD += m.deaths; totalA += m.assists; totalCs += m.cs;
+    totalDmg += m.damageDealt || 0; totalGold += m.goldEarned || 0; totalVision += m.visionScore || 0;
+  });
+  var n = matches.length;
+  var losses = n - wins;
+  var wr = n ? Math.round(wins / n * 100) : 0;
+  var avgK = n ? (totalK / n).toFixed(1) : '0';
+  var avgD = n ? (totalD / n).toFixed(1) : '0';
+  var avgA = n ? (totalA / n).toFixed(1) : '0';
+  var kda = parseFloat(avgD) > 0 ? ((parseFloat(avgK) + parseFloat(avgA)) / parseFloat(avgD)).toFixed(2) : 'Perfect';
+  var avgCs = n ? Math.round(totalCs / n) : 0;
+  var avgDmg = n ? Math.round(totalDmg / n).toLocaleString() : '0';
+  var avgGold = n ? Math.round(totalGold / n).toLocaleString() : '0';
+  var avgVision = n ? (totalVision / n).toFixed(1) : '0';
+
+  document.getElementById('stat-grid').innerHTML =
+    sc('Win rate', '<span class="' + (wr>=50?'win-c':'loss-c') + '">' + wr + '%</span>', wins + 'W / ' + losses + 'L') +
+    sc('KDA', kda, avgK + ' / ' + avgD + ' / ' + avgA) +
+    sc('Avg CS', avgCs, 'per game') +
+    sc('Avg Damage', avgDmg, 'to champions') +
+    sc('Avg Gold', avgGold, 'per game') +
+    sc('Avg Vision', avgVision, 'score');
+}
+
+function sc(lbl, val, sub) {
+  return '<div class="stat-card"><div class="lbl">' + lbl + '</div><div class="val">' + val + '</div><div class="sub">' + sub + '</div></div>';
+}
+
+function renderHighlights(matches) {
+  var el = document.getElementById('highlights');
+  if (!matches.length) { el.innerHTML = ''; return; }
+  var champs = {};
+  matches.forEach(function(m) {
+    if (!champs[m.champion]) champs[m.champion] = { wins:0, games:0, kills:0, deaths:0, assists:0 };
+    champs[m.champion].games++; if (m.win) champs[m.champion].wins++;
+    champs[m.champion].kills += m.kills; champs[m.champion].deaths += m.deaths; champs[m.champion].assists += m.assists;
+  });
+  var entries = Object.entries(champs).filter(function(e) { return e[1].games >= 2; });
+  if (!entries.length) entries = Object.entries(champs);
+  var best = entries.sort(function(a,b) { return (b[1].wins/b[1].games) - (a[1].wins/a[1].games); })[0];
+  var worst = entries.sort(function(a,b) { return (a[1].wins/a[1].games) - (b[1].wins/b[1].games); })[0];
+  var mostPlayed = Object.entries(champs).sort(function(a,b) { return b[1].games - a[1].games; })[0];
+  var html = '';
+  if (best) html += hc('Best champion', best[0], Math.round(best[1].wins/best[1].games*100) + '% WR over ' + best[1].games + ' games', '#34d399');
+  if (worst && worst[0] !== best[0]) html += hc('Worst champion', worst[0], Math.round(worst[1].wins/worst[1].games*100) + '% WR over ' + worst[1].games + ' games', '#f87171');
+  if (mostPlayed) html += hc('Most played', mostPlayed[0], mostPlayed[1].games + ' games this sample', '#60a5fa');
+  el.innerHTML = html;
+}
+
+function hc(label, champ, sub, color) {
+  return '<div class="highlight-card"><div class="hl-label">' + label + '</div><div class="hl-champ" style="color:' + color + '">' + champ + '</div><div class="hl-sub">' + sub + '</div></div>';
+}
+
+function renderMatchList(matches) {
+  var matchList = document.createElement('div');
+  matchList.className = 'match-list';
+
+  matches.forEach(function(m, i) {
+    var col = COLORS[i % COLORS.length];
+    var mins = Math.floor(m.duration / 60);
+    var secs = String(m.duration % 60).padStart(2, '0');
+    var date = m.ts ? new Date(m.ts).toLocaleDateString() : '';
+    var kda = m.deaths > 0 ? ((m.kills + m.assists) / m.deaths).toFixed(2) : 'Perfect';
+    var dmg = m.damageDealt ? Math.round(m.damageDealt / 1000).toFixed(1) + 'k' : '—';
+    var gold = m.goldEarned ? Math.round(m.goldEarned / 1000).toFixed(1) + 'k' : '—';
+
+    var card = document.createElement('div');
+    card.className = 'match-card ' + (m.win ? 'win' : 'loss');
+
+    // Top row
+    var top = document.createElement('div');
+    top.className = 'match-top';
+
+    // Result
+    var res = document.createElement('div');
+    res.className = 'match-result ' + (m.win ? 'win-c' : 'loss-c');
+    res.textContent = m.win ? 'Win' : 'Loss';
+    top.appendChild(res);
+
+    // Champ icon
+    var champWrap = document.createElement('div');
+    champWrap.className = 'champ-wrap';
+    var champIcon = document.createElement('div');
+    champIcon.className = 'champ-icon';
+    champIcon.style.borderColor = col;
+    var champImg = makeImg('https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/champion/' + m.champion + '.png', 38, 38, m.champion);
+    champIcon.appendChild(champImg);
+    champWrap.appendChild(champIcon);
+    top.appendChild(champWrap);
+
+    // Summoner spells
+    if (m.spell1 || m.spell2) {
+      var spells = document.createElement('div');
+      spells.className = 'spells';
+      if (m.spell1) {
+        var s1 = document.createElement('div'); s1.className = 'spell-icon';
+        s1.appendChild(makeImg('https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/spell/' + m.spell1 + '.png', 16, 16, m.spell1));
+        spells.appendChild(s1);
+      }
+      if (m.spell2) {
+        var s2 = document.createElement('div'); s2.className = 'spell-icon';
+        s2.appendChild(makeImg('https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/spell/' + m.spell2 + '.png', 16, 16, m.spell2));
+        spells.appendChild(s2);
+      }
+      top.appendChild(spells);
+    }
+
+    // Keystone rune
+    if (m.keystone) {
+      var kw = document.createElement('div'); kw.className = 'keystone-wrap';
+      var ki = document.createElement('div'); ki.className = 'keystone-icon';
+      ki.appendChild(makeImg('https://ddragon.leagueoflegends.com/cdn/img/' + m.keystone.icon, 28, 28, m.keystone.name));
+      kw.appendChild(ki);
+      top.appendChild(kw);
+    }
+
+    // Info
+    var info = document.createElement('div');
+    info.className = 'match-info';
+    info.innerHTML =
+      '<div class="match-champ">' + m.champion + '</div>' +
+      '<div class="match-kda">' + m.kills + '/' + m.deaths + '/' + m.assists + ' &nbsp; KDA: <b>' + kda + '</b></div>' +
+      '<div class="match-stats-row">' +
+        '<div class="match-stat">CS: <span>' + m.cs + '</span></div>' +
+        '<div class="match-stat">Dmg: <span>' + dmg + '</span></div>' +
+        '<div class="match-stat">Gold: <span>' + gold + '</span></div>' +
+        '<div class="match-stat">Vision: <span>' + (m.visionScore || 0) + '</span></div>' +
+      '</div>';
+    top.appendChild(info);
+
+    // Meta
+    var meta = document.createElement('div');
+    meta.className = 'match-meta';
+    meta.innerHTML = '<div><span class="' + queueBadgeClass(m.queueId) + '">' + (m.queueLabel || 'Other') + '</span></div><div>' + mins + ':' + secs + ' &middot; ' + date + '</div>';
+    top.appendChild(meta);
+    card.appendChild(top);
+
+    // Items row
+    var itemsRow = document.createElement('div');
+    itemsRow.className = 'match-items';
+    var lbl = document.createElement('span'); lbl.className = 'items-label'; lbl.textContent = 'Build';
+    itemsRow.appendChild(lbl);
+    var itemIds = m.items || [];
+    for (var slot = 0; slot < 6; slot++) itemsRow.appendChild(makeItemSlot(itemIds[slot] || 0));
+    if (m.trinket) {
+      var div = document.createElement('div'); div.className = 'item-divider'; itemsRow.appendChild(div);
+      var ts = document.createElement('div'); ts.className = 'trinket-slot';
+      ts.appendChild(makeImg('https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/item/' + m.trinket + '.png', 26, 26, 'Trinket'));
+      itemsRow.appendChild(ts);
+    }
+    card.appendChild(itemsRow);
+    matchList.appendChild(card);
+  });
+
+  var tm = document.getElementById('tab-matches');
+  tm.innerHTML = '';
+  tm.appendChild(matchList);
+}
+
+function renderChampTable(matches) {
+  var champs = {};
+  matches.forEach(function(m) {
+    if (!champs[m.champion]) champs[m.champion] = { wins:0, games:0, kills:0, deaths:0, assists:0, cs:0, dmg:0, gold:0, vision:0 };
+    var c = champs[m.champion];
+    c.games++; if (m.win) c.wins++;
+    c.kills+=m.kills; c.deaths+=m.deaths; c.assists+=m.assists; c.cs+=m.cs;
+    c.dmg+=(m.damageDealt||0); c.gold+=(m.goldEarned||0); c.vision+=(m.visionScore||0);
+  });
+  var sorted = Object.entries(champs).sort(function(a,b) { return b[1].games - a[1].games; });
+
+  var cHtml = '<table><thead><tr>' +
+    '<th>Champion</th><th>Games</th><th>Win rate</th><th>KDA</th><th>Avg CS</th><th>Avg Dmg</th><th>Avg Gold</th><th>Avg Vision</th>' +
+    '</tr></thead><tbody>';
+  sorted.forEach(function(entry, k) {
+    var ch = entry[0], s = entry[1];
+    var wr2 = Math.round(s.wins/s.games*100);
+    var kda2 = s.deaths > 0 ? ((s.kills+s.assists)/s.deaths).toFixed(2) : 'Perfect';
+    var col2 = COLORS[k % COLORS.length];
+    cHtml += '<tr>' +
+      '<td style="display:flex;align-items:center;gap:8px;">' +
+        '<img src="https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/champion/' + ch + '.png" width="28" height="28" style="border-radius:50%;object-fit:cover;transform:scale(1.1);overflow:hidden;border:1px solid ' + col2 + '44;" />' + ch +
+      '</td>' +
+      '<td>' + s.games + '</td>' +
+      '<td><div class="wr-bar-wrap"><div class="wr-bar" style="width:' + wr2 + '%;background:' + (wr2>=50?'#34d399':'#f87171') + ';"></div></div><span style="color:' + (wr2>=50?'#34d399':'#f87171') + '">' + wr2 + '%</span></td>' +
+      '<td>' + kda2 + '</td>' +
+      '<td>' + Math.round(s.cs/s.games) + '</td>' +
+      '<td>' + Math.round(s.dmg/s.games/1000).toFixed(1) + 'k</td>' +
+      '<td>' + Math.round(s.gold/s.games/1000).toFixed(1) + 'k</td>' +
+      '<td>' + (s.vision/s.games).toFixed(1) + '</td>' +
+      '</tr>';
+  });
+  cHtml += '</tbody></table>';
+  document.getElementById('tab-champions').innerHTML = cHtml;
+}
+</script>
+
+<!-- Release Notes -->
+<div style="max-width:920px;margin:3rem auto 1rem auto;border-top:1px solid #1e2a3a;padding-top:1.5rem;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;cursor:pointer;" id="rn-toggle">
+    <span style="font-size:13px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;">Release Notes</span>
+    <span style="font-size:12px;color:#4a5568;" id="rn-chevron">▼ Show</span>
+  </div>
+  <div id="rn-body" style="display:none;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.5</span>
+          <span style="font-size:12px;color:#6b7280;">Latest</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Rate Limit Fix</div>
+        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+          <li>Fixed "Rate Limit Exceeded" errors on search</li>
+          <li>Match fetching now uses batches of 5 with a 1.2s pause between batches</li>
+          <li>Reduced max matches fetched from 25 to 20 to stay within dev key limits</li>
+          <li>Batch progress logged to terminal during fetch</li>
+        </ul>
+      </div>
+
+      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#60a5fa;background:#60a5fa22;border:1px solid #60a5fa44;padding:2px 9px;border-radius:5px;">v1.3</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Stats Overhaul & Quality of Life</div>
+        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+          <li>Summoner spell and keystone rune icons per match</li>
+          <li>Damage dealt, gold earned, and vision score on match cards</li>
+          <li>KDA trend chart and rolling 5-game win rate chart</li>
+          <li>LP tracker with persistent storage and chart</li>
+          <li>Best / worst / most played champion highlights</li>
+          <li>Win/loss streak banner</li>
+          <li>Queue type and champion filter buttons</li>
+          <li>Last search saved across page reloads</li>
+          <li>Auto-refresh toggle (every 5 minutes)</li>
+          <li>Export match history to CSV</li>
+          <li>Champion portraits in the champion stats table</li>
+        </ul>
+      </div>
+
+      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#a78bfa;background:#a78bfa22;border:1px solid #a78bfa44;padding:2px 9px;border-radius:5px;">v1.2</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Champion Icons & Item Builds</div>
+        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+          <li>Champion portrait icons in match history</li>
+          <li>Item build row with icons from Data Dragon</li>
+          <li>Trinket shown separately with circular icon</li>
+          <li>Queue type badge per match (ARAM, Ranked, Mayhem, etc.)</li>
+          <li>ARAM Mayhem (queue 900) support added</li>
+        </ul>
+      </div>
+
+      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#34d399;background:#34d39922;border:1px solid #34d39944;padding:2px 9px;border-radius:5px;">v1.1</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Multi-Queue Support & Bug Fixes</div>
+        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+          <li>Expanded match fetch to all queue types</li>
+          <li>Fixed results panel not appearing after successful search</li>
+          <li>Rewrote JS to avoid silent parse errors in some browsers</li>
+          <li>Improved error messages shown on page</li>
+          <li>Added server-side console logging for debugging</li>
+        </ul>
+      </div>
+
+      <div style="background:#111827;border:1px solid #1e2a3a;border-radius:10px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#fb923c;background:#fb923c22;border:1px solid #fb923c44;padding:2px 9px;border-radius:5px;">v1.0</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#e0e4f0;margin-bottom:6px;">Initial Release</div>
+        <ul style="font-size:13px;color:#9ca3af;padding-left:1.2rem;line-height:1.8;">
+          <li>Local Node.js proxy server to bypass Riot API CORS restrictions</li>
+          <li>Search by summoner name, tag, and region</li>
+          <li>Win/loss rate, KDA, and CS summary stats</li>
+          <li>Recent match history with result, champion, KDA, CS, duration</li>
+          <li>Champion breakdown tab with per-champion win rate and KDA</li>
+          <li>Ranked solo/duo and flex rank display</li>
+        </ul>
+      </div>
+
+    </div>
+    <div style="font-size:12px;color:#374151;text-align:center;margin-top:1rem;padding-bottom:1rem;">LoL Stat Tracker — built with Riot Games API & Data Dragon</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('rn-toggle').addEventListener('click', function() {
+  var body = document.getElementById('rn-body');
+  var chevron = document.getElementById('rn-chevron');
+  var open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  chevron.textContent = open ? '▲ Hide' : '▼ Show';
+});
+</script>
+
+</body>
+</html>
