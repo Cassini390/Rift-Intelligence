@@ -1,5 +1,12 @@
 # LoL Stat Tracker - Changelog
 
+## v1.6 - Visual Overhaul
+- Typography — Two new fonts loaded from Google Fonts: Syne (bold, geometric) for headings, titles, champion names, and the logo; DM Sans (clean, refined) for all body text and UI labels.
+- Colour & atmosphere — Deeper, richer background (#07090f), a warm gold gradient on the page title with a subtle top glow, and a soft radial background bloom to add depth without being distracting.
+- Cards & panels — All cards now have a refined top-edge gold line highlight, hover shadow transitions, and a more layered background hierarchy (bg → bg1 → bg2 → bg3).
+- Details — Tabs redesigned as underline-style navigation, rank badges now use pill shapes, queue badges are pill-shaped too, stat values use Syne for a more editorial feel, and the search button has a gradient with a subtle lift on hover.
+- Version tag — A small v1.5 pill sits next to the page title.
+
 ## v1.5 - Rate Limit Fix
 - Fixed "Rate Limit Exceeded" errors caused by parallel API calls
 - Match fetching now uses sequential batches of 5 with a 1.2s pause between each batch
