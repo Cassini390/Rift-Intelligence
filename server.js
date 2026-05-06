@@ -118,6 +118,33 @@ app.get('/api/summoner', async (req, res) => {
       const spell2Id = String(p.summoner2Id);
       const keystoneId = p.perks?.styles?.[0]?.selections?.[0]?.perk;
       const keystoneInfo = keystoneId && runeLookup[keystoneId] ? runeLookup[keystoneId] : null;
+      // Map all 10 players for the scoreboard
+      const allPlayers = m.info.participants.map(pl => {
+        const plItems = [pl.item0, pl.item1, pl.item2, pl.item3, pl.item4, pl.item5].filter(id => id > 0);
+        const plTrinket = pl.item6 > 0 ? pl.item6 : null;
+        const plSpell1Id = String(pl.summoner1Id);
+        const plSpell2Id = String(pl.summoner2Id);
+        const plKeystoneId = pl.perks?.styles?.[0]?.selections?.[0]?.perk;
+        const plKeystone = plKeystoneId && runeLookup[plKeystoneId] ? runeLookup[plKeystoneId] : null;
+        return {
+          summonerName: pl.riotIdGameName || pl.summonerName || 'Unknown',
+          champion: pl.championName,
+          teamId: pl.teamId,
+          isYou: pl.puuid === puuid,
+          win: pl.win,
+          kills: pl.kills, deaths: pl.deaths, assists: pl.assists,
+          cs: pl.totalMinionsKilled + pl.neutralMinionsKilled,
+          damageDealt: pl.totalDamageDealtToChampions,
+          goldEarned: pl.goldEarned,
+          visionScore: pl.visionScore,
+          items: plItems,
+          trinket: plTrinket,
+          spell1: spellData[plSpell1Id] || null,
+          spell2: spellData[plSpell2Id] || null,
+          keystone: plKeystone,
+        };
+      });
+
       return {
         win: p.win,
         champion: p.championName,
@@ -136,7 +163,8 @@ app.get('/api/summoner', async (req, res) => {
         spell1: spellData[spell1Id] || null,
         spell2: spellData[spell2Id] || null,
         keystone: keystoneInfo,
-        ddVersion
+        ddVersion,
+        allPlayers
       };
     }).filter(Boolean).sort((a, b) => b.ts - a.ts);
 

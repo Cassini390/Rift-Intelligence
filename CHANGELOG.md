@@ -1,11 +1,14 @@
-# LoL Stat Tracker - Changelog
+## v1.6 - Expandable Match Scoreboard
+- Each match card now has a collapsible 'Full Scoreboard' button
+- Clicking reveals all 10 players split into Blue and Red teams
+- Per-player data: champion icon, summoner spells, name, K/D/A, gold, CS, and item build
+- Your row is highlighted in gold with a star prefix for easy identification
+- Victory/Defeat label shown per team with colour coding
+- Premium dark UI redesign: new fonts (Syne + DM Sans), gold gradient title, polished cards and tab styles
 
-## v1.6 - Visual Overhaul
-- Typography — Two new fonts loaded from Google Fonts: Syne (bold, geometric) for headings, titles, champion names, and the logo; DM Sans (clean, refined) for all body text and UI labels.
-- Colour & atmosphere — Deeper, richer background (#07090f), a warm gold gradient on the page title with a subtle top glow, and a soft radial background bloom to add depth without being distracting.
-- Cards & panels — All cards now have a refined top-edge gold line highlight, hover shadow transitions, and a more layered background hierarchy (bg → bg1 → bg2 → bg3).
-- Details — Tabs redesigned as underline-style navigation, rank badges now use pill shapes, queue badges are pill-shaped too, stat values use Syne for a more editorial feel, and the search button has a gradient with a subtle lift on hover.
-- Version tag — A small v1.5 pill sits next to the page title.
+---
+
+# LoL Stat Tracker - Changelog
 
 ## v1.5 - Rate Limit Fix
 - Fixed "Rate Limit Exceeded" errors caused by parallel API calls
