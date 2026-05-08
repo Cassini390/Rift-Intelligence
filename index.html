@@ -6,7 +6,7 @@
 <title>LoL Stat Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:        #050a08;
@@ -33,7 +33,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -85,7 +85,7 @@ body {
 }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 0; }
 .page-header h1 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 32px; font-weight: 800;
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, #7fffc4 0%, var(--accent) 50%, var(--teal) 100%);
@@ -121,7 +121,7 @@ body {
 .row:last-of-type { margin-bottom: 0; }
 
 input, select {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 14px; font-weight: 400;
   padding: 10px 14px;
   border: 1px solid var(--border2);
@@ -144,7 +144,7 @@ select option { background: var(--bg2); }
 
 .btn {
   padding: 10px 22px; font-size: 14px; font-weight: 600;
-  font-family: 'Syne', sans-serif; letter-spacing: 0.03em;
+  font-family: 'Roboto', sans-serif; letter-spacing: 0.03em;
   background: linear-gradient(135deg, #4dff91, #00cc6a);
   color: #030f07; border: none; border-radius: var(--radius-sm);
   cursor: pointer; white-space: nowrap;
@@ -156,7 +156,7 @@ select option { background: var(--bg2); }
 
 .btn-sm {
   padding: 7px 13px; font-size: 11px; font-weight: 600;
-  font-family: 'DM Sans', sans-serif; letter-spacing: 0.04em;
+  font-family: 'Roboto', sans-serif; letter-spacing: 0.04em;
   background: var(--bg3); color: var(--text2);
   border: 1px solid var(--border2); border-radius: var(--radius-sm);
   cursor: pointer; transition: all 0.15s; text-transform: uppercase;
@@ -171,7 +171,7 @@ select option { background: var(--bg2); }
 
 /* Section labels */
 .section-label {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 11px; font-weight: 700;
   color: var(--text3); text-transform: uppercase;
   letter-spacing: 0.1em; margin-bottom: 12px;
@@ -195,14 +195,14 @@ select option { background: var(--bg2); }
 .avatar {
   width: 62px; height: 62px; border-radius: 50%;
   background: var(--bg3); display: flex; align-items: center;
-  justify-content: center; font-family: 'Syne', sans-serif;
+  justify-content: center; font-family: 'Roboto', sans-serif;
   font-size: 24px; font-weight: 800; color: var(--accent);
   flex-shrink: 0; border: 2px solid var(--accent);
   box-shadow: 0 0 20px var(--accent-glow); overflow: hidden;
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .profile-name {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
 }
 .profile-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
@@ -210,7 +210,7 @@ select option { background: var(--bg2); }
 .rank-badge {
   font-size: 11px; font-weight: 600; padding: 3px 11px;
   border-radius: 20px; border: 1px solid; letter-spacing: 0.03em;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .rank-CHALLENGER,.rank-GRANDMASTER,.rank-MASTER { background: #2a180022; color: #f5a623; border-color: #f5a62344; }
 .rank-DIAMOND,.rank-EMERALD { background: var(--blue-dim); color: var(--blue); border-color: #4f8ef744; }
@@ -237,9 +237,9 @@ select option { background: var(--bg2); }
 .stat-card .lbl {
   font-size: 10px; font-weight: 700; color: var(--text3);
   text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
-.stat-card .val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.stat-card .val { font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
 .stat-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
 .win-c { color: var(--green); } .loss-c { color: var(--red); }
 
@@ -250,7 +250,7 @@ select option { background: var(--bg2); }
   border-radius: var(--radius); padding: 1rem 1.25rem;
 }
 .highlight-card .hl-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
-.highlight-card .hl-champ { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; }
+.highlight-card .hl-champ { font-family: 'Roboto', sans-serif; font-size: 17px; font-weight: 700; }
 .highlight-card .hl-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
 
 /* LP tracker */
@@ -259,7 +259,7 @@ select option { background: var(--bg2); }
   border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem;
 }
 .lp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.lp-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+.lp-title { font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
 .lp-input-row { display: flex; gap: 8px; }
 .lp-input-row input { flex: 1; font-size: 13px; padding: 8px 12px; }
 .lp-entries { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 150px; overflow-y: auto; }
@@ -271,7 +271,7 @@ select option { background: var(--bg2); }
 .streak-banner {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .streak-banner.win-streak { background: #2ec99a18; border: 1px solid #2ec99a44; color: var(--green); }
 .streak-banner.loss-streak { background: #e8555518; border: 1px solid #e8555544; color: var(--red); }
@@ -279,7 +279,7 @@ select option { background: var(--bg2); }
 /* Charts */
 .chart-section { margin-bottom: 1.75rem; }
 .chart-title {
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  font-family: 'Roboto', sans-serif; font-size: 11px; font-weight: 700;
   color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
 }
 .chart-wrap {
@@ -290,13 +290,13 @@ canvas { display: block; width: 100%; }
 
 /* Filters */
 .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-.filters-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; font-family: 'DM Sans', sans-serif; }
+.filters-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; font-family: 'Roboto', sans-serif; }
 
 /* Tabs */
 .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 0; }
 .tab {
   padding: 9px 20px; font-size: 13px; font-weight: 600;
-  font-family: 'Syne', sans-serif; letter-spacing: 0.03em;
+  font-family: 'Roboto', sans-serif; letter-spacing: 0.03em;
   border: none; border-bottom: 2px solid transparent;
   background: transparent; color: var(--text3); cursor: pointer;
   margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
@@ -317,7 +317,7 @@ canvas { display: block; width: 100%; }
 .match-card.win { border-left-color: var(--green); }
 .match-card.loss { border-left-color: var(--red); }
 .match-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
-.match-result { width: 38px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; flex-shrink: 0; letter-spacing: 0.02em; }
+.match-result { width: 38px; font-family: 'Roboto', sans-serif; font-weight: 800; font-size: 13px; flex-shrink: 0; letter-spacing: 0.02em; }
 .champ-wrap { position: relative; flex-shrink: 0; }
 .champ-icon { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border2); flex-shrink: 0; }
 .champ-icon img { width: 40px; height: 40px; display: block; object-fit: cover; transform: scale(1.12); }
@@ -328,7 +328,7 @@ canvas { display: block; width: 100%; }
 .keystone-icon { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; background: var(--bg1); border: 1px solid var(--border2); }
 .keystone-icon img { width: 30px; height: 30px; display: block; }
 .match-info { flex: 1; min-width: 100px; }
-.match-champ { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+.match-champ { font-family: 'Roboto', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
 .match-kda { font-size: 12px; color: var(--text2); margin-top: 3px; }
 .match-stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 3px; }
 .match-stat { font-size: 12px; color: var(--text3); }
@@ -338,7 +338,7 @@ canvas { display: block; width: 100%; }
   display: inline-block; font-size: 10px; font-weight: 700;
   padding: 2px 8px; border-radius: 20px; letter-spacing: 0.04em;
   background: var(--bg3); color: var(--text3); border: 1px solid var(--border2);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .queue-badge.aram { background: var(--blue-dim); color: var(--blue); border-color: #4f8ef744; }
 .queue-badge.mayhem { background: #6d4ef720; color: #a78bfa; border-color: #a78bfa44; }
@@ -346,7 +346,7 @@ canvas { display: block; width: 100%; }
 
 /* Items */
 .match-items { display: flex; align-items: center; gap: 4px; padding: 0 16px 12px 16px; flex-wrap: wrap; }
-.items-label { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px; font-family: 'DM Sans', sans-serif; }
+.items-label { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px; font-family: 'Roboto', sans-serif; }
 .item-slot { width: 30px; height: 30px; border-radius: 6px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); flex-shrink: 0; }
 .item-slot img { width: 30px; height: 30px; display: block; }
 .item-slot.empty { opacity: 0.12; }
@@ -360,7 +360,7 @@ th {
   text-align: left; font-size: 10px; font-weight: 700; color: var(--text3);
   padding: 8px 12px; border-bottom: 1px solid var(--border);
   text-transform: uppercase; letter-spacing: 0.08em;
-  cursor: pointer; user-select: none; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; user-select: none; font-family: 'Roboto', sans-serif;
   transition: color 0.15s;
 }
 th:hover { color: var(--accent); }
@@ -379,7 +379,7 @@ tr:last-child td { border-bottom: none; }
 .match-expand-btn {
   width: 100%; padding: 6px; background: none; border: none;
   border-top: 1px solid var(--border); color: var(--text3);
-  font-size: 11px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;
   letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
   transition: background 0.15s, color 0.15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -394,7 +394,7 @@ tr:last-child td { border-bottom: none; }
 .scoreboard-team { padding: 10px 0; }
 .scoreboard-team:first-child { border-right: 1px solid var(--border); }
 .team-header {
-  font-size: 10px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+  font-size: 10px; font-weight: 700; font-family: 'Roboto', sans-serif;
   text-transform: uppercase; letter-spacing: 0.1em;
   padding: 4px 14px 8px; color: var(--text3);
   display: flex; gap: 8px; align-items: center;
@@ -407,7 +407,7 @@ tr:last-child td { border-bottom: none; }
   gap: 6px; align-items: center;
   padding: 0 14px 4px; font-size: 9px; font-weight: 700;
   color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .sb-player-row {
   display: grid;
@@ -1202,7 +1202,7 @@ function renderChampTable(matches) {
 <!-- Release Notes -->
 <div style="max-width:960px;margin:3rem auto 1rem auto;border-top:1px solid var(--border);padding-top:2rem;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;cursor:pointer;" id="rn-toggle">
-    <span style="font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'Syne',sans-serif;">Release Notes</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'Roboto',sans-serif;">Release Notes</span>
     <span style="font-size:12px;color:#4a5568;" id="rn-chevron">▼ Show</span>
   </div>
   <div id="rn-body" style="display:none;">
@@ -1213,7 +1213,7 @@ function renderChampTable(matches) {
           <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.7</span>
           <span style="font-size:12px;color:var(--text3);">Latest</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif">Shadow Isles Theme & Banner</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Shadow Isles Theme & Banner</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
           <li>Full Shadow Isles colour scheme - deep blacks, toxic greens, eerie teals and purples</li>
           <li>Added image banner at the top of the page with mist/glow fallback background</li>
@@ -1228,14 +1228,14 @@ function renderChampTable(matches) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.6</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif">Expandable Match Scoreboard</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Expandable Match Scoreboard</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
           <li>Each match card now has a &quot;Full Scoreboard&quot; expand button</li>
           <li>Clicking it reveals all 10 players split into Blue and Red teams</li>
           <li>Shows champion icon, summoner spells, summoner name, K/D/A, gold, CS, and item build per player</li>
           <li>Your row is highlighted in gold with a star prefix</li>
           <li>Victory/Defeat label per team with colour coding</li>
-          <li>Premium dark UI redesign - new fonts (Syne + DM Sans), gold gradient title, polished cards and tab styles</li>
+          <li>Premium dark UI redesign - new fonts, gold gradient title, polished cards and tab styles</li>
         </ul>
       </div>
 
@@ -1244,7 +1244,7 @@ function renderChampTable(matches) {
           <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.5</span>
           <span style="font-size:12px;color:#6b7280;">Latest</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Rate Limit Fix</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Rate Limit Fix</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Fixed "Rate Limit Exceeded" errors on search</li>
           <li>Match fetching now uses batches of 5 with a 1.2s pause between batches</li>
@@ -1257,7 +1257,7 @@ function renderChampTable(matches) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#60a5fa;background:#60a5fa22;border:1px solid #60a5fa44;padding:2px 9px;border-radius:5px;">v1.3</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Stats Overhaul & Quality of Life</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Stats Overhaul & Quality of Life</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Summoner spell and keystone rune icons per match</li>
           <li>Damage dealt, gold earned, and vision score on match cards</li>
@@ -1277,7 +1277,7 @@ function renderChampTable(matches) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#a78bfa;background:#a78bfa22;border:1px solid #a78bfa44;padding:2px 9px;border-radius:5px;">v1.2</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Champion Icons & Item Builds</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Champion Icons & Item Builds</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Champion portrait icons in match history</li>
           <li>Item build row with icons from Data Dragon</li>
@@ -1291,7 +1291,7 @@ function renderChampTable(matches) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#34d399;background:#34d39922;border:1px solid #34d39944;padding:2px 9px;border-radius:5px;">v1.1</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Multi-Queue Support & Bug Fixes</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Multi-Queue Support & Bug Fixes</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Expanded match fetch to all queue types</li>
           <li>Fixed results panel not appearing after successful search</li>
@@ -1305,7 +1305,7 @@ function renderChampTable(matches) {
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#fb923c;background:#fb923c22;border:1px solid #fb923c44;padding:2px 9px;border-radius:5px;">v1.0</span>
         </div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif;">Initial Release</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Initial Release</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
           <li>Local Node.js proxy server to bypass Riot API CORS restrictions</li>
           <li>Search by summoner name, tag, and region</li>
