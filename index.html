@@ -253,19 +253,6 @@ select option { background: var(--bg2); }
 .highlight-card .hl-champ { font-family: 'Roboto', sans-serif; font-size: 17px; font-weight: 700; }
 .highlight-card .hl-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
 
-/* LP tracker */
-.lp-section {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem;
-}
-.lp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.lp-title { font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
-.lp-input-row { display: flex; gap: 8px; }
-.lp-input-row input { flex: 1; font-size: 13px; padding: 8px 12px; }
-.lp-entries { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 150px; overflow-y: auto; }
-.lp-entry { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 10px; background: var(--bg1); border-radius: 6px; border: 1px solid var(--border); }
-.lp-entry .lp-delta.pos { color: var(--green); font-weight: 600; }
-.lp-entry .lp-delta.neg { color: var(--red); font-weight: 600; }
 
 /* Streak banner */
 .streak-banner {
@@ -498,20 +485,6 @@ tr:last-child td { border-bottom: none; }
 
     <div class="highlights" id="highlights"></div>
 
-    <!-- LP Tracker -->
-    <div class="lp-section">
-      <div class="lp-header">
-        <span class="lp-title">LP Tracker</span>
-        <button class="btn-sm" id="lp-clear-btn">Clear</button>
-      </div>
-      <div class="lp-input-row">
-        <input type="number" id="lp-input" placeholder="Enter current LP (e.g. 67)" />
-        <button class="btn-sm" id="lp-add-btn">Log LP</button>
-      </div>
-      <div class="lp-entries" id="lp-entries"></div>
-      <canvas id="lp-chart" height="80"></canvas>
-    </div>
-
     <!-- Trend Charts -->
     <div class="chart-section">
       <div class="chart-title">KDA trend (last 20 games)</div>
@@ -546,7 +519,6 @@ var ALL_MATCHES = [];
 var ACTIVE_QUEUE_FILTER = 'All';
 var ACTIVE_CHAMP_FILTER = 'All';
 var AUTO_REFRESH_TIMER = null;
-var LP_DATA = JSON.parse(localStorage.getItem('lol_lp_data') || '[]');
 var LAST_SEARCH = JSON.parse(localStorage.getItem('lol_last_search') || 'null');
 
 // Restore last search
@@ -558,7 +530,6 @@ window.addEventListener('load', function() {
     var rs = document.getElementById('region-select');
     if (LAST_SEARCH.region) rs.value = LAST_SEARCH.region;
   }
-  renderLPLog();
 });
 
 document.getElementById('search-btn').addEventListener('click', fetchStats);
@@ -567,8 +538,6 @@ document.getElementById('api-key-input').addEventListener('keydown', function(e)
 document.getElementById('tab-btn-matches').addEventListener('click', function() { switchTab('matches'); });
 document.getElementById('tab-btn-champions').addEventListener('click', function() { switchTab('champions'); });
 document.getElementById('export-btn').addEventListener('click', exportCSV);
-document.getElementById('lp-add-btn').addEventListener('click', logLP);
-document.getElementById('lp-clear-btn').addEventListener('click', function() { LP_DATA = []; localStorage.setItem('lol_lp_data', '[]'); renderLPLog(); drawLPChart(); });
 document.getElementById('auto-refresh-btn').addEventListener('click', toggleAutoRefresh);
 
 function switchTab(tab) {
@@ -590,45 +559,6 @@ function toggleAutoRefresh() {
     btn.textContent = 'Auto-refresh: On';
     btn.classList.add('active');
   }
-}
-
-function logLP() {
-  var val = parseInt(document.getElementById('lp-input').value);
-  if (isNaN(val) || val < 0 || val > 100) return;
-  var prev = LP_DATA.length > 0 ? LP_DATA[LP_DATA.length - 1].lp : null;
-  LP_DATA.push({ lp: val, ts: Date.now(), delta: prev !== null ? val - prev : null });
-  localStorage.setItem('lol_lp_data', JSON.stringify(LP_DATA));
-  document.getElementById('lp-input').value = '';
-  renderLPLog();
-  drawLPChart();
-}
-
-function renderLPLog() {
-  var el = document.getElementById('lp-entries');
-  if (!LP_DATA.length) { el.innerHTML = '<div style="font-size:12px;color:#4a5568;padding:4px 0;">No LP logged yet. Enter your current LP after each game.</div>'; return; }
-  var html = '';
-  var recent = LP_DATA.slice(-10).reverse();
-  recent.forEach(function(e) {
-    var deltaStr = '';
-    if (e.delta !== null) {
-      var cls = e.delta >= 0 ? 'pos' : 'neg';
-      deltaStr = '<span class="lp-delta ' + cls + '">' + (e.delta >= 0 ? '+' : '') + e.delta + ' LP</span>';
-    }
-    var date = new Date(e.ts).toLocaleString();
-    html += '<div class="lp-entry"><span>' + date + ' — <b>' + e.lp + ' LP</b></span>' + deltaStr + '</div>';
-  });
-  el.innerHTML = html;
-}
-
-function drawLPChart() {
-  var canvas = document.getElementById('lp-chart');
-  var ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth || 600;
-  canvas.height = 80;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  if (LP_DATA.length < 2) return;
-  var vals = LP_DATA.map(function(e) { return e.lp; });
-  drawLineChart(ctx, canvas.width, canvas.height, vals, '#c89b3c', 'LP');
 }
 
 function drawLineChart(ctx, w, h, values, color, label) {
@@ -846,8 +776,6 @@ function render(data) {
   renderFiltered();
   drawKDAChart(ALL_MATCHES);
   drawWRChart(ALL_MATCHES);
-  drawLPChart();
-  renderLPLog();
 
   document.getElementById('export-btn').style.display = '';
   document.getElementById('results').style.display = 'block';
