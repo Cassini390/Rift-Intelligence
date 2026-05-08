@@ -12,7 +12,6 @@ A locally hosted League of Legends stat tracker that pulls live data from the Ri
 - Champion breakdown tab with aggregated win rate, KDA, CS, damage, and gold per champion
 - Summary stat cards: overall win rate, average KDA, CS, damage, gold, and vision score
 - KDA trend chart and rolling 5-game win rate chart
-- LP tracker to log your LP after each game, with a persistent chart
 - Win/loss streak detection
 - Best, worst, and most played champion highlights
 - Filter matches by queue type or champion
