@@ -6,7 +6,7 @@
 - All accent colours updated from gold to Shadow Isles green and teal
 - Subtitle added below the title in the banner area
 - Body background updated with subtle green and purple radial glows
-- Change font family to 'Roboto'
+- LP Tracker removed because ranked is for sweats
 
 ---
 
@@ -43,7 +43,6 @@
 - Added damage dealt, gold earned, and vision score to every match card
 - KDA trend line chart across last 20 games
 - Rolling 5-game win rate percentage chart
-- LP tracker - manually log LP after each game, persists via localStorage with a chart
 - Best / worst / most played champion highlight cards above the match list
 - Win/loss streak banner shown when on a streak of 2 or more
 - Queue type filter buttons (All, Ranked Solo, ARAM, Mayhem, etc.)
