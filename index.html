@@ -9,22 +9,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:        #07090f;
-  --bg1:       #0d1017;
-  --bg2:       #121620;
-  --bg3:       #181d2a;
-  --border:    #1f2736;
-  --border2:   #29334a;
-  --gold:      #c9973a;
-  --gold2:     #e8b84b;
-  --gold-glow: #c9973a30;
-  --blue:      #4f8ef7;
-  --blue-dim:  #4f8ef720;
-  --green:     #2ec99a;
-  --red:       #e85555;
-  --text:      #dce4f0;
-  --text2:     #8896b0;
-  --text3:     #4a566e;
+  --bg:        #050a08;
+  --bg1:       #080f0c;
+  --bg2:       #0c1510;
+  --bg3:       #111c16;
+  --border:    #162018;
+  --border2:   #1f3028;
+  --accent:    #4dff91;
+  --accent2:   #00cc6a;
+  --accent-glow: #4dff9125;
+  --teal:      #1de8b5;
+  --teal-dim:  #1de8b518;
+  --purple:    #8b5cf6;
+  --purple-dim:#8b5cf620;
+  --green:     #4dff91;
+  --red:       #ff4d6a;
+  --text:      #c8ddd0;
+  --text2:     #6b9980;
+  --text3:     #3a5c48;
   --radius:    12px;
   --radius-sm: 8px;
 }
@@ -35,27 +37,67 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding: 2.5rem 1.25rem 4rem;
+  padding: 0 0 4rem;
   background-image:
-    radial-gradient(ellipse 80% 40% at 50% -10%, #c9973a12 0%, transparent 70%),
-    radial-gradient(ellipse 50% 30% at 80% 60%, #4f8ef708 0%, transparent 60%);
+    radial-gradient(ellipse 100% 50% at 50% 0%, #4dff9108 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, #8b5cf608 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 40%, #1de8b506 0%, transparent 50%);
 }
 
-.container { max-width: 960px; margin: 0 auto; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
 
-/* Header */
-.page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; }
+/* Banner */
+.site-banner {
+  width: 100%; height: 220px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #050a08 0%, #0a1f14 40%, #061a10 70%, #050a08 100%);
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border2);
+}
+.site-banner img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  opacity: 0.55; display: block;
+}
+.site-banner-placeholder {
+  width: 100%; height: 100%; position: absolute; inset: 0;
+  background:
+    linear-gradient(135deg, #050a08 0%, #081a10 25%, #0c2418 50%, #071a10 75%, #050a08 100%);
+}
+.site-banner img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  opacity: 0.6; display: block;
+}
+.banner-mist {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 100%, #4dff9115 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 60%, #8b5cf612 0%, transparent 60%),
+    radial-gradient(ellipse 30% 50% at 80% 40%, #1de8b510 0%, transparent 50%);
+}
+.banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, var(--bg) 100%);
+}
+.banner-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  max-width: 960px; margin: 0 auto;
+}
+.page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 0; }
 .page-header h1 {
   font-family: 'Syne', sans-serif;
-  font-size: 28px; font-weight: 800;
+  font-size: 32px; font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--gold2) 0%, var(--gold) 60%, #a07020 100%);
+  background: linear-gradient(135deg, #7fffc4 0%, var(--accent) 50%, var(--teal) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px #4dff9140);
 }
 .page-header .version-tag {
   font-size: 11px; font-weight: 600; color: var(--text3);
   border: 1px solid var(--border2); border-radius: 20px; padding: 2px 10px;
   letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--bg2);
 }
 
 /* Search box */
@@ -72,8 +114,8 @@ body {
 .search-box::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold2) 60%, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, var(--teal) 30%, var(--accent) 60%, transparent);
+  opacity: 0.4;
 }
 .row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .row:last-of-type { margin-bottom: 0; }
@@ -90,8 +132,8 @@ input, select {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 input:focus, select:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 input::placeholder { color: var(--text3); }
 select option { background: var(--bg2); }
@@ -103,13 +145,13 @@ select option { background: var(--bg2); }
 .btn {
   padding: 10px 22px; font-size: 14px; font-weight: 600;
   font-family: 'Syne', sans-serif; letter-spacing: 0.03em;
-  background: linear-gradient(135deg, var(--gold2), var(--gold));
-  color: #0a0800; border: none; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #4dff91, #00cc6a);
+  color: #030f07; border: none; border-radius: var(--radius-sm);
   cursor: pointer; white-space: nowrap;
-  box-shadow: 0 2px 12px var(--gold-glow);
+  box-shadow: 0 2px 16px #4dff9130;
   transition: opacity 0.15s, box-shadow 0.15s, transform 0.1s;
 }
-.btn:hover { opacity: 0.9; box-shadow: 0 4px 20px #c9973a50; transform: translateY(-1px); }
+.btn:hover { opacity: 0.9; box-shadow: 0 4px 24px #4dff9145; transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 
 .btn-sm {
@@ -120,7 +162,7 @@ select option { background: var(--bg2); }
   cursor: pointer; transition: all 0.15s; text-transform: uppercase;
 }
 .btn-sm:hover { background: var(--border2); color: var(--text); }
-.btn-sm.active { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+.btn-sm.active { background: var(--accent-glow); color: var(--accent); border-color: var(--accent); }
 
 .error { font-size: 13px; color: var(--red); min-height: 18px; margin-top: 8px; }
 .help { font-size: 12px; color: var(--text3); margin-top: 8px; }
@@ -147,16 +189,16 @@ select option { background: var(--bg2); }
 .profile-header::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold2) 60%, transparent);
-  opacity: 0.4;
+  background: linear-gradient(90deg, transparent, var(--teal) 30%, var(--accent) 60%, transparent);
+  opacity: 0.3;
 }
 .avatar {
   width: 62px; height: 62px; border-radius: 50%;
   background: var(--bg3); display: flex; align-items: center;
   justify-content: center; font-family: 'Syne', sans-serif;
-  font-size: 24px; font-weight: 800; color: var(--gold);
-  flex-shrink: 0; border: 2px solid var(--gold);
-  box-shadow: 0 0 16px var(--gold-glow); overflow: hidden;
+  font-size: 24px; font-weight: 800; color: var(--accent);
+  flex-shrink: 0; border: 2px solid var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow); overflow: hidden;
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .profile-name {
@@ -173,7 +215,7 @@ select option { background: var(--bg2); }
 .rank-CHALLENGER,.rank-GRANDMASTER,.rank-MASTER { background: #2a180022; color: #f5a623; border-color: #f5a62344; }
 .rank-DIAMOND,.rank-EMERALD { background: var(--blue-dim); color: var(--blue); border-color: #4f8ef744; }
 .rank-PLATINUM { background: #00201a22; color: var(--green); border-color: #2ec99a44; }
-.rank-GOLD { background: var(--gold-glow); color: var(--gold); border-color: var(--gold); }
+.rank-GOLD { background: #b8860b22; color: #ffd700; border-color: #ffd70044; }
 .rank-SILVER { background: #1a1e2a; color: #8896b0; border-color: #4a566e; }
 .rank-BRONZE,.rank-IRON { background: #1a100022; color: #fb923c; border-color: #fb923c44; }
 .rank-default { background: var(--bg3); color: var(--text3); border-color: var(--border2); }
@@ -189,7 +231,7 @@ select option { background: var(--bg2); }
 }
 .stat-card::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+  background: linear-gradient(90deg, transparent, var(--teal-dim), transparent);
 }
 .stat-card:hover { border-color: var(--border2); box-shadow: 0 4px 20px #00000030; }
 .stat-card .lbl {
@@ -261,7 +303,7 @@ canvas { display: block; width: 100%; }
   border-radius: 0;
 }
 .tab:hover { color: var(--text2); }
-.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* Match cards */
 .match-list { display: flex; flex-direction: column; gap: 8px; }
@@ -321,7 +363,7 @@ th {
   cursor: pointer; user-select: none; font-family: 'DM Sans', sans-serif;
   transition: color 0.15s;
 }
-th:hover { color: var(--gold); }
+th:hover { color: var(--accent); }
 td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
 tr:hover td { background: var(--bg3); }
 tr:last-child td { border-bottom: none; }
@@ -330,7 +372,7 @@ tr:last-child td { border-bottom: none; }
 
 /* Loading */
 #loading { display: none; padding: 3rem; text-align: center; color: var(--text2); font-size: 14px; }
-.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 10px; }
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 10px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Scoreboard expand */
@@ -375,14 +417,14 @@ tr:last-child td { border-bottom: none; }
   transition: background 0.1s;
 }
 .sb-player-row:hover { background: var(--bg3); }
-.sb-player-row.is-you { background: var(--gold-glow); }
-.sb-player-row.is-you:hover { background: #c9973a20; }
+.sb-player-row.is-you { background: var(--accent-glow); }
+.sb-player-row.is-you:hover { background: #4dff9118; }
 .sb-champ-icon { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; border: 1px solid var(--border2); flex-shrink: 0; }
 .sb-champ-icon img { width: 28px; height: 28px; display: block; object-fit: cover; transform: scale(1.1); }
 .sb-spell { width: 16px; height: 16px; border-radius: 3px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); }
 .sb-spell img { width: 16px; height: 16px; display: block; }
 .sb-name { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sb-name.is-you { color: var(--gold); font-weight: 700; }
+.sb-name.is-you { color: var(--accent); font-weight: 700; }
 .sb-kda { font-size: 12px; color: var(--text2); white-space: nowrap; }
 .sb-stat { font-size: 12px; color: var(--text2); white-space: nowrap; }
 .sb-items { display: flex; gap: 2px; flex-wrap: nowrap; }
@@ -392,8 +434,23 @@ tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
+<div class="site-banner" id="site-banner">
+  <!-- BANNER IMAGE: Replace the src below with your image URL or local file path -->
+  <!-- Recommended size: 1920 x 220px. Leave src empty to show the default mist background -->
+  <img id="site-banner-img" src="https://i.postimg.cc/pXp0RY0y/Banner.png" alt="Banner" onerror="this.style.display='none'" onload="document.getElementById('banner-placeholder-bg').style.display='none'" />
+  <div id="banner-placeholder-bg" class="site-banner-placeholder"></div>
+  <div class="banner-mist"></div>
+  <div class="banner-overlay"></div>
+  <div class="banner-content">
+    <div class="page-header"><h1>LoL Stat Tracker</h1><span class="version-tag">v1.7</span></div>
+    <div style="font-size:13px;color:var(--text2);margin-top:6px;">Shadow Isles Edition &nbsp;&middot;&nbsp; Powered by Riot Games API</div>
+  </div>
+</div>
+
 <div class="container">
-  <div class="page-header"><h1>LoL Stat Tracker</h1><span class="version-tag">v1.6</span></div>
+  <div style="font-size:11px;color:var(--text3);margin-bottom:1.5rem;margin-top:-0.5rem;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);display:inline-block;">
+    
+  </div>
 
   <div class="search-box">
     <div class="row">
@@ -616,7 +673,7 @@ function drawKDAChart(matches) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (matches.length < 2) return;
   var vals = matches.map(function(m) { return m.deaths > 0 ? parseFloat(((m.kills + m.assists) / m.deaths).toFixed(2)) : m.kills + m.assists; });
-  drawLineChart(ctx, canvas.width, canvas.height, vals, '#60a5fa', 'KDA');
+  drawLineChart(ctx, canvas.width, canvas.height, vals, '#1de8b5', 'KDA');
 }
 
 function drawWRChart(matches) {
@@ -631,7 +688,7 @@ function drawWRChart(matches) {
     var slice = matches.slice(i - 4, i + 1);
     vals.push(Math.round(slice.filter(function(m) { return m.win; }).length / 5 * 100));
   }
-  drawLineChart(ctx, canvas.width, canvas.height, vals, '#34d399', 'WR%');
+  drawLineChart(ctx, canvas.width, canvas.height, vals, '#4dff91', 'WR%');
 }
 
 function fetchStats() {
@@ -1153,8 +1210,23 @@ function renderChampTable(matches) {
 
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.6</span>
+          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.7</span>
           <span style="font-size:12px;color:var(--text3);">Latest</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif">Shadow Isles Theme & Banner</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
+          <li>Full Shadow Isles colour scheme - deep blacks, toxic greens, eerie teals and purples</li>
+          <li>Added image banner at the top of the page with mist/glow fallback background</li>
+          <li>Banner image is easily configurable - find the BANNER IMAGE comment in index.html and paste your image URL</li>
+          <li>Page title now uses an animated green gradient with a glow effect</li>
+          <li>All accent colours updated from gold to Shadow Isles green and teal</li>
+          <li>Subtitle added below the title: Shadow Isles Edition - Powered by Riot Games API</li>
+        </ul>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.6</span>
         </div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Syne',sans-serif">Expandable Match Scoreboard</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">

@@ -1,3 +1,14 @@
+## v1.7 - Shadow Isles Theme & Banner
+- Full Shadow Isles colour scheme - deep blacks, toxic greens, eerie teals and purples throughout
+- Added image banner at the top of the page with animated mist/glow fallback background
+- Banner image easily configurable - find the BANNER IMAGE comment in index.html and paste your URL
+- Page title uses a green gradient with a glow filter effect
+- All accent colours updated from gold to Shadow Isles green and teal
+- Subtitle added below the title in the banner area
+- Body background updated with subtle green and purple radial glows
+
+---
+
 ## v1.6 - Expandable Match Scoreboard
 - Each match card now has a collapsible 'Full Scoreboard' button
 - Clicking reveals all 10 players split into Blue and Red teams
