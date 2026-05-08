@@ -1,3 +1,13 @@
+## v1.8 - Scoreboard & Layout Improvements
+- Widened page container from 960px to 1200px for more space
+- Scoreboard teams now stack vertically instead of side by side, giving each player row full width
+- Scoreboard grid updated with dedicated columns for keystone rune, vision score, and trinket
+- Item icons in scoreboard increased from 18px to 24px for better readability
+- Trinket now shown in scoreboard alongside the 6 main item slots
+- LP tracker removed as it is not needed for casual play
+
+---
+
 ## v1.7 - Shadow Isles Theme & Banner
 - Full Shadow Isles colour scheme - deep blacks, toxic greens, eerie teals and purples throughout
 - Added image banner at the top of the page with animated mist/glow fallback background
@@ -6,7 +16,6 @@
 - All accent colours updated from gold to Shadow Isles green and teal
 - Subtitle added below the title in the banner area
 - Body background updated with subtle green and purple radial glows
-- LP Tracker removed because ranked is for sweats
 
 ---
 
@@ -43,6 +52,7 @@
 - Added damage dealt, gold earned, and vision score to every match card
 - KDA trend line chart across last 20 games
 - Rolling 5-game win rate percentage chart
+- LP tracker - manually log LP after each game, persists via localStorage with a chart
 - Best / worst / most played champion highlight cards above the match list
 - Win/loss streak banner shown when on a streak of 2 or more
 - Queue type filter buttons (All, Ranked Solo, ARAM, Mayhem, etc.)

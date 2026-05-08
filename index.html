@@ -26,7 +26,7 @@
   --red:       #ff4d6a;
   --text:      #c8ddd0;
   --text2:     #6b9980;
-  --text3:     #c8ddd0;
+  --text3:     #3a5c48;
   --radius:    12px;
   --radius-sm: 8px;
 }
@@ -44,7 +44,7 @@ body {
     radial-gradient(ellipse 40% 30% at 80% 40%, #1de8b506 0%, transparent 50%);
 }
 
-.container { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
 
 /* Banner */
 .site-banner {
@@ -81,7 +81,7 @@ body {
 .banner-content {
   position: absolute; bottom: 0; left: 0; right: 0;
   padding: 1.5rem 1.25rem 1.25rem;
-  max-width: 960px; margin: 0 auto;
+  max-width: 1200px; margin: 0 auto;
 }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 0; }
 .page-header h1 {
@@ -377,9 +377,9 @@ tr:last-child td { border-bottom: none; }
 
 .scoreboard { display: none; border-top: 1px solid var(--border); overflow: hidden; }
 .scoreboard.open { display: block; }
-.scoreboard-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.scoreboard-teams { display: flex; flex-direction: column; gap: 0; }
 .scoreboard-team { padding: 10px 0; }
-.scoreboard-team:first-child { border-right: 1px solid var(--border); }
+.scoreboard-team:first-child { border-right: none; border-bottom: 1px solid var(--border); }
 .team-header {
   font-size: 10px; font-weight: 700; font-family: 'Roboto', sans-serif;
   text-transform: uppercase; letter-spacing: 0.1em;
@@ -390,17 +390,17 @@ tr:last-child td { border-bottom: none; }
 .team-header.team-loss { color: var(--red); }
 .scoreboard-col-headers {
   display: grid;
-  grid-template-columns: 28px 16px 16px 80px 70px 60px 60px 40px;
-  gap: 6px; align-items: center;
-  padding: 0 14px 4px; font-size: 9px; font-weight: 700;
+  grid-template-columns: 32px 18px 18px 32px 140px 90px 80px 70px 50px 160px;
+  gap: 8px; align-items: center;
+  padding: 0 16px 6px; font-size: 9px; font-weight: 700;
   color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em;
   font-family: 'Roboto', sans-serif;
 }
 .sb-player-row {
   display: grid;
-  grid-template-columns: 28px 16px 16px 80px 70px 60px 60px 40px;
-  gap: 6px; align-items: center;
-  padding: 5px 14px; font-size: 12px;
+  grid-template-columns: 32px 18px 18px 32px 140px 90px 80px 70px 50px 160px;
+  gap: 8px; align-items: center;
+  padding: 6px 16px; font-size: 12px;
   transition: background 0.1s;
 }
 .sb-player-row:hover { background: var(--bg3); }
@@ -414,10 +414,12 @@ tr:last-child td { border-bottom: none; }
 .sb-name.is-you { color: var(--accent); font-weight: 700; }
 .sb-kda { font-size: 12px; color: var(--text2); white-space: nowrap; }
 .sb-stat { font-size: 12px; color: var(--text2); white-space: nowrap; }
-.sb-items { display: flex; gap: 2px; flex-wrap: nowrap; }
-.sb-item { width: 18px; height: 18px; border-radius: 3px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); flex-shrink: 0; }
-.sb-item img { width: 18px; height: 18px; display: block; }
+.sb-items { display: flex; gap: 3px; flex-wrap: nowrap; align-items: center; }
+.sb-item { width: 24px; height: 24px; border-radius: 4px; overflow: hidden; background: var(--bg1); border: 1px solid var(--border); flex-shrink: 0; }
+.sb-item img { width: 24px; height: 24px; display: block; }
 .sb-item.empty { opacity: 0.1; }
+.sb-trinket { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; background: var(--bg1); border: 1px solid var(--border2); flex-shrink: 0; margin-left: 3px; }
+.sb-trinket img { width: 22px; height: 22px; display: block; }
 </style>
 </head>
 <body>
@@ -986,7 +988,7 @@ function renderMatchList(matches) {
         // Column headers
         var colHdr = document.createElement('div');
         colHdr.className = 'scoreboard-col-headers';
-        colHdr.innerHTML = '<span></span><span></span><span></span><span>Summoner</span><span>K/D/A</span><span>Gold</span><span>CS</span><span>Items</span>';
+        colHdr.innerHTML = '<span></span><span></span><span></span><span></span><span>Summoner</span><span>K/D/A</span><span>Gold</span><span>CS</span><span>VS</span><span>Items</span>';
         teamDiv.appendChild(colHdr);
 
         team.players.forEach(function(pl) {
@@ -1020,6 +1022,21 @@ function renderMatchList(matches) {
           }
           row.appendChild(sp2);
 
+          // Keystone
+          var ksDiv = document.createElement('div');
+          ksDiv.className = 'sb-spell';
+          ksDiv.style.borderRadius = '50%';
+          ksDiv.style.width = '32px';
+          ksDiv.style.height = '32px';
+          if (pl.keystone) {
+            var ksImg = document.createElement('img');
+            ksImg.src = 'https://ddragon.leagueoflegends.com/cdn/img/' + pl.keystone.icon;
+            ksImg.width = 32; ksImg.height = 32;
+            ksImg.title = pl.keystone.name;
+            ksDiv.appendChild(ksImg);
+          }
+          row.appendChild(ksDiv);
+
           // Name
           var nameDiv = document.createElement('div');
           nameDiv.className = 'sb-name' + (pl.isYou ? ' is-you' : '');
@@ -1045,7 +1062,13 @@ function renderMatchList(matches) {
           csDiv.textContent = pl.cs;
           row.appendChild(csDiv);
 
-          // Items (6 slots)
+          // Vision score
+          var vsDiv = document.createElement('div');
+          vsDiv.className = 'sb-stat';
+          vsDiv.textContent = pl.visionScore || 0;
+          row.appendChild(vsDiv);
+
+          // Items (6 slots + trinket)
           var itemsDiv = document.createElement('div');
           itemsDiv.className = 'sb-items';
           var plItems = pl.items || [];
@@ -1055,12 +1078,22 @@ function renderMatchList(matches) {
               slot.className = 'sb-item';
               var iImg = document.createElement('img');
               iImg.src = 'https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/item/' + plItems[si] + '.png';
-              iImg.alt = ''; iImg.width = 18; iImg.height = 18;
+              iImg.alt = ''; iImg.width = 24; iImg.height = 24;
               slot.appendChild(iImg);
             } else {
               slot.className = 'sb-item empty';
             }
             itemsDiv.appendChild(slot);
+          }
+          // Trinket
+          if (pl.trinket) {
+            var tSlot = document.createElement('div');
+            tSlot.className = 'sb-trinket';
+            var tImg = document.createElement('img');
+            tImg.src = 'https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/item/' + pl.trinket + '.png';
+            tImg.alt = ''; tImg.width = 22; tImg.height = 22;
+            tSlot.appendChild(tImg);
+            itemsDiv.appendChild(tSlot);
           }
           row.appendChild(itemsDiv);
 
@@ -1128,7 +1161,7 @@ function renderChampTable(matches) {
 </script>
 
 <!-- Release Notes -->
-<div style="max-width:960px;margin:3rem auto 1rem auto;border-top:1px solid var(--border);padding-top:2rem;">
+<div style="max-width:1200px;margin:3rem auto 1rem auto;border-top:1px solid var(--border);padding-top:2rem;">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;cursor:pointer;" id="rn-toggle">
     <span style="font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'Roboto',sans-serif;">Release Notes</span>
     <span style="font-size:12px;color:#4a5568;" id="rn-chevron">▼ Show</span>
@@ -1138,8 +1171,23 @@ function renderChampTable(matches) {
 
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.7</span>
+          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.8</span>
           <span style="font-size:12px;color:var(--text3);">Latest</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Scoreboard & Layout Improvements</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
+          <li>Widened page container from 960px to 1200px for more space</li>
+          <li>Scoreboard teams now stack vertically instead of side by side, giving each player row full width</li>
+          <li>Scoreboard grid updated with dedicated columns for keystone rune, vision score, and trinket</li>
+          <li>Item icons in scoreboard increased from 18px to 24px for better readability</li>
+          <li>Trinket now shown in scoreboard alongside the 6 main item slots</li>
+          <li>LP tracker removed as it is not needed for casual play</li>
+        </ul>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.7</span>
         </div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Shadow Isles Theme & Banner</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
