@@ -1,3 +1,5 @@
+![enter image description here](https://i.postimg.cc/tCXcYqPw/Tracker-Page-example.png)
+
 # LoL Stat Tracker
 
 A locally hosted League of Legends stat tracker that pulls live data from the Riot Games API and displays your match history, champion stats, item builds, and full game scoreboards in a polished dark-themed web interface.
@@ -183,4 +185,4 @@ To stay within these limits, match data is fetched in batches of 5 with a short 
 
 ## Version
 
-Current version: **v1.6** - see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v1.7** - see [CHANGELOG.md](CHANGELOG.md) for full history.
