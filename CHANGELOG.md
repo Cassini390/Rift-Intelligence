@@ -1,5 +1,19 @@
 # LoL Stat Tracker - Changelog
 
+## v2.0 - Theme System & Visual Overhaul
+- Added 5 selectable themes: Shadow Isles, Demacia, Noxus, Freljord, and Ionia
+- Each theme applies a full colour scheme — backgrounds, accents, borders, glows, and button colours
+- Banner gradient and subtitle text ("Shadow Isles Edition", "Noxus Edition", etc.) update to match the selected theme
+- Theme selection is saved to localStorage and restored on next visit
+- All accent colours now use CSS variables throughout, making the theme system consistent
+- Win/Loss text replaced with pill badges (coloured background + border) for quicker at-a-glance reading
+- Champion icons added to Best/Worst/Most Played highlight cards
+- Removed KDA trend and Win/Loss trend charts
+- Removed "BUILD" label from item rows in match cards
+- Added subtle top-edge accent line to stat cards
+
+---
+
 ## v1.9 - Security & Configuration Improvements
 - API key moved from browser input to a `.env` file on the server — the key is never sent over the network or stored in the browser
 - Added `dotenv` support — server reads `RIOT_API_KEY` from `.env` on startup
