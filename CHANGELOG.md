@@ -1,3 +1,23 @@
+# LoL Stat Tracker - Changelog
+
+## v1.9 - Security & Configuration Improvements
+- API key moved from browser input to a `.env` file on the server — the key is never sent over the network or stored in the browser
+- Added `dotenv` support — server reads `RIOT_API_KEY` from `.env` on startup
+- Added `.env.example` as a safe-to-commit template showing required variables
+- Added `.gitignore` to prevent `.env` and `node_modules` from being accidentally committed
+- CORS restricted to localhost only — the server no longer accepts requests from other origins
+- Server now validates the region parameter and returns a clear error for unknown values
+- Server returns a descriptive error if `RIOT_API_KEY` is missing or still set to the placeholder value
+- Port is now configurable via `PORT` in `.env` (defaults to 3000)
+- Removed API key input field from the UI — key is managed server-side only
+- Search state saved to localStorage no longer includes the API key
+- Fixed missing `--blue` and `--blue-dim` CSS variables that caused ARAM queue badges and Diamond/Emerald rank badges to display incorrectly
+- Fixed stale "Latest" label showing on the v1.5 release notes entry
+- Added `engines` field to `package.json` documenting the Node.js v16+ requirement
+- Updated README with full setup instructions for the `.env` workflow and key renewal process
+
+---
+
 ## v1.8 - Scoreboard & Layout Improvements
 - Widened page container from 960px to 1200px for more space
 - Scoreboard teams now stack vertically instead of side by side, giving each player row full width
@@ -29,8 +49,6 @@
 
 ---
 
-# LoL Stat Tracker - Changelog
-
 ## v1.5 - Rate Limit Fix
 - Fixed "Rate Limit Exceeded" errors caused by parallel API calls
 - Match fetching now uses sequential batches of 5 with a 1.2s pause between each batch
@@ -58,7 +76,7 @@
 - Queue type filter buttons (All, Ranked Solo, ARAM, Mayhem, etc.)
 - Champion filter buttons - click any champion to show only those matches
 - All stats, charts, and champion table update live when filters change
-- Last search (name, tag, region, API key) saved to localStorage and restored on reload
+- Last search (name, tag, region) saved to localStorage and restored on reload
 - Auto-refresh toggle - re-fetches data every 5 minutes when enabled
 - Export match history to CSV button
 - Champion portraits added to the champion stats table
