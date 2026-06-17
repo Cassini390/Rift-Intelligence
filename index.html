@@ -22,6 +22,8 @@
   --teal-dim:  #1de8b518;
   --purple:    #8b5cf6;
   --purple-dim:#8b5cf620;
+  --blue:      #4f8ef7;
+  --blue-dim:  #4f8ef720;
   --green:     #4dff91;
   --red:       #ff4d6a;
   --text:      #c8ddd0;
@@ -440,7 +442,7 @@ tr:last-child td { border-bottom: none; }
 
 <div class="container">
   <div style="font-size:11px;color:var(--text3);margin-bottom:1.5rem;margin-top:-0.5rem;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);display:inline-block;">
-    
+    API key is loaded from <code style="color:var(--accent);background:var(--bg3);padding:1px 5px;border-radius:4px;">.env</code> on the server — edit that file and restart <code style="color:var(--accent);background:var(--bg3);padding:1px 5px;border-radius:4px;">node server.js</code> when your key expires.
   </div>
 
   <div class="search-box">
@@ -461,13 +463,12 @@ tr:last-child td { border-bottom: none; }
       </select>
     </div>
     <div class="row">
-      <input type="password" id="api-key-input" placeholder="Riot API key (RGAPI-...)" autocomplete="off" />
       <button class="btn" id="search-btn">Search</button>
       <button class="btn-sm" id="auto-refresh-btn" title="Auto-refresh every 5 minutes">Auto-refresh: Off</button>
       <button class="btn-sm" id="export-btn" style="display:none;">Export CSV</button>
     </div>
     <div class="error" id="error-msg"></div>
-    <div class="help">Get a free API key at <a href="https://developer.riotgames.com" target="_blank">developer.riotgames.com</a> (lasts 24h).</div>
+    <div class="help">Get a free API key at <a href="https://developer.riotgames.com" target="_blank">developer.riotgames.com</a> (expires every 24h — paste it into <code style="color:var(--accent)">.env</code> and restart the server).</div>
   </div>
 
   <div id="loading"><span class="spinner"></span>Loading match history...</div>
@@ -530,7 +531,6 @@ window.addEventListener('load', function() {
   if (LAST_SEARCH) {
     document.getElementById('summoner-input').value = LAST_SEARCH.name || '';
     document.getElementById('tag-input').value = LAST_SEARCH.tag || '';
-    document.getElementById('api-key-input').value = LAST_SEARCH.apiKey || '';
     var rs = document.getElementById('region-select');
     if (LAST_SEARCH.region) rs.value = LAST_SEARCH.region;
   }
@@ -538,7 +538,6 @@ window.addEventListener('load', function() {
 
 document.getElementById('search-btn').addEventListener('click', fetchStats);
 document.getElementById('summoner-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') fetchStats(); });
-document.getElementById('api-key-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') fetchStats(); });
 document.getElementById('tab-btn-matches').addEventListener('click', function() { switchTab('matches'); });
 document.getElementById('tab-btn-champions').addEventListener('click', function() { switchTab('champions'); });
 document.getElementById('export-btn').addEventListener('click', exportCSV);
@@ -629,21 +628,18 @@ function fetchStats() {
   var name = document.getElementById('summoner-input').value.trim();
   var tag = document.getElementById('tag-input').value.trim() || 'NA1';
   var region = document.getElementById('region-select').value;
-  var apiKey = document.getElementById('api-key-input').value.trim();
   var errEl = document.getElementById('error-msg');
   errEl.textContent = '';
   if (!name) { errEl.textContent = 'Please enter a summoner name.'; return; }
-  if (!apiKey) { errEl.textContent = 'Please enter your Riot API key.'; return; }
 
-  // Save last search
-  localStorage.setItem('lol_last_search', JSON.stringify({ name: name, tag: tag, region: region, apiKey: apiKey }));
+  localStorage.setItem('lol_last_search', JSON.stringify({ name: name, tag: tag, region: region }));
 
   document.getElementById('results').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('export-btn').style.display = 'none';
 
   var url = 'http://localhost:3000/api/summoner?name=' + encodeURIComponent(name) +
-    '&tag=' + encodeURIComponent(tag) + '&region=' + region + '&apiKey=' + encodeURIComponent(apiKey);
+    '&tag=' + encodeURIComponent(tag) + '&region=' + region;
 
   fetch(url)
     .then(function(res) { return res.json().then(function(d) { if (!res.ok) throw new Error(d.error || 'HTTP ' + res.status); return d; }); })
@@ -1217,7 +1213,6 @@ function renderChampTable(matches) {
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#c89b3c;background:#c89b3c22;border:1px solid #c89b3c44;padding:2px 9px;border-radius:5px;">v1.5</span>
-          <span style="font-size:12px;color:#6b7280;">Latest</span>
         </div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif;">Rate Limit Fix</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9;">
