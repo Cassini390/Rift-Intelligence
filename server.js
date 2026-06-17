@@ -1,11 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
-app.use(cors());
+const PORT = process.env.PORT || 3000;
+app.use(cors({ origin: /^http:\/\/localhost(:\d+)?$/ }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
@@ -26,12 +27,18 @@ async function riotFetch(url, apiKey) {
 }
 
 app.get('/api/summoner', async (req, res) => {
-  const { name, tag, region, apiKey } = req.query;
-  console.log(`\n-> Request: "${name}#${tag}" [${region}]`);
-  if (!name || !tag || !region || !apiKey)
-    return res.status(400).json({ error: 'Missing params' });
+  const apiKey = process.env.RIOT_API_KEY;
+  if (!apiKey || apiKey === 'RGAPI-your-key-here')
+    return res.status(500).json({ error: 'RIOT_API_KEY not configured — edit .env and restart the server.' });
 
-  const routing = ROUTING[region] || 'americas';
+  const { name, tag, region } = req.query;
+  console.log(`\n-> Request: "${name}#${tag}" [${region}]`);
+  if (!name || !tag || !region)
+    return res.status(400).json({ error: 'Missing params' });
+  if (!ROUTING[region])
+    return res.status(400).json({ error: `Unknown region "${region}"` });
+
+  const routing = ROUTING[region];
   try {
     const account = await riotFetch(
       `https://${routing}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`, apiKey);
