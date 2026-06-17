@@ -41,9 +41,9 @@ body {
   min-height: 100vh;
   padding: 0 0 4rem;
   background-image:
-    radial-gradient(ellipse 100% 50% at 50% 0%, #4dff9108 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 20% 80%, #8b5cf608 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 80% 40%, #1de8b506 0%, transparent 50%);
+    radial-gradient(ellipse 100% 50% at 50% 0%, var(--accent-glow) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, var(--purple-dim) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 40%, var(--teal-dim) 0%, transparent 50%);
 }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
@@ -72,9 +72,9 @@ body {
 .banner-mist {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 100%, #4dff9115 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 20% 60%, #8b5cf612 0%, transparent 60%),
-    radial-gradient(ellipse 30% 50% at 80% 40%, #1de8b510 0%, transparent 50%);
+    radial-gradient(ellipse 70% 60% at 50% 100%, var(--accent-glow) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 60%, var(--purple-dim) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 50% at 80% 40%, var(--teal-dim) 0%, transparent 50%);
 }
 .banner-overlay {
   position: absolute; inset: 0;
@@ -140,20 +140,19 @@ input:focus, select:focus {
 input::placeholder { color: var(--text3); }
 select option { background: var(--bg2); }
 #summoner-input { flex: 1; min-width: 130px; }
-#tag-input { width: 95px; }
+#tag-input { width: 110px; }
 #region-select { width: 82px; }
-#api-key-input { flex: 1; min-width: 160px; }
 
 .btn {
   padding: 10px 22px; font-size: 14px; font-weight: 600;
   font-family: 'Roboto', sans-serif; letter-spacing: 0.03em;
-  background: linear-gradient(135deg, #4dff91, #00cc6a);
-  color: #030f07; border: none; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #08080a; border: none; border-radius: var(--radius-sm);
   cursor: pointer; white-space: nowrap;
-  box-shadow: 0 2px 16px #4dff9130;
+  box-shadow: 0 2px 16px var(--accent-glow);
   transition: opacity 0.15s, box-shadow 0.15s, transform 0.1s;
 }
-.btn:hover { opacity: 0.9; box-shadow: 0 4px 24px #4dff9145; transform: translateY(-1px); }
+.btn:hover { opacity: 0.9; box-shadow: 0 4px 24px var(--accent-glow); transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 
 .btn-sm {
@@ -231,6 +230,11 @@ select option { background: var(--bg2); }
   transition: border-color 0.2s, box-shadow 0.2s;
   position: relative; overflow: hidden;
 }
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
 .stat-card::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--teal-dim), transparent);
@@ -306,7 +310,13 @@ canvas { display: block; width: 100%; }
 .match-card.win { border-left-color: var(--green); }
 .match-card.loss { border-left-color: var(--red); }
 .match-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; }
-.match-result { width: 38px; font-family: 'Roboto', sans-serif; font-weight: 800; font-size: 13px; flex-shrink: 0; letter-spacing: 0.02em; }
+.match-result {
+  min-width: 42px; font-family: 'Roboto', sans-serif; font-weight: 800; font-size: 12px;
+  flex-shrink: 0; letter-spacing: 0.04em; text-align: center; text-transform: uppercase;
+  padding: 4px 8px; border-radius: 6px; border: 1px solid transparent;
+}
+.match-card.win .match-result { background: #4dff9115; border-color: #4dff9135; }
+.match-card.loss .match-result { background: #ff4d6a15; border-color: #ff4d6a35; }
 .champ-wrap { position: relative; flex-shrink: 0; }
 .champ-icon { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border2); flex-shrink: 0; }
 .champ-icon img { width: 40px; height: 40px; display: block; object-fit: cover; transform: scale(1.12); }
@@ -358,6 +368,9 @@ tr:hover td { background: var(--bg3); }
 tr:last-child td { border-bottom: none; }
 .wr-bar-wrap { width: 60px; height: 4px; background: var(--bg3); border-radius: 2px; display: inline-block; vertical-align: middle; overflow: hidden; margin-right: 8px; }
 .wr-bar { height: 4px; border-radius: 2px; }
+
+/* Theme switcher */
+.theme-dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; vertical-align:middle; flex-shrink:0; }
 
 /* Loading */
 #loading { display: none; padding: 3rem; text-align: center; color: var(--text2); font-size: 14px; }
@@ -435,20 +448,30 @@ tr:last-child td { border-bottom: none; }
   <div class="banner-mist"></div>
   <div class="banner-overlay"></div>
   <div class="banner-content">
-    <div class="page-header"><h1>LoL Stat Tracker</h1><span class="version-tag">v1.8</span></div>
-    <div style="font-size:13px;color:var(--text2);margin-top:6px;">Shadow Isles Edition &nbsp;&middot;&nbsp; Powered by Riot Games API</div>
+    <div class="page-header"><h1>LoL Stat Tracker</h1><span class="version-tag">v2.0</span></div>
+    <div id="banner-subtitle" style="font-size:13px;color:var(--text2);margin-top:6px;">Shadow Isles Edition &nbsp;&middot;&nbsp; Powered by Riot Games API</div>
   </div>
 </div>
 
 <div class="container">
-  <div style="font-size:11px;color:var(--text3);margin-bottom:1.5rem;margin-top:-0.5rem;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);display:inline-block;">
-    API key is loaded from <code style="color:var(--accent);background:var(--bg3);padding:1px 5px;border-radius:4px;">.env</code> on the server — edit that file and restart <code style="color:var(--accent);background:var(--bg3);padding:1px 5px;border-radius:4px;">node server.js</code> when your key expires.
+  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;margin-top:-0.5rem;">
+    <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-right:4px;font-family:'Roboto',sans-serif;">Theme</span>
+    <button class="theme-btn btn-sm active" data-theme="shadow-isles"><span class="theme-dot" style="background:#4dff91;"></span>Shadow Isles</button>
+    <button class="theme-btn btn-sm" data-theme="demacia"><span class="theme-dot" style="background:#c8a96e;"></span>Demacia</button>
+    <button class="theme-btn btn-sm" data-theme="noxus"><span class="theme-dot" style="background:#e03535;"></span>Noxus</button>
+    <button class="theme-btn btn-sm" data-theme="freljord"><span class="theme-dot" style="background:#7ee8ff;"></span>Freljord</button>
+    <button class="theme-btn btn-sm" data-theme="ionia"><span class="theme-dot" style="background:#f09aca;"></span>Ionia</button>
+  </div>
+
+  <div style="font-size:12px;color:var(--text2);margin-bottom:1.75rem;margin-top:-0.5rem;padding:10px 16px;background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--teal);border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px;">
+    <span style="color:var(--teal);font-size:16px;flex-shrink:0;line-height:1;">ℹ</span>
+    API key is loaded from <code style="color:var(--accent);background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:11px;">.env</code> on the server — edit that file and restart <code style="color:var(--accent);background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:11px;">node server.js</code> when your key expires.
   </div>
 
   <div class="search-box">
     <div class="row">
       <input type="text" id="summoner-input" placeholder="Summoner name" autocomplete="off" />
-      <input type="text" id="tag-input" placeholder="Tag e.g. EUW" autocomplete="off" />
+      <input type="text" id="tag-input" placeholder="#EUW" autocomplete="off" />
       <select id="region-select">
         <option value="na1">NA</option>
         <option value="euw1">EUW</option>
@@ -490,16 +513,6 @@ tr:last-child td { border-bottom: none; }
 
     <div class="highlights" id="highlights"></div>
 
-    <!-- Trend Charts -->
-    <div class="chart-section">
-      <div class="chart-title">KDA trend (last 20 games)</div>
-      <div class="chart-wrap"><canvas id="kda-chart" height="80"></canvas></div>
-    </div>
-    <div class="chart-section" style="margin-bottom:1.5rem;">
-      <div class="chart-title">Win/Loss trend (rolling 5-game win rate %)</div>
-      <div class="chart-wrap"><canvas id="wr-chart" height="80"></canvas></div>
-    </div>
-
     <!-- Filters -->
     <div class="filters" id="filters">
       <span class="filters-label">Queue:</span>
@@ -526,8 +539,53 @@ var ACTIVE_CHAMP_FILTER = 'All';
 var AUTO_REFRESH_TIMER = null;
 var LAST_SEARCH = JSON.parse(localStorage.getItem('lol_last_search') || 'null');
 
+var THEMES = {
+  'shadow-isles': {
+    subtitle: 'Shadow Isles Edition  ·  Powered by Riot Games API',
+    banner: 'linear-gradient(135deg, #050a08 0%, #0a1f14 40%, #061a10 70%, #050a08 100%)',
+    vars: { '--bg':'#050a08','--bg1':'#080f0c','--bg2':'#0c1510','--bg3':'#111c16','--border':'#162018','--border2':'#1f3028','--accent':'#4dff91','--accent2':'#00cc6a','--accent-glow':'#4dff9125','--teal':'#1de8b5','--teal-dim':'#1de8b518','--purple':'#8b5cf6','--purple-dim':'#8b5cf620','--text':'#c8ddd0','--text2':'#6b9980','--text3':'#3a5c48' }
+  },
+  'demacia': {
+    subtitle: 'Demacia Edition  ·  Powered by Riot Games API',
+    banner: 'linear-gradient(135deg, #06080f 0%, #0e1830 40%, #080e1e 70%, #06080f 100%)',
+    vars: { '--bg':'#06080f','--bg1':'#080c17','--bg2':'#0c1220','--bg3':'#111828','--border':'#151e32','--border2':'#1e2e4a','--accent':'#c8a96e','--accent2':'#a88848','--accent-glow':'#c8a96e25','--teal':'#6a9fd8','--teal-dim':'#6a9fd818','--purple':'#c8a96e','--purple-dim':'#c8a96e20','--text':'#d0cfc8','--text2':'#8a8070','--text3':'#4a4838' }
+  },
+  'noxus': {
+    subtitle: 'Noxus Edition  ·  Powered by Riot Games API',
+    banner: 'linear-gradient(135deg, #0a0505 0%, #200808 40%, #160505 70%, #0a0505 100%)',
+    vars: { '--bg':'#0a0505','--bg1':'#0e0707','--bg2':'#140a0a','--bg3':'#1c0d0d','--border':'#220d0d','--border2':'#321212','--accent':'#e03535','--accent2':'#b52020','--accent-glow':'#e0353525','--teal':'#c43a3a','--teal-dim':'#c43a3a18','--purple':'#8b1a1a','--purple-dim':'#8b1a1a20','--text':'#ddd0d0','--text2':'#9a7070','--text3':'#5a3838' }
+  },
+  'freljord': {
+    subtitle: 'Freljord Edition  ·  Powered by Riot Games API',
+    banner: 'linear-gradient(135deg, #050810 0%, #0a1828 40%, #081020 70%, #050810 100%)',
+    vars: { '--bg':'#050810','--bg1':'#070c18','--bg2':'#0a1020','--bg3':'#0e1628','--border':'#121e35','--border2':'#1a2d50','--accent':'#7ee8ff','--accent2':'#50c8e8','--accent-glow':'#7ee8ff25','--teal':'#a0d0f0','--teal-dim':'#a0d0f018','--purple':'#6080e8','--purple-dim':'#6080e820','--text':'#c8d8e8','--text2':'#6080a0','--text3':'#304058' }
+  },
+  'ionia': {
+    subtitle: 'Ionia Edition  ·  Powered by Riot Games API',
+    banner: 'linear-gradient(135deg, #0d0810 0%, #1a0c28 40%, #120a1e 70%, #0d0810 100%)',
+    vars: { '--bg':'#0d0810','--bg1':'#120b16','--bg2':'#180d1e','--bg3':'#201028','--border':'#281535','--border2':'#38204c','--accent':'#f09aca','--accent2':'#d070a8','--accent-glow':'#f09aca25','--teal':'#c084fc','--teal-dim':'#c084fc18','--purple':'#e879f9','--purple-dim':'#e879f920','--text':'#e0ccd8','--text2':'#906880','--text3':'#503848' }
+  }
+};
+
+function applyTheme(key) {
+  var theme = THEMES[key];
+  if (!theme) return;
+  var root = document.documentElement;
+  Object.keys(theme.vars).forEach(function(k) { root.style.setProperty(k, theme.vars[k]); });
+  document.getElementById('site-banner').style.background = theme.banner;
+  document.getElementById('banner-subtitle').textContent = theme.subtitle;
+  document.querySelectorAll('.theme-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.theme === key); });
+  localStorage.setItem('lol_theme', key);
+}
+
 // Restore last search
 window.addEventListener('load', function() {
+  // Restore theme
+  applyTheme(localStorage.getItem('lol_theme') || 'shadow-isles');
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { applyTheme(btn.dataset.theme); });
+  });
+  // Restore last search
   if (LAST_SEARCH) {
     document.getElementById('summoner-input').value = LAST_SEARCH.name || '';
     document.getElementById('tag-input').value = LAST_SEARCH.tag || '';
@@ -774,8 +832,6 @@ function render(data) {
   });
 
   renderFiltered();
-  drawKDAChart(ALL_MATCHES);
-  drawWRChart(ALL_MATCHES);
 
   document.getElementById('export-btn').style.display = '';
   document.getElementById('results').style.display = 'block';
@@ -850,7 +906,15 @@ function renderHighlights(matches) {
 }
 
 function hc(label, champ, sub, color) {
-  return '<div class="highlight-card"><div class="hl-label">' + label + '</div><div class="hl-champ" style="color:' + color + '">' + champ + '</div><div class="hl-sub">' + sub + '</div></div>';
+  return '<div class="highlight-card">' +
+    '<div class="hl-label">' + label + '</div>' +
+    '<div style="display:flex;align-items:center;gap:10px;margin:6px 0 4px;">' +
+      '<img src="https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/champion/' + champ + '.png" ' +
+        'width="36" height="36" style="border-radius:50%;object-fit:cover;transform:scale(1.08);overflow:hidden;border:2px solid ' + color + '55;flex-shrink:0;" />' +
+      '<div class="hl-champ" style="color:' + color + '">' + champ + '</div>' +
+    '</div>' +
+    '<div class="hl-sub">' + sub + '</div>' +
+    '</div>';
 }
 
 function renderMatchList(matches) {
@@ -940,8 +1004,6 @@ function renderMatchList(matches) {
     // Items row
     var itemsRow = document.createElement('div');
     itemsRow.className = 'match-items';
-    var lbl = document.createElement('span'); lbl.className = 'items-label'; lbl.textContent = 'Build';
-    itemsRow.appendChild(lbl);
     var itemIds = m.items || [];
     for (var slot = 0; slot < 6; slot++) itemsRow.appendChild(makeItemSlot(itemIds[slot] || 0));
     if (m.trinket) {
@@ -1156,18 +1218,53 @@ function renderChampTable(matches) {
 </script>
 
 <!-- Release Notes -->
-<div style="max-width:1200px;margin:3rem auto 1rem auto;border-top:1px solid var(--border);padding-top:2rem;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;cursor:pointer;" id="rn-toggle">
-    <span style="font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'Roboto',sans-serif;">Release Notes</span>
-    <span style="font-size:12px;color:#4a5568;" id="rn-chevron">▼ Show</span>
+<div style="max-width:1200px;margin:3rem auto 1rem auto;">
+  <div id="rn-toggle" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:0;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="color:var(--teal);font-size:14px;">📋</span>
+      <span style="font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;font-family:'Roboto',sans-serif;">Release Notes</span>
+      <span style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent);padding:1px 8px;border-radius:20px;letter-spacing:0.05em;">v2.0 Latest</span>
+    </div>
+    <span style="font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.05em;" id="rn-chevron">▼ SHOW</span>
   </div>
-  <div id="rn-body" style="display:none;">
+  <div id="rn-body" style="display:none;background:var(--bg2);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:1.25rem;">
     <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v2.0</span>
+          <span style="font-size:12px;color:var(--text3);">Latest</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Theme System &amp; Visual Overhaul</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
+          <li>5 selectable themes: Shadow Isles, Demacia, Noxus, Freljord, and Ionia</li>
+          <li>Banner gradient and subtitle update to match the selected theme</li>
+          <li>Theme saved to localStorage and restored on next visit</li>
+          <li>Win/Loss text replaced with coloured pill badges</li>
+          <li>Champion icons added to Best/Worst/Most Played highlight cards</li>
+          <li>Removed KDA and Win/Loss trend charts</li>
+          <li>Visual polish: stat card accents, item row cleanup, info banner styling</li>
+        </ul>
+      </div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.9</span>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Security &amp; Configuration Improvements</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
+          <li>API key moved from browser input to <code style="color:var(--accent);background:var(--bg1);padding:0 4px;border-radius:3px;">.env</code> file — never sent over the network or stored in the browser</li>
+          <li>Added <code style="color:var(--accent);background:var(--bg1);padding:0 4px;border-radius:3px;">.gitignore</code> to prevent <code style="color:var(--accent);background:var(--bg1);padding:0 4px;border-radius:3px;">.env</code> and <code style="color:var(--accent);background:var(--bg1);padding:0 4px;border-radius:3px;">node_modules</code> being accidentally committed</li>
+          <li>CORS restricted to localhost only</li>
+          <li>Server validates region and returns clear errors for misconfiguration</li>
+          <li>Fixed missing CSS variables causing ARAM and Diamond/Emerald badges to display incorrectly</li>
+          <li>Visual polish: info banner, improved Release Notes section, tag input sizing</li>
+        </ul>
+      </div>
 
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:12px;font-weight:700;color:#4dff91;background:#4dff9122;border:1px solid #4dff9144;padding:2px 9px;border-radius:5px;">v1.8</span>
-          <span style="font-size:12px;color:var(--text3);">Latest</span>
         </div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'Roboto',sans-serif">Scoreboard & Layout Improvements</div>
         <ul style="font-size:13px;color:var(--text2);padding-left:1.2rem;line-height:1.9">
@@ -1297,7 +1394,7 @@ document.getElementById('rn-toggle').addEventListener('click', function() {
   var chevron = document.getElementById('rn-chevron');
   var open = body.style.display === 'none';
   body.style.display = open ? 'block' : 'none';
-  chevron.textContent = open ? '▲ Hide' : '▼ Show';
+  chevron.textContent = open ? '▲ HIDE' : '▼ SHOW';
 });
 </script>
 
