@@ -178,7 +178,7 @@ app.get('/api/summoner', async (req, res) => {
     console.log(`  Done: ${matches.length} matches for ${account.gameName}#${account.tagLine}`);
     if (matches[0]) console.log(`  Sample items:`, matches[0].items, `trinket:`, matches[0].trinket);
 
-    res.json({ gameName: account.gameName, tagLine: account.tagLine, summonerLevel: summoner.summonerLevel, rankInfo, rankTier, rankedStats, matches, ddVersion });
+    res.json({ gameName: account.gameName, tagLine: account.tagLine, summonerLevel: summoner.summonerLevel, profileIconId: summoner.profileIconId, rankInfo, rankTier, rankedStats, matches, ddVersion });
   } catch (e) {
     console.log('  Error:', e.message);
     res.status(e.status || 500).json({ error: e.message || 'Server error' });

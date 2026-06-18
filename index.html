@@ -357,14 +357,15 @@ tr:last-child td{border-bottom:none;}
 .match-expand-btn.open .chevron{transform:rotate(180deg);}
 .scoreboard{display:none;border-top:1px solid var(--border);overflow:hidden;}
 .scoreboard.open{display:block;}
-.scoreboard-teams{display:flex;flex-direction:column;gap:0;}
+.scoreboard-teams{display:grid;grid-template-columns:1fr 1fr;}
 .scoreboard-team{padding:10px 0;}
-.scoreboard-team:first-child{border-right:none;border-bottom:1px solid var(--border);}
+.scoreboard-team:first-child{border-right:1px solid var(--border);}
 .team-header{font-size:10px;font-weight:700;font-family:var(--font-body);text-transform:uppercase;letter-spacing:0.1em;padding:4px 14px 8px;color:var(--text3);display:flex;gap:8px;align-items:center;}
 .team-header.team-win{color:var(--green);}
 .team-header.team-loss{color:var(--red);}
-.scoreboard-col-headers{display:grid;grid-template-columns:32px 18px 18px 32px 140px 90px 80px 70px 50px 160px;gap:8px;align-items:center;padding:0 16px 6px;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--font-body);}
-.sb-player-row{display:grid;grid-template-columns:32px 18px 18px 32px 140px 90px 80px 70px 50px 160px;gap:8px;align-items:center;padding:6px 16px;font-size:12px;transition:background 0.1s;}
+.scoreboard-col-headers{display:grid;grid-template-columns:28px 18px 18px 28px minmax(0,1fr) 80px 40px minmax(0,148px);gap:6px;align-items:center;padding:0 14px 6px;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--font-body);}
+.sb-player-row{display:grid;grid-template-columns:28px 18px 18px 28px minmax(0,1fr) 80px 40px minmax(0,148px);gap:6px;align-items:center;padding:6px 14px;font-size:12px;transition:background 0.1s;}
+@media(max-width:800px){.scoreboard-teams{grid-template-columns:1fr;}.scoreboard-team:first-child{border-right:none;border-bottom:1px solid var(--border);}}
 .sb-player-row:hover{background:var(--bg3);}
 .sb-player-row.is-you{background:var(--accent-glow);}
 .sb-player-row.is-you:hover{background:#4dff9118;}
@@ -426,7 +427,7 @@ tr:last-child td{border-bottom:none;}
   <div class="nav-inner container">
     <div class="nav-brand">
       <span class="nav-title">LoL Stat Tracker</span>
-      <span class="version-tag">v2.1</span>
+      <span class="version-tag">v2.2</span>
       <span id="banner-subtitle" class="nav-sub">Shadow Isles Edition &nbsp;&middot;&nbsp; Powered by Riot Games API</span>
     </div>
     <div class="theme-switcher">
@@ -761,7 +762,16 @@ function render(data) {
   var rankTier = data.rankTier || '';
   var rankedStats = data.rankedStats || {};
 
-  document.getElementById('profile-icon').textContent = (gameName || '?')[0].toUpperCase();
+  var iconEl = document.getElementById('profile-icon');
+  if (data.profileIconId) {
+    iconEl.innerHTML = '';
+    var iconImg = document.createElement('img');
+    iconImg.src = 'https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/profileicon/' + data.profileIconId + '.png';
+    iconImg.alt = gameName;
+    iconEl.appendChild(iconImg);
+  } else {
+    iconEl.textContent = (gameName || '?')[0].toUpperCase();
+  }
   document.getElementById('profile-name').textContent = gameName + ' #' + tagLine;
   document.getElementById('profile-sub').textContent = 'Level ' + data.summonerLevel;
 
@@ -1029,7 +1039,7 @@ function renderMatchList(matches) {
 
         var colHdr = document.createElement('div');
         colHdr.className = 'scoreboard-col-headers';
-        colHdr.innerHTML = '<span></span><span></span><span></span><span></span><span>Summoner</span><span>K/D/A</span><span>Gold</span><span>CS</span><span>VS</span><span>Items</span>';
+        colHdr.innerHTML = '<span></span><span></span><span></span><span></span><span>Summoner</span><span>K/D/A</span><span>CS</span><span>Items</span>';
         teamDiv.appendChild(colHdr);
 
         team.players.forEach(function(pl) {
@@ -1082,20 +1092,10 @@ function renderMatchList(matches) {
           kdaDiv.textContent = pl.kills + '/' + pl.deaths + '/' + pl.assists;
           row.appendChild(kdaDiv);
 
-          var goldDiv = document.createElement('div');
-          goldDiv.className = 'sb-stat';
-          goldDiv.textContent = pl.goldEarned ? (pl.goldEarned / 1000).toFixed(1) + 'k' : '-';
-          row.appendChild(goldDiv);
-
           var csDiv = document.createElement('div');
           csDiv.className = 'sb-stat';
           csDiv.textContent = pl.cs;
           row.appendChild(csDiv);
-
-          var vsDiv = document.createElement('div');
-          vsDiv.className = 'sb-stat';
-          vsDiv.textContent = pl.visionScore || 0;
-          row.appendChild(vsDiv);
 
           var itemsDiv = document.createElement('div');
           itemsDiv.className = 'sb-items';
@@ -1112,15 +1112,6 @@ function renderMatchList(matches) {
               islot.className = 'sb-item empty';
             }
             itemsDiv.appendChild(islot);
-          }
-          if (pl.trinket) {
-            var tSlot = document.createElement('div');
-            tSlot.className = 'sb-trinket';
-            var tImg = document.createElement('img');
-            tImg.src = 'https://ddragon.leagueoflegends.com/cdn/' + DD_VERSION + '/img/item/' + pl.trinket + '.png';
-            tImg.alt = ''; tImg.width = 22; tImg.height = 22;
-            tSlot.appendChild(tImg);
-            itemsDiv.appendChild(tSlot);
           }
           row.appendChild(itemsDiv);
 
@@ -1192,7 +1183,7 @@ function renderChampTable(matches) {
     <div class="rn-header-left">
       <span class="rn-icon">📋</span>
       <span class="rn-title">Release Notes</span>
-      <span class="rn-latest-badge">v2.1 Latest</span>
+      <span class="rn-latest-badge">v2.2 Latest</span>
     </div>
     <span class="rn-chevron" id="rn-chevron">▼ SHOW</span>
   </div>

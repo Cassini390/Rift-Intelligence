@@ -1,5 +1,22 @@
 # LoL Stat Tracker - Changelog
 
+## v2.2 - Visual Redesign & Scoreboard Improvements
+- Full visual redesign: sticky glass-blur navigation bar replaces the in-page title
+- Theme switcher moved into the nav bar as compact colour dots with an active ring indicator
+- Added Space Grotesk display font for the nav title, champion names, and section headings
+- Added JetBrains Mono for all numeric stat values, KDA ratios, and scoreboard data
+- Banner is now purely decorative — no text overlaid, with a full-bleed fade to page background
+- Profile card, stat cards, and match cards have increased padding and spacing
+- Stat cards show a gradient top accent line on hover with a subtle lift animation
+- Release notes section converted from inline styles to proper CSS classes
+- Summoner profile avatar now shows the actual in-game portrait icon via Data Dragon
+- Match scoreboard now shows Blue Team and Red Team side by side
+- Scoreboard columns simplified to: Champion, Spells, Keystone, Summoner, K/D/A, CS, Items
+- Trinket icons removed from the expanded scoreboard
+- Scoreboard falls back to stacked layout on screens below 800px
+
+---
+
 ## v2.1 - Theme Colour Fixes & Per-Theme Banners
 - Fixed colour clashes across themes — each theme now has three visually distinct accent colours (accent, teal, purple)
   - Demacia: `--purple` changed from a duplicate gold to silver-blue (`#8ca8c8`)
