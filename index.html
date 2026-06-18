@@ -1192,19 +1192,36 @@ function renderChampTable(matches) {
 
       <div class="rn-entry">
         <div class="rn-entry-header">
-          <span class="rn-v-badge rn-v-current">v2.1</span>
+          <span class="rn-v-badge rn-v-current">v2.2</span>
           <span class="rn-entry-label">Latest</span>
         </div>
-        <div class="rn-entry-title">Visual Redesign</div>
+        <div class="rn-entry-title">Visual Redesign &amp; Scoreboard Improvements</div>
         <ul>
           <li>New sticky navigation bar with glass-blur effect and theme colour glow</li>
-          <li>Theme switcher moved to nav as compact colour dots</li>
-          <li>Added Space Grotesk display font and JetBrains Mono for all stat values</li>
-          <li>Stat card numbers now use monospaced font for precision and readability</li>
-          <li>Match card champion names use display typeface; KDA values use mono</li>
-          <li>Banner is now purely decorative with improved overlay fade</li>
-          <li>Profile card, stat grid, and match cards have more breathing room</li>
+          <li>Theme switcher moved to nav as compact colour dots with active ring indicator</li>
+          <li>Added Space Grotesk display font and JetBrains Mono for all stat values and KDA</li>
+          <li>Banner is now purely decorative with a full-bleed fade to page background</li>
+          <li>Profile card, stat cards, and match cards have increased padding and spacing</li>
+          <li>Stat cards show a gradient top accent line on hover with a subtle lift animation</li>
           <li>Release notes section converted from inline styles to proper CSS classes</li>
+          <li>Summoner avatar now shows the actual in-game profile icon via Data Dragon</li>
+          <li>Match scoreboard now shows Blue Team and Red Team side by side</li>
+          <li>Scoreboard columns simplified to Champion, Spells, Keystone, Summoner, K/D/A, CS, Items</li>
+          <li>Trinket icons removed from the expanded scoreboard</li>
+          <li>Scoreboard falls back to stacked layout on screens below 800px</li>
+        </ul>
+      </div>
+
+      <div class="rn-entry">
+        <div class="rn-entry-header">
+          <span class="rn-v-badge rn-v-old">v2.1</span>
+        </div>
+        <div class="rn-entry-title">Theme Colour Fixes &amp; Per-Theme Banners</div>
+        <ul>
+          <li>Fixed colour clashes across themes — each theme now has three visually distinct accent colours</li>
+          <li>Banner image now changes per theme — switching themes swaps the banner photo</li>
+          <li>Added <code>bannerImg</code> field to each theme in the THEMES object</li>
+          <li>Shadow Isles keeps the existing banner; other themes fall back to the gradient until a URL is added</li>
         </ul>
       </div>
 
