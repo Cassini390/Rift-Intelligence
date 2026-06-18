@@ -1,5 +1,17 @@
 # LoL Stat Tracker - Changelog
 
+## v2.1 - Theme Colour Fixes & Per-Theme Banners
+- Fixed colour clashes across themes — each theme now has three visually distinct accent colours (accent, teal, purple)
+  - Demacia: `--purple` changed from a duplicate gold to silver-blue (`#8ca8c8`)
+  - Noxus: `--teal` changed from a second red to rust/bronze (`#d4824a`); `--purple` changed to wine/rose (`#8b4a6a`)
+  - Freljord: `--teal` changed to a deeper steel blue (`#60a8e8`); `--purple` changed to frost amethyst (`#9080c8`)
+  - Ionia: `--teal` changed to spirit-water blue (`#88c0d0`); `--purple` now uses the former `--teal` violet (`#c084fc`)
+- Banner image now changes per theme — switching themes swaps the banner photo and falls back to the theme gradient if no image is set
+- Added `bannerImg` field to each theme in the THEMES object — paste an image URL to activate it per theme
+- Shadow Isles keeps the existing banner image; other themes default to the gradient until you add your own URLs
+
+---
+
 ## v2.0 - Theme System & Visual Overhaul
 - Added 5 selectable themes: Shadow Isles, Demacia, Noxus, Freljord, and Ionia
 - Each theme applies a full colour scheme — backgrounds, accents, borders, glows, and button colours

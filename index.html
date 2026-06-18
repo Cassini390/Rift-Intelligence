@@ -61,8 +61,7 @@ body {
 }
 .site-banner-placeholder {
   width: 100%; height: 100%; position: absolute; inset: 0;
-  background:
-    linear-gradient(135deg, #050a08 0%, #081a10 25%, #0c2418 50%, #071a10 75%, #050a08 100%);
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg3) 25%, var(--bg2) 50%, var(--bg3) 75%, var(--bg) 100%);
 }
 .site-banner img {
   position: absolute; inset: 0;
@@ -266,7 +265,7 @@ select option { background: var(--bg2); }
   padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
   font-family: 'Roboto', sans-serif;
 }
-.streak-banner.win-streak { background: #2ec99a18; border: 1px solid #2ec99a44; color: var(--green); }
+.streak-banner.win-streak { background: var(--accent-glow); border: 1px solid var(--accent); color: var(--accent); }
 .streak-banner.loss-streak { background: #e8555518; border: 1px solid #e8555544; color: var(--red); }
 
 /* Charts */
@@ -542,28 +541,33 @@ var LAST_SEARCH = JSON.parse(localStorage.getItem('lol_last_search') || 'null');
 var THEMES = {
   'shadow-isles': {
     subtitle: 'Shadow Isles Edition  ·  Powered by Riot Games API',
+    bannerImg: 'https://i.postimg.cc/pXp0RY0y/Banner.png',
     banner: 'linear-gradient(135deg, #050a08 0%, #0a1f14 40%, #061a10 70%, #050a08 100%)',
     vars: { '--bg':'#050a08','--bg1':'#080f0c','--bg2':'#0c1510','--bg3':'#111c16','--border':'#162018','--border2':'#1f3028','--accent':'#4dff91','--accent2':'#00cc6a','--accent-glow':'#4dff9125','--teal':'#1de8b5','--teal-dim':'#1de8b518','--purple':'#8b5cf6','--purple-dim':'#8b5cf620','--text':'#c8ddd0','--text2':'#6b9980','--text3':'#3a5c48' }
   },
   'demacia': {
     subtitle: 'Demacia Edition  ·  Powered by Riot Games API',
+    bannerImg: '', // Add your Demacia banner image URL here
     banner: 'linear-gradient(135deg, #06080f 0%, #0e1830 40%, #080e1e 70%, #06080f 100%)',
-    vars: { '--bg':'#06080f','--bg1':'#080c17','--bg2':'#0c1220','--bg3':'#111828','--border':'#151e32','--border2':'#1e2e4a','--accent':'#c8a96e','--accent2':'#a88848','--accent-glow':'#c8a96e25','--teal':'#6a9fd8','--teal-dim':'#6a9fd818','--purple':'#c8a96e','--purple-dim':'#c8a96e20','--text':'#d0cfc8','--text2':'#8a8070','--text3':'#4a4838' }
+    vars: { '--bg':'#06080f','--bg1':'#080c17','--bg2':'#0c1220','--bg3':'#111828','--border':'#151e32','--border2':'#1e2e4a','--accent':'#c8a96e','--accent2':'#a88848','--accent-glow':'#c8a96e25','--teal':'#6a9fd8','--teal-dim':'#6a9fd818','--purple':'#8ca8c8','--purple-dim':'#8ca8c820','--text':'#d0cfc8','--text2':'#8a8070','--text3':'#4a4838' }
   },
   'noxus': {
     subtitle: 'Noxus Edition  ·  Powered by Riot Games API',
+    bannerImg: '', // Add your Noxus banner image URL here
     banner: 'linear-gradient(135deg, #0a0505 0%, #200808 40%, #160505 70%, #0a0505 100%)',
-    vars: { '--bg':'#0a0505','--bg1':'#0e0707','--bg2':'#140a0a','--bg3':'#1c0d0d','--border':'#220d0d','--border2':'#321212','--accent':'#e03535','--accent2':'#b52020','--accent-glow':'#e0353525','--teal':'#c43a3a','--teal-dim':'#c43a3a18','--purple':'#8b1a1a','--purple-dim':'#8b1a1a20','--text':'#ddd0d0','--text2':'#9a7070','--text3':'#5a3838' }
+    vars: { '--bg':'#0a0505','--bg1':'#0e0707','--bg2':'#140a0a','--bg3':'#1c0d0d','--border':'#220d0d','--border2':'#321212','--accent':'#e03535','--accent2':'#b52020','--accent-glow':'#e0353525','--teal':'#d4824a','--teal-dim':'#d4824a18','--purple':'#8b4a6a','--purple-dim':'#8b4a6a20','--text':'#ddd0d0','--text2':'#9a7070','--text3':'#5a3838' }
   },
   'freljord': {
     subtitle: 'Freljord Edition  ·  Powered by Riot Games API',
+    bannerImg: '', // Add your Freljord banner image URL here
     banner: 'linear-gradient(135deg, #050810 0%, #0a1828 40%, #081020 70%, #050810 100%)',
-    vars: { '--bg':'#050810','--bg1':'#070c18','--bg2':'#0a1020','--bg3':'#0e1628','--border':'#121e35','--border2':'#1a2d50','--accent':'#7ee8ff','--accent2':'#50c8e8','--accent-glow':'#7ee8ff25','--teal':'#a0d0f0','--teal-dim':'#a0d0f018','--purple':'#6080e8','--purple-dim':'#6080e820','--text':'#c8d8e8','--text2':'#6080a0','--text3':'#304058' }
+    vars: { '--bg':'#050810','--bg1':'#070c18','--bg2':'#0a1020','--bg3':'#0e1628','--border':'#121e35','--border2':'#1a2d50','--accent':'#7ee8ff','--accent2':'#50c8e8','--accent-glow':'#7ee8ff25','--teal':'#60a8e8','--teal-dim':'#60a8e818','--purple':'#9080c8','--purple-dim':'#9080c820','--text':'#c8d8e8','--text2':'#6080a0','--text3':'#304058' }
   },
   'ionia': {
     subtitle: 'Ionia Edition  ·  Powered by Riot Games API',
+    bannerImg: '', // Add your Ionia banner image URL here
     banner: 'linear-gradient(135deg, #0d0810 0%, #1a0c28 40%, #120a1e 70%, #0d0810 100%)',
-    vars: { '--bg':'#0d0810','--bg1':'#120b16','--bg2':'#180d1e','--bg3':'#201028','--border':'#281535','--border2':'#38204c','--accent':'#f09aca','--accent2':'#d070a8','--accent-glow':'#f09aca25','--teal':'#c084fc','--teal-dim':'#c084fc18','--purple':'#e879f9','--purple-dim':'#e879f920','--text':'#e0ccd8','--text2':'#906880','--text3':'#503848' }
+    vars: { '--bg':'#0d0810','--bg1':'#120b16','--bg2':'#180d1e','--bg3':'#201028','--border':'#281535','--border2':'#38204c','--accent':'#f09aca','--accent2':'#d070a8','--accent-glow':'#f09aca25','--teal':'#88c0d0','--teal-dim':'#88c0d018','--purple':'#c084fc','--purple-dim':'#c084fc18','--text':'#e0ccd8','--text2':'#906880','--text3':'#503848' }
   }
 };
 
@@ -574,6 +578,17 @@ function applyTheme(key) {
   Object.keys(theme.vars).forEach(function(k) { root.style.setProperty(k, theme.vars[k]); });
   document.getElementById('site-banner').style.background = theme.banner;
   document.getElementById('banner-subtitle').textContent = theme.subtitle;
+  var img = document.getElementById('site-banner-img');
+  var placeholder = document.getElementById('banner-placeholder-bg');
+  if (theme.bannerImg) {
+    img.src = theme.bannerImg;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+  } else {
+    img.src = '';
+    img.style.display = 'none';
+    placeholder.style.display = 'block';
+  }
   document.querySelectorAll('.theme-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.theme === key); });
   localStorage.setItem('lol_theme', key);
 }
@@ -899,9 +914,9 @@ function renderHighlights(matches) {
   var worst = entries.sort(function(a,b) { return (a[1].wins/a[1].games) - (b[1].wins/b[1].games); })[0];
   var mostPlayed = Object.entries(champs).sort(function(a,b) { return b[1].games - a[1].games; })[0];
   var html = '';
-  if (best) html += hc('Best champion', best[0], Math.round(best[1].wins/best[1].games*100) + '% WR over ' + best[1].games + ' games', '#34d399');
+  if (best) html += hc('Best champion', best[0], Math.round(best[1].wins/best[1].games*100) + '% WR over ' + best[1].games + ' games', 'var(--accent)');
   if (worst && worst[0] !== best[0]) html += hc('Worst champion', worst[0], Math.round(worst[1].wins/worst[1].games*100) + '% WR over ' + worst[1].games + ' games', '#f87171');
-  if (mostPlayed) html += hc('Most played', mostPlayed[0], mostPlayed[1].games + ' games this sample', '#60a5fa');
+  if (mostPlayed) html += hc('Most played', mostPlayed[0], mostPlayed[1].games + ' games this sample', 'var(--teal)');
   el.innerHTML = html;
 }
 
