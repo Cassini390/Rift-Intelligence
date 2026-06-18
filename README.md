@@ -1,4 +1,4 @@
-![enter image description here](https://i.postimg.cc/SxkLqdXZ/Tracker-Page-example.png)
+![Visual Example](https://i.postimg.cc/9MN79Ryk/Github-Image.png)
 
 
 # LoL Stat Tracker
