@@ -1,6 +1,6 @@
-# Rift Readout — LoL Scouting Dossier
+# Rift Intelligence — LoL Scouting Dossier
 
-A locally hosted League of Legends performance tracker that pulls live data from the Riot Games API and reads your recent games back to you like a scout. Instead of another wall of tables, it leads with plain-language insight: what your wins have in common, where your form is slipping, and which habits are costing you games. Dark, dense, and built on a tactical "scouting dossier" identity.
+A locally hosted League of Legends performance tracker that pulls live data from the Riot Games API and reads your recent games back to you like a scout. Instead of another wall of tables, it leads with plain-language insight: what your wins have in common, where your form is slipping, and which habits are costing you games. Presented as a premium, minimalist intelligence dossier — ink, parchment and hextech gold, with a sticky section nav so any data point is one click away.
 
 ---
 
@@ -19,13 +19,13 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 
 **Plus the supporting readout:**
 - **Win-condition Fingerprint** — diverging bars showing how each factor (KDA, kill participation, damage share, vision, CS/min, game length, deaths) separates your wins from your losses
-- **Form Verdict + Form Ribbon** — a synthesised verdict (CLIMBING / HOLDING / SLIPPING / VOLATILE) beside a 20-game win/loss ribbon
+- **Assessment verdict + engagement ribbon** — a synthesised verdict (Ascending / Holding / Declining / Volatile / Inconclusive) beside a 20-game win/loss ribbon
 - **Strict per-queue view** — stats are never mixed across queues; tabs default to your most-played queue
-- Per-match cards with KDA colour thresholds, a CS/min benchmark, role tag, and a one-line "Read" of why each game was won or lost
+- Per-engagement rows with KDA colour thresholds, a CS/min figure, role tag, and a one-line "Read" of why each game was won or lost (match list capped at 8 with a show-all toggle)
 - Expandable full scoreboard for each match (all 10 players, builds, runes, spells)
-- Champion pool table with gated win rate, a mastery trend, and pool-concentration signal
-- Win/loss streak detection, EWMA-smoothed secondary trend tiles, CSV export, last-search memory
-- Orchestrated load animation that respects `prefers-reduced-motion`, and a responsive layout down to mobile
+- Champion dossier with gated win rate, a mastery trend, and pool-concentration signal
+- Win/loss streak detection, CSV export, last-search memory
+- Sticky section nav, orchestrated load animation that respects `prefers-reduced-motion`, and a responsive layout down to mobile
 
 ---
 

@@ -1,5 +1,15 @@
 # LoL Stat Tracker - Changelog
 
+## v3.3 - Type, density & navigation pass
+- Retuned the type system: **Space Grotesk** (display) / **Inter** (body) / **JetBrains Mono** (data) — replaces the earlier Fraunces serif for a sharper, more even feel.
+- Tighter, compact spacing on a regular vertical rhythm; smaller type scale throughout.
+- **Sticky section nav** in the masthead (Assessment · Findings · Profile · Record) so any data point is one click away — no long scrolling.
+- **Findings and the Biometric profile now sit side by side**, and the match list is **capped at 8** with a "show all" toggle — cutting roughly 17% of page height.
+- Robustness fix: count-up numbers and bar heights now use `setTimeout` instead of `requestAnimationFrame`, so final values always land even if the tab loads in the background (CSS still animates them when visible). Fixed the "LP" suffix being wiped mid-animation.
+- Launcher (`start-tracker.bat`) polished: gold/bone ANSI banner, and the server now runs in the **same console** with the browser opening from a hidden background timer — no second window, nothing closes and reopens.
+
+---
+
 ## v3.2 - Classified Subject File (premium minimalist redesign)
 - Reframed the whole page as a refined intelligence dossier *about a summoner*: case-file masthead, classification stamp, and §-numbered sections.
 - **Signature moment:** a redaction bar that wipes away to reveal the subject's codename on load (respects `prefers-reduced-motion`).

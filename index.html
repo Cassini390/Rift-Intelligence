@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Rift Intelligence — Classified Subject File</title>
 
-<!-- Type: Fraunces (display serif) · Hanken Grotesk (body) · JetBrains Mono (dossier metadata/data) -->
+<!-- Type: Space Grotesk (display) · Inter (body) · JetBrains Mono (dossier metadata/data) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: { extend: {
       colors: {
-        ink:'#0B0D11', ink2:'#10131A', bone:'#ECE3D0', gold:'#C7A86A', goldsoft:'#9A7F4E',
-        slate:'#8A93A0', faint:'#565E6B', hair:'#1E232B', jade:'#4FA890', oxblood:'#C75D54', stampred:'#B14A43',
+        ink:'#0B0D11', ink2:'#10131A', bone:'#E9E6DD', gold:'#C7A86A', goldsoft:'#9A7F4E',
+        slate:'#8A93A0', faint:'#565E6B', hair:'#1C2027', jade:'#4FA890', oxblood:'#C75D54',
       },
       fontFamily: {
-        display:['Fraunces','Georgia','serif'],
-        sans:['"Hanken Grotesk"','system-ui','sans-serif'],
+        display:['"Space Grotesk"','system-ui','sans-serif'],
+        sans:['Inter','system-ui','sans-serif'],
         mono:['"JetBrains Mono"','ui-monospace','monospace'],
       },
-      maxWidth:{ file:'1000px' },
+      maxWidth:{ file:'980px' },
     }}
   }
 </script>
@@ -37,61 +37,54 @@
   html, body { background:#0B0D11; }
   body {
     background-image:
-      radial-gradient(ellipse 100% 60% at 50% -15%, rgba(199,168,106,0.05) 0%, transparent 60%),
-      radial-gradient(circle at 88% 8%, rgba(199,168,106,0.04) 0%, transparent 22%);
+      radial-gradient(ellipse 100% 55% at 50% -15%, rgba(199,168,106,0.05) 0%, transparent 60%);
     background-attachment: fixed;
   }
   .tnum { font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; }
 
-  /* §-section label — the dossier's structural voice */
-  .sec { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.28em; text-transform:uppercase;
-    color:#9A7F4E; display:flex; align-items:center; gap:12px; }
-  .sec::after { content:""; flex:1; height:1px; background:#1E232B; }
+  /* §-section label */
+  .sec { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.24em; text-transform:uppercase;
+    color:#9A7F4E; display:flex; align-items:center; gap:10px; }
+  .sec::after { content:""; flex:1; height:1px; background:#1C2027; }
+  .meta { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; color:#565E6B; text-transform:uppercase; }
 
-  .meta { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#565E6B; text-transform:uppercase; }
-
-  /* Classification stamp */
-  .stamp { font-family:'JetBrains Mono',monospace; font-weight:500; font-size:10px; letter-spacing:0.22em;
-    text-transform:uppercase; border:1.5px solid currentColor; border-radius:2px; padding:4px 9px;
+  .stamp { font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9px; letter-spacing:0.2em;
+    text-transform:uppercase; border:1px solid currentColor; border-radius:2px; padding:3px 8px;
     display:inline-flex; align-items:center; gap:6px; }
-  .stamp::before { content:""; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .stamp::before { content:""; width:4px; height:4px; border-radius:50%; background:currentColor; }
 
-  /* Agency sigil */
-  .sigil { width:26px; height:28px; }
+  .sigil { width:24px; height:26px; }
 
-  /* Redaction reveal — the signature moment, used once */
+  /* Redaction reveal — signature moment */
   .redact-wrap { position:relative; display:inline-block; }
-  .redact { position:absolute; inset:-2px -6px; background:#15171C; border-radius:2px;
-    transform-origin:right center; transition:transform 1s cubic-bezier(.76,0,.24,1); }
+  .redact { position:absolute; inset:-1px -5px; background:#15171C; border-radius:2px;
+    transform-origin:right center; transition:transform .9s cubic-bezier(.76,0,.24,1); }
   .redact.lift { transform:scaleX(0); }
 
-  /* Rank emblem hexagon */
-  .emblem { width:18px; height:20px; clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  .emblem { width:16px; height:18px; clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
     display:inline-grid; place-items:center; font-family:'JetBrains Mono',monospace; font-weight:500;
-    font-size:10px; color:#0B0D11; flex-shrink:0; }
+    font-size:9px; color:#0B0D11; flex-shrink:0; }
 
-  /* Engagement ribbon (slim, minimal) */
-  .ribbon { display:flex; align-items:flex-end; gap:3px; height:34px; }
+  /* Engagement ribbon */
+  .ribbon { display:flex; align-items:flex-end; gap:2px; height:30px; }
   .ribbon-bar { flex:1 1 0; min-width:4px; border-radius:1px; height:0; opacity:.85;
-    transition:height .7s cubic-bezier(.22,1,.36,1), opacity .15s; }
+    transition:height .6s cubic-bezier(.22,1,.36,1), opacity .15s; }
   .ribbon-bar:hover { opacity:1; }
   .ribbon-bar.win  { background:#4FA890; }
   .ribbon-bar.loss { background:#C75D54; }
 
-  /* Biometric fingerprint bars */
-  .fp-track { position:relative; height:14px; }
-  .fp-center { position:absolute; left:50%; top:0; bottom:0; width:1px; background:#1E232B; }
-  .fp-bar { position:absolute; top:4px; bottom:4px; width:0; border-radius:1px; transition:width .8s cubic-bezier(.22,1,.36,1); }
+  /* Biometric fingerprint */
+  .fp-track { position:relative; height:12px; }
+  .fp-center { position:absolute; left:50%; top:0; bottom:0; width:1px; background:#1C2027; }
+  .fp-bar { position:absolute; top:3px; bottom:3px; width:0; border-radius:1px; transition:width .7s cubic-bezier(.22,1,.36,1); }
   .fp-bar.good { background:#4FA890; }
   .fp-bar.bad  { background:#C75D54; }
 
-  /* Motion */
-  .reveal { opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal { opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease; }
   .reveal.in { opacity:1; transform:none; }
 
-  /* Scoreboard */
-  .sb-grid { display:grid; grid-template-columns:26px 15px 15px 24px minmax(0,1fr) 60px 40px auto; gap:6px; align-items:center; }
-  .sb-row { padding:4px 8px; }
+  .sb-grid { display:grid; grid-template-columns:24px 14px 14px 22px minmax(0,1fr) 58px 38px auto; gap:6px; align-items:center; }
+  .sb-row { padding:3px 7px; }
   .sb-row.you { box-shadow:inset 2px 0 0 #C7A86A; background:rgba(199,168,106,0.06); }
 
   @keyframes shimmer { 0%{background-position:-380px 0;} 100%{background-position:380px 0;} }
@@ -102,61 +95,72 @@
   *::-webkit-scrollbar-thumb { background:#242A33; border-radius:8px; }
   *::-webkit-scrollbar-track { background:transparent; }
   :focus-visible { outline:1.5px solid #C7A86A; outline-offset:3px; }
-  ::selection { background:rgba(199,168,106,0.25); color:#ECE3D0; }
+  ::selection { background:rgba(199,168,106,0.25); color:#E9E6DD; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration:.001ms !important; transition-duration:.001ms !important; }
     .reveal { opacity:1 !important; transform:none !important; }
     .redact { transform:scaleX(0) !important; }
   }
+  html { scroll-behavior:smooth; }
+  [id^="sec-"] { scroll-margin-top:68px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
   img { -webkit-user-drag:none; user-select:none; }
   details > summary { list-style:none; } details > summary::-webkit-details-marker { display:none; }
 </style>
 </head>
 
-<body class="font-sans text-slate antialiased min-h-screen pb-28">
+<body class="font-sans text-slate antialiased min-h-screen pb-20">
 
-<div class="mx-auto max-w-file px-6 sm:px-8">
-
-  <!-- ── Masthead ─────────────────────────────────────────── -->
-  <header class="flex items-center justify-between py-6 border-b border-hair">
-    <div class="flex items-center gap-3">
+<!-- ── Masthead (sticky) ─────────────────────────────────── -->
+<header class="sticky top-0 z-50 bg-ink/90 backdrop-blur-md border-b border-hair">
+  <div class="mx-auto max-w-file px-5 sm:px-7 flex items-center justify-between gap-4 py-3">
+    <div class="flex items-center gap-2.5">
       <svg class="sigil" viewBox="0 0 24 26" fill="none" aria-hidden="true">
         <path d="M12 1L22 6.5v13L12 25 2 19.5v-13L12 1z" stroke="#C7A86A" stroke-width="1" fill="rgba(199,168,106,0.06)"/>
         <path d="M12 6l5 2.75v5.5L12 17l-5-2.75v-5.5L12 6z" stroke="#9A7F4E" stroke-width="0.8"/>
         <circle cx="12" cy="11.5" r="1.4" fill="#C7A86A"/>
       </svg>
       <div class="leading-tight">
-        <div class="font-mono text-[12px] tracking-[0.3em] text-bone uppercase">Rift Intelligence</div>
-        <div class="meta !text-[9px] !tracking-[0.24em]">Summoner Reconnaissance Division</div>
+        <div class="font-mono text-[11px] tracking-[0.26em] text-bone uppercase">Rift Intelligence</div>
+        <div class="meta !text-[8px] !tracking-[0.22em] hidden sm:block">Summoner Reconnaissance Division</div>
       </div>
     </div>
+    <nav id="section-nav" style="display:none" class="hidden md:flex items-center gap-5">
+      <a href="#sec-assess" class="font-mono text-[11px] tracking-[0.14em] uppercase text-faint hover:text-gold transition-colors">Assessment</a>
+      <a href="#sec-find" class="font-mono text-[11px] tracking-[0.14em] uppercase text-faint hover:text-gold transition-colors">Findings</a>
+      <a href="#sec-prof" class="font-mono text-[11px] tracking-[0.14em] uppercase text-faint hover:text-gold transition-colors">Profile</a>
+      <a href="#sec-rec" class="font-mono text-[11px] tracking-[0.14em] uppercase text-faint hover:text-gold transition-colors">Record</a>
+    </nav>
     <div class="text-right">
       <div class="meta text-goldsoft">Confidential</div>
       <div id="case-no" class="meta !text-faint"></div>
     </div>
-  </header>
+  </div>
+</header>
+
+<div class="mx-auto max-w-file px-5 sm:px-7">
 
   <!-- ── Intake (search) ──────────────────────────────────── -->
-  <section class="py-10 sm:py-14">
-    <p class="sec mb-6">§ Open a file</p>
-    <div class="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-6">
+  <section class="py-7">
+    <p class="sec mb-4">§ Open a file</p>
+    <div class="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-5">
       <div class="flex-1">
-        <label class="meta block mb-2" for="summoner-input">Subject codename</label>
+        <label class="meta block mb-1.5" for="summoner-input">Subject codename</label>
         <input id="summoner-input" type="text" placeholder="Summoner name" autocomplete="off"
           class="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors
-                 font-display text-bone text-2xl sm:text-3xl placeholder:text-faint placeholder:font-display pb-2" />
+                 font-display font-500 text-bone text-xl sm:text-2xl placeholder:text-faint placeholder:font-500 pb-1.5" />
       </div>
-      <div class="w-full sm:w-24">
-        <label class="meta block mb-2" for="tag-input">Tag</label>
+      <div class="w-full sm:w-20">
+        <label class="meta block mb-1.5" for="tag-input">Tag</label>
         <input id="tag-input" type="text" placeholder="EUW" autocomplete="off"
           class="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors
-                 font-mono text-bone text-lg placeholder:text-faint pb-2" />
+                 font-mono text-bone text-base placeholder:text-faint pb-1.5" />
       </div>
-      <div class="w-full sm:w-28">
-        <label class="meta block mb-2" for="region-select">Server</label>
+      <div class="w-full sm:w-24">
+        <label class="meta block mb-1.5" for="region-select">Server</label>
         <select id="region-select"
           class="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors
-                 font-mono text-bone text-lg pb-2 cursor-pointer">
+                 font-mono text-bone text-base pb-1.5 cursor-pointer">
           <option class="bg-ink" value="na1">NA</option><option class="bg-ink" value="euw1">EUW</option>
           <option class="bg-ink" value="eune1">EUNE</option><option class="bg-ink" value="kr">KR</option>
           <option class="bg-ink" value="br1">BR</option><option class="bg-ink" value="la1">LAN</option>
@@ -165,63 +169,63 @@
         </select>
       </div>
       <button id="search-btn"
-        class="group shrink-0 font-mono text-[12px] tracking-[0.22em] uppercase text-gold hover:text-bone transition-colors pb-2.5 flex items-center gap-2">
+        class="group shrink-0 font-mono text-[11px] tracking-[0.2em] uppercase text-gold hover:text-bone transition-colors pb-2 flex items-center gap-2">
         Open file <span class="transition-transform group-hover:translate-x-1">→</span>
       </button>
     </div>
-    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4">
       <button id="auto-refresh-btn" class="meta hover:text-slate transition-colors">↻ Auto-refresh: Off</button>
       <button id="export-btn" style="display:none" class="meta hover:text-slate transition-colors">↓ Export record</button>
-      <span class="meta !text-faint !tracking-[0.08em] ml-auto normal-case">key from <span class="text-goldsoft">.env</span> · <a href="https://developer.riotgames.com" target="_blank" rel="noopener" class="text-goldsoft hover:text-gold underline underline-offset-2">developer.riotgames.com</a></span>
+      <span class="meta !text-faint !tracking-[0.06em] ml-auto normal-case">key from <span class="text-goldsoft">.env</span> · <a href="https://developer.riotgames.com" target="_blank" rel="noopener" class="text-goldsoft hover:text-gold underline underline-offset-2">developer.riotgames.com</a></span>
     </div>
-    <div id="error-msg" class="text-oxblood text-[13px] mt-4 font-mono empty:hidden"></div>
+    <div id="error-msg" class="text-oxblood text-[13px] mt-3 font-mono empty:hidden"></div>
   </section>
 
   <!-- ── Loading ──────────────────────────────────────────── -->
-  <div id="loading" style="display:none" class="space-y-8 pb-10">
-    <div class="space-y-3"><div class="skel h-10 w-72"></div><div class="skel h-4 w-48"></div></div>
-    <div class="skel h-24 w-full max-w-md"></div>
-    <div class="space-y-3"><div class="skel h-5 w-full"></div><div class="skel h-5 w-5/6"></div><div class="skel h-5 w-4/6"></div></div>
+  <div id="loading" style="display:none" class="space-y-6 pb-8">
+    <div class="space-y-2.5"><div class="skel h-9 w-64"></div><div class="skel h-3.5 w-44"></div></div>
+    <div class="skel h-20 w-full max-w-md"></div>
+    <div class="space-y-2.5"><div class="skel h-4 w-full"></div><div class="skel h-4 w-5/6"></div><div class="skel h-4 w-4/6"></div></div>
   </div>
 
   <!-- ── Dossier ──────────────────────────────────────────── -->
   <div id="results" style="display:none">
 
     <!-- Subject -->
-    <section class="pb-12 border-b border-hair">
-      <div class="flex items-start justify-between gap-6 flex-wrap">
-        <div class="flex items-start gap-5">
-          <div id="profile-icon" class="shrink-0 h-16 w-16 rounded-sm overflow-hidden ring-1 ring-hair bg-ink2 grid place-items-center font-display text-2xl text-faint"></div>
+    <section id="sec-subject" class="py-7 border-b border-hair">
+      <div class="flex items-start justify-between gap-5 flex-wrap">
+        <div class="flex items-start gap-4">
+          <div id="profile-icon" class="shrink-0 h-14 w-14 rounded-sm overflow-hidden ring-1 ring-hair bg-ink2 grid place-items-center font-display text-xl text-faint"></div>
           <div>
-            <p class="meta mb-2">Subject</p>
-            <h1 class="redact-wrap font-display text-bone leading-none" style="font-size:clamp(2.4rem,6vw,4rem)">
+            <p class="meta mb-1.5">Subject</p>
+            <h1 class="redact-wrap font-display font-600 text-bone leading-none tracking-tight" style="font-size:clamp(1.9rem,4.2vw,2.6rem)">
               <span id="profile-name"></span><span id="redact-bar" class="redact"></span>
             </h1>
-            <div id="profile-meta" class="meta !text-slate !tracking-[0.14em] mt-3 normal-case"></div>
+            <div id="profile-meta" class="meta !text-slate !tracking-[0.12em] mt-2.5 normal-case"></div>
           </div>
         </div>
-        <div id="rank-badges" class="flex flex-col items-end gap-2"></div>
+        <div id="rank-badges" class="flex flex-col items-end gap-1.5"></div>
       </div>
     </section>
 
     <!-- Assessment -->
-    <section class="py-12 border-b border-hair">
-      <div class="flex items-center justify-between mb-7">
-        <p class="sec !after:hidden" style="flex:0 0 auto">§ Assessment</p>
+    <section id="sec-assess" class="py-7 border-b border-hair">
+      <div class="flex items-center justify-between mb-5">
+        <p class="sec" style="flex:0 0 auto">§ Assessment</p>
         <span id="confidence-stamp" class="stamp"></span>
       </div>
-      <div class="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-14 items-start">
+      <div class="grid lg:grid-cols-[1.1fr_1fr] gap-7 lg:gap-10 items-start">
         <div>
-          <div id="verdict-word" class="font-display text-bone leading-[0.95]" style="font-size:clamp(2.6rem,6.5vw,4.4rem)"></div>
-          <p id="verdict-note" class="text-slate text-[15px] leading-relaxed mt-4 max-w-md"></p>
-          <div class="flex gap-10 mt-9">
-            <div><p class="meta mb-1.5">Win rate</p><p id="hl-winrate" class="font-display tnum text-bone text-3xl leading-none"></p><p id="hl-winrate-sub" class="meta !text-faint mt-1.5 normal-case !tracking-[0.06em]"></p></div>
-            <div><p class="meta mb-1.5">KDA</p><p id="hl-kda" class="font-display tnum text-bone text-3xl leading-none"></p><p id="hl-kda-sub" class="meta !text-faint mt-1.5 normal-case !tracking-[0.06em]"></p></div>
-            <div><p id="hl-third-lbl" class="meta mb-1.5">Rank</p><p id="hl-third" class="font-display tnum text-bone text-3xl leading-none"></p><p id="hl-third-sub" class="meta !text-faint mt-1.5 normal-case !tracking-[0.06em]"></p></div>
+          <div id="verdict-word" class="font-display font-600 text-bone leading-[1] tracking-tight" style="font-size:clamp(1.9rem,4.2vw,2.6rem)"></div>
+          <p id="verdict-note" class="text-slate text-[13px] leading-relaxed mt-3 max-w-md"></p>
+          <div class="flex gap-7 mt-6">
+            <div><p class="meta mb-1">Win rate</p><p id="hl-winrate" class="font-display font-600 tnum text-bone text-2xl leading-none"></p><p id="hl-winrate-sub" class="meta !text-faint mt-1 normal-case !tracking-[0.04em]"></p></div>
+            <div><p class="meta mb-1">KDA</p><p id="hl-kda" class="font-display font-600 tnum text-bone text-2xl leading-none"></p><p id="hl-kda-sub" class="meta !text-faint mt-1 normal-case !tracking-[0.04em]"></p></div>
+            <div><p id="hl-third-lbl" class="meta mb-1">Rank</p><p id="hl-third" class="font-display font-600 tnum text-bone text-2xl leading-none"></p><p id="hl-third-sub" class="meta !text-faint mt-1 normal-case !tracking-[0.04em]"></p></div>
           </div>
         </div>
-        <div class="lg:pt-2">
-          <div class="flex items-center justify-between mb-2.5">
+        <div class="lg:pt-1">
+          <div class="flex items-center justify-between mb-2">
             <p class="meta">Engagement log · <span id="ribbon-queue"></span></p>
             <p class="meta !text-faint">older → newer</p>
           </div>
@@ -230,31 +234,33 @@
       </div>
     </section>
 
-    <!-- Findings -->
-    <section class="py-12 border-b border-hair">
-      <p class="sec mb-8">§ Field findings</p>
-      <div id="report-host" class="space-y-0"></div>
-      <button id="report-more" style="display:none" class="mt-6 meta text-goldsoft hover:text-gold transition-colors"></button>
-    </section>
-
-    <!-- Biometric profile (fingerprint) -->
-    <section class="py-12 border-b border-hair">
-      <p class="sec mb-2">§ Biometric profile</p>
-      <p class="text-slate text-[14px] mb-8 max-w-lg">How each trait separates the subject's victories from defeats, in this theatre.</p>
-      <div id="fingerprint-host" class="grid sm:grid-cols-2 gap-x-12 gap-y-5 max-w-3xl"></div>
+    <!-- Findings + Biometric (side by side) -->
+    <section class="py-7 border-b border-hair">
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-10">
+        <div id="sec-find">
+          <p class="sec mb-5">§ Field findings</p>
+          <div id="report-host"></div>
+          <button id="report-more" style="display:none" class="mt-4 meta text-goldsoft hover:text-gold transition-colors"></button>
+        </div>
+        <div id="sec-prof">
+          <p class="sec mb-1.5">§ Biometric profile</p>
+          <p class="text-slate text-[13px] mb-6 max-w-lg">How each trait separates the subject's victories from defeats, in this theatre.</p>
+          <div id="fingerprint-host" class="space-y-3.5"></div>
+        </div>
+      </div>
     </section>
 
     <!-- Field record -->
-    <section class="py-12">
-      <div class="flex flex-wrap items-end justify-between gap-4 mb-7">
+    <section id="sec-rec" class="py-7">
+      <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
         <p class="sec" style="flex:0 0 auto">§ Field record</p>
-        <div class="flex gap-5">
-          <button id="tab-btn-matches" class="font-mono text-[12px] tracking-[0.18em] uppercase text-bone border-b border-gold pb-1">Engagements</button>
-          <button id="tab-btn-champions" class="font-mono text-[12px] tracking-[0.18em] uppercase text-faint hover:text-slate border-b border-transparent pb-1">Champion dossier</button>
+        <div class="flex gap-4">
+          <button id="tab-btn-matches" class="font-mono text-[11px] tracking-[0.16em] uppercase text-bone border-b border-gold pb-1">Engagements</button>
+          <button id="tab-btn-champions" class="font-mono text-[11px] tracking-[0.16em] uppercase text-faint hover:text-slate border-b border-transparent pb-1">Champion dossier</button>
         </div>
       </div>
-      <div id="queue-tabs" class="flex flex-wrap gap-x-5 gap-y-2 mb-3"></div>
-      <div id="champ-filters" class="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-7"></div>
+      <div id="queue-tabs" class="flex flex-wrap gap-x-4 gap-y-2 mb-2.5"></div>
+      <div id="champ-filters" class="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5"></div>
       <div id="tab-matches"></div>
       <div id="tab-champions" style="display:none"></div>
     </section>
@@ -262,19 +268,18 @@
   </div>
 
   <!-- Release notes -->
-  <section class="mt-10 pt-6 border-t border-hair">
+  <section class="mt-8 pt-5 border-t border-hair">
     <button id="rn-toggle" class="flex items-center gap-2 meta hover:text-slate transition-colors">
       <span>Dossier revision history</span><span id="rn-chevron">▼</span>
     </button>
-    <div id="rn-body" style="display:none" class="mt-5 max-w-2xl">
-      <p class="font-mono text-[12px] tracking-[0.1em] text-bone uppercase">v3.2 · Classified Subject File</p>
-      <ul class="mt-3 space-y-1 text-slate text-[13px] leading-relaxed">
-        <li>— Premium minimalist intelligence-dossier redesign: ink, parchment & hextech gold</li>
-        <li>— Fraunces / Hanken Grotesk / JetBrains Mono type system; deliberate whitespace, hairline structure</li>
-        <li>— Redaction-wipe reveal on the subject codename; case-file masthead & classification stamp</li>
-        <li>— Same Scouting Report engine, Biometric fingerprint, and per-engagement reads underneath</li>
+    <div id="rn-body" style="display:none" class="mt-4 max-w-2xl">
+      <p class="font-mono text-[11px] tracking-[0.1em] text-bone uppercase">v3.3 · Classified Subject File</p>
+      <ul class="mt-2.5 space-y-1 text-slate text-[13px] leading-relaxed">
+        <li>— Retuned type system: Space Grotesk (display) / Inter (body) / JetBrains Mono (data)</li>
+        <li>— Tighter, compact spacing on a regular vertical rhythm</li>
+        <li>— Same intelligence-dossier framing, Scouting Report engine & biometric fingerprint</li>
       </ul>
-      <p class="meta !text-faint mt-4 normal-case">Full history in <span class="text-goldsoft">CHANGELOG.md</span>.</p>
+      <p class="meta !text-faint mt-3 normal-case">Full history in <span class="text-goldsoft">CHANGELOG.md</span>.</p>
     </div>
   </section>
 
@@ -286,7 +291,7 @@ var DD_VERSION='14.24.1', ALL_MATCHES=[], ACTIVE_QUEUE=null, ACTIVE_CHAMP='All',
 var LAST=JSON.parse(localStorage.getItem('lol_last_search')||'null');
 var MIN_TREND_GAMES=10;
 var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var C={win:'#4FA890',loss:'#C75D54',gold:'#C7A86A',bone:'#ECE3D0',slate:'#8A93A0',faint:'#565E6B'};
+var C={win:'#4FA890',loss:'#C75D54',gold:'#C7A86A',bone:'#E9E6DD',slate:'#8A93A0',faint:'#565E6B'};
 
 var DD='https://ddragon.leagueoflegends.com/cdn/';
 function champImg(n){return DD+DD_VERSION+'/img/champion/'+n+'.png';}
@@ -433,18 +438,21 @@ function toggleAutoRefresh(){
 
 /* ════════════ MOTION ════════════ */
 function reveal(nodes){
+  // setTimeout (not rAF) so the end-state lands even in a backgrounded tab
   nodes.forEach(function(n,i){ n.classList.add('reveal');
     if(reducedMotion){ n.classList.add('in'); return; }
-    n.style.transitionDelay=(i*80)+'ms';
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ n.classList.add('in'); }); });
+    setTimeout(function(){ n.classList.add('in'); }, 20+i*70);
   });
 }
 function countUp(node,to,dec,suffix){
   suffix=suffix||''; dec=dec||0;
-  if(reducedMotion){ node.textContent=to.toFixed(dec)+suffix; return; }
-  var start=null,dur=750;
-  function step(t){ if(start==null)start=t; var p=Math.min(1,(t-start)/dur); node.textContent=(to*(1-Math.pow(1-p,3))).toFixed(dec)+suffix; if(p<1) requestAnimationFrame(step); }
-  requestAnimationFrame(step);
+  node.textContent=to.toFixed(dec)+suffix;          // guaranteed final value
+  if(reducedMotion) return;
+  var steps=24,i=0;
+  var timer=setInterval(function(){ i++; var p=i/steps;
+    node.textContent=(to*(1-Math.pow(1-p,3))).toFixed(dec)+suffix;
+    if(i>=steps){ clearInterval(timer); node.textContent=to.toFixed(dec)+suffix; }
+  },26);
 }
 function caseNumber(name){ var h=0; for(var i=0;i<name.length;i++){ h=(h*31+name.charCodeAt(i))>>>0; } return 'Case No. '+String(1000+(h%8999)); }
 
@@ -472,7 +480,7 @@ function render(data){
   queues.forEach(function(q){
     var on=q===ACTIVE_QUEUE;
     var b=document.createElement('button');
-    b.className='font-mono text-[11px] tracking-[0.16em] uppercase transition-colors '+(on?'text-gold':'text-faint hover:text-slate');
+    b.className='font-mono text-[11px] tracking-[0.14em] uppercase transition-colors '+(on?'text-gold':'text-faint hover:text-slate');
     b.innerHTML=q+' <span class="tnum opacity-60">'+counts[q]+'</span>';
     b.addEventListener('click',function(){ ACTIVE_QUEUE=q; ACTIVE_CHAMP='All'; renderQueue(); });
     tabs.appendChild(b);
@@ -480,17 +488,17 @@ function render(data){
 
   renderQueue();
   document.getElementById('export-btn').style.display='';
+  document.getElementById('section-nav').style.display='';
   document.getElementById('results').style.display='block';
-  // signature: redaction lift
   var bar=document.getElementById('redact-bar');
-  if(reducedMotion){ bar.classList.add('lift'); } else setTimeout(function(){ bar.classList.add('lift'); }, 260);
+  if(reducedMotion){ bar.classList.add('lift'); } else setTimeout(function(){ bar.classList.add('lift'); }, 240);
 }
 
 function rankChip(label,r){
   if(!r){ var u=document.createElement('span'); u.className='meta'; u.textContent=label+' · Unranked'; return u; }
   var col='var(--t-'+(r.tier||'UNRANKED').toUpperCase()+',var(--t-UNRANKED))';
   var wr=(r.wins+r.losses)?Math.round(r.wins/(r.wins+r.losses)*100):0;
-  var chip=document.createElement('div'); chip.className='flex items-center gap-2.5 text-[12px] font-mono';
+  var chip=document.createElement('div'); chip.className='flex items-center gap-2 text-[12px] font-mono';
   chip.innerHTML='<span class="emblem" style="background:'+col+'">'+(r.tier?r.tier[0]:'?')+'</span>'
     +'<span class="meta !text-faint">'+label+'</span>'
     +'<span style="color:'+col+'">'+r.tier+' '+r.rank+'</span>'
@@ -502,7 +510,7 @@ function rankChip(label,r){
 function renderQueue(){
   document.querySelectorAll('#queue-tabs button').forEach(function(b){
     var on=b.textContent.trim().indexOf(ACTIVE_QUEUE)===0;
-    b.className='font-mono text-[11px] tracking-[0.16em] uppercase transition-colors '+(on?'text-gold':'text-faint hover:text-slate');
+    b.className='font-mono text-[11px] tracking-[0.14em] uppercase transition-colors '+(on?'text-gold':'text-faint hover:text-slate');
   });
   renderChampFilters();
   var ms=queueMatches();
@@ -521,14 +529,14 @@ function renderChampFilters(){
   ['All'].concat(ordered).forEach(function(ch){
     var on=ch===ACTIVE_CHAMP;
     var b=document.createElement('button');
-    b.className='font-mono text-[11px] tracking-[0.06em] transition-colors '+(on?'text-bone':'text-faint hover:text-slate');
+    b.className='font-mono text-[11px] tracking-[0.04em] transition-colors '+(on?'text-bone':'text-faint hover:text-slate');
     b.textContent=ch==='All'?'all':ch.toLowerCase();
     b.addEventListener('click',function(){ ACTIVE_CHAMP=ch; renderQueue(); });
     wrap.appendChild(b);
   });
 }
 
-/* ── Assessment (verdict + ribbon + figures) ── */
+/* ── Assessment ── */
 function renderAssessment(ms){
   var trend=winRateTrend(ms), vw=document.getElementById('verdict-word'), vn=document.getElementById('verdict-note'), verdict;
   if(trend.state==='insufficient') verdict={w:'Inconclusive',c:C.slate,n:'Sample too thin for a confident assessment — '+MIN_TREND_GAMES+'+ games required in this theatre.'};
@@ -549,8 +557,8 @@ function renderAssessment(ms){
   chrono.forEach(function(m){ var bar=document.createElement('div'); bar.className='ribbon-bar '+(m.win?'win':'loss');
     var h=30+Math.min(1,kdaOf(m)/maxK)*70; targets.push({bar:bar,h:h});
     bar.title=(m.win?'Victory':'Defeat')+' · '+m.champion+' · '+m.kills+'/'+m.deaths+'/'+m.assists; ribbon.appendChild(bar); });
-  if(reducedMotion) targets.forEach(function(t){ t.bar.style.height=t.h+'%'; });
-  else requestAnimationFrame(function(){ requestAnimationFrame(function(){ targets.forEach(function(t){ t.bar.style.height=t.h+'%'; }); }); });
+  var setRibbon=function(){ targets.forEach(function(t){ t.bar.style.height=t.h+'%'; }); };
+  if(reducedMotion) setRibbon(); else setTimeout(setRibbon,30);
 
   var n=ms.length, wins=ms.filter(function(m){return m.win;}).length, wr=n?wins/n:0;
   var wrEl=document.getElementById('hl-winrate'); wrEl.style.color=wr>=0.5?C.win:C.loss; wrEl.textContent='';
@@ -565,7 +573,7 @@ function renderAssessment(ms){
 
   var ranked=window._RANKED||{}, rk=ACTIVE_QUEUE==='Ranked Solo'?ranked.solo:ACTIVE_QUEUE==='Ranked Flex'?ranked.flex:null;
   var lbl=document.getElementById('hl-third-lbl'), val=document.getElementById('hl-third'), tsub=document.getElementById('hl-third-sub');
-  if(rk){ lbl.textContent='Rank'; val.style.color='var(--t-'+(rk.tier||'UNRANKED').toUpperCase()+',var(--t-UNRANKED))'; val.textContent=''; countUp(val,rk.lp,0); val.insertAdjacentHTML('beforeend','<span class="text-[16px]"> LP</span>'); tsub.textContent=rk.tier+' '+rk.rank; }
+  if(rk){ lbl.textContent='Rank'; val.style.color='var(--t-'+(rk.tier||'UNRANKED').toUpperCase()+',var(--t-UNRANKED))'; val.innerHTML=rk.lp+'<span class="text-[15px]"> LP</span>'; tsub.textContent=rk.tier+' '+rk.rank; }
   else { var st=getStreak(ms); lbl.textContent='Streak'; if(st){ val.style.color=st.type?C.win:C.loss; val.textContent=st.count+(st.type?'W':'L'); tsub.textContent=st.type?'consecutive wins':'consecutive losses'; } else { val.style.color=C.slate; val.textContent='—'; tsub.textContent='no active streak'; } }
 }
 
@@ -574,7 +582,7 @@ function renderReport(ms){
   var findings=scoutingReport(ms), host=document.getElementById('report-host'); host.innerHTML='';
   var moreBtn=document.getElementById('report-more');
   if(!findings.length){
-    host.innerHTML='<p class="text-slate text-[14px] leading-relaxed max-w-lg">'
+    host.innerHTML='<p class="text-slate text-[13px] leading-relaxed max-w-lg">'
       +(ms.length<6?'Insufficient intelligence — scout more engagements in this theatre for a full assessment.':'No standout patterns this stretch. The subject is unremarkable — itself a kind of stability.')+'</p>';
     moreBtn.style.display='none'; return;
   }
@@ -582,15 +590,15 @@ function renderReport(ms){
   findings.forEach(function(f,idx){
     var dot=f.sev==='good'?C.win:f.sev==='bad'?C.loss:C.gold;
     var row=document.createElement('div');
-    row.className='grid grid-cols-[2.2rem_1fr] gap-x-4 py-5 border-b border-hair';
+    row.className='grid grid-cols-[1.6rem_1fr] gap-x-3.5 py-3.5'+(idx<findings.length-1?' border-b border-hair':'');
     if(idx>=SHOW){ row.dataset.extra='1'; row.style.display='none'; }
     row.innerHTML=
-      '<div class="font-mono text-[12px] tnum text-faint pt-1">'+(idx<9?'0':'')+(idx+1)+'</div>'
-      +'<div><div class="flex items-center gap-2.5 mb-2">'
+      '<div class="font-mono text-[11px] tnum text-faint pt-0.5">'+(idx<9?'0':'')+(idx+1)+'</div>'
+      +'<div><div class="flex items-center gap-2 mb-1.5">'
         +'<span class="h-1 w-1 rounded-full" style="background:'+dot+'"></span>'
-        +'<span class="font-mono text-[10px] tracking-[0.22em] uppercase" style="color:'+dot+'">'+f.tag+'</span></div>'
-      +'<p class="font-display text-bone text-[19px] leading-snug">'+f.headline+'</p>'
-      +'<p class="text-slate text-[14px] leading-relaxed mt-1.5 max-w-xl">'+f.detail+'</p></div>';
+        +'<span class="font-mono text-[9px] tracking-[0.2em] uppercase" style="color:'+dot+'">'+f.tag+'</span></div>'
+      +'<p class="font-display font-500 text-bone text-[15px] leading-snug">'+f.headline+'</p>'
+      +'<p class="text-slate text-[13px] leading-relaxed mt-1 max-w-xl">'+f.detail+'</p></div>';
     host.appendChild(row); cards.push(row);
   });
   reveal(cards.filter(function(c){return c.style.display!=='none';}));
@@ -604,7 +612,7 @@ function renderReport(ms){
 function renderFingerprint(ms){
   var host=document.getElementById('fingerprint-host'); host.innerHTML='';
   var w=ms.filter(function(m){return m.win;}), l=ms.filter(function(m){return !m.win;});
-  if(w.length<3||l.length<3){ host.innerHTML='<p class="meta normal-case !tracking-[0.06em] text-slate">Need at least three victories and three defeats to profile.</p>'; return; }
+  if(w.length<3||l.length<3){ host.innerHTML='<p class="meta normal-case !tracking-[0.04em] text-slate">Need at least three victories and three defeats to profile.</p>'; return; }
   var factors=[ {k:'KDA',get:kdaOf,hi:true},{k:'Kill participation',get:kpOf,hi:true},{k:'Damage share',get:dmgShare,hi:true},
     {k:'Vision score',get:function(m){return m.visionScore||0;},hi:true},{k:'CS / min',get:csPerMin,hi:true},
     {k:'Game length',get:function(m){return m.duration;},hi:null},{k:'Deaths',get:function(m){return m.deaths;},hi:false} ];
@@ -619,14 +627,14 @@ function renderFingerprint(ms){
   rows.forEach(function(r){
     var posWin=r.eff>0, good=r.hi===null?posWin:(posWin===r.hi), pctw=Math.min(1,Math.abs(r.eff)/maxAbs)*50;
     var row=document.createElement('div');
-    row.innerHTML='<div class="flex items-center justify-between mb-1.5"><span class="text-[13px] text-slate">'+r.k+'</span>'
-      +'<span class="meta !text-faint !tracking-[0.08em]">'+(posWin?'in wins':'in losses')+'</span></div>'
+    row.innerHTML='<div class="flex items-center justify-between mb-1"><span class="text-[12px] text-slate">'+r.k+'</span>'
+      +'<span class="meta !text-faint !tracking-[0.06em]">'+(posWin?'in wins':'in losses')+'</span></div>'
       +'<div class="fp-track"><div class="fp-center"></div><div class="fp-bar '+(good?'good':'bad')+'" style="'+(posWin?'left:50%;':'right:50%;')+'width:0" data-w="'+pctw+'"></div></div>';
     host.appendChild(row);
   });
   var bars=host.querySelectorAll('.fp-bar');
-  if(reducedMotion) bars.forEach(function(b){ b.style.width=b.dataset.w+'%'; });
-  else requestAnimationFrame(function(){ requestAnimationFrame(function(){ bars.forEach(function(b){ b.style.width=b.dataset.w+'%'; }); }); });
+  var setFp=function(){ bars.forEach(function(b){ b.style.width=b.dataset.w+'%'; }); };
+  if(reducedMotion) setFp(); else setTimeout(setFp,30);
 }
 
 /* ── Per-engagement read ── */
@@ -641,69 +649,78 @@ function matchReason(m){
   if(ds!=null&&ds<0.18) return 'Passenger — only '+pc(ds)+'% of team damage.'; return 'Lost the engagement.';
 }
 
-/* ── Field record (engagements) ── */
+/* ── Field record ── */
 function renderMatchList(ms){
   var host=document.getElementById('tab-matches'); host.innerHTML='';
-  if(!ms.length){ host.innerHTML='<p class="text-slate text-[14px] py-6">No engagements in this theatre.</p>'; return; }
-  ms.forEach(function(m){
+  if(!ms.length){ host.innerHTML='<p class="text-slate text-[13px] py-5">No engagements in this theatre.</p>'; return; }
+  var CAP=8;
+  ms.forEach(function(m,idx){
     var win=m.win, mins=Math.floor(m.duration/60), secs=String(m.duration%60).padStart(2,'0');
     var date=m.ts?new Date(m.ts).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'';
     var kda=kdaOf(m), ds=dmgShare(m), cspm=csPerMin(m), col=win?C.win:C.loss;
     var kdaColor=kda>=4?C.win:kda>=2.5?C.bone:kda>=1.5?C.slate:C.loss;
 
     var card=document.createElement('div'); card.className='border-b border-hair';
-    var spells=''; if(m.spell1) spells+='<div class="h-4 w-4 rounded-[2px] overflow-hidden bg-ink2"><img src="'+spellImg(m.spell1)+'" class="h-full w-full" alt=""></div>';
-    if(m.spell2) spells+='<div class="h-4 w-4 rounded-[2px] overflow-hidden bg-ink2"><img src="'+spellImg(m.spell2)+'" class="h-full w-full" alt=""></div>';
+    var spells=''; if(m.spell1) spells+='<div class="h-3.5 w-3.5 rounded-[2px] overflow-hidden bg-ink2"><img src="'+spellImg(m.spell1)+'" class="h-full w-full" alt=""></div>';
+    if(m.spell2) spells+='<div class="h-3.5 w-3.5 rounded-[2px] overflow-hidden bg-ink2"><img src="'+spellImg(m.spell2)+'" class="h-full w-full" alt=""></div>';
 
-    var head=document.createElement('button'); head.className='w-full text-left flex items-center gap-4 sm:gap-5 py-4 group';
+    var head=document.createElement('button'); head.className='w-full text-left flex items-center gap-3 sm:gap-4 py-2.5 group';
     head.innerHTML=
-      '<span class="shrink-0 w-12"><span class="font-mono text-[12px] tracking-[0.16em] uppercase" style="color:'+col+'">'+(win?'Win':'Loss')+'</span>'
-        +'<span class="block meta !text-faint !tracking-[0.06em] tnum mt-0.5">'+mins+':'+secs+'</span></span>'
-      +'<span class="shrink-0 relative"><span class="block h-11 w-11 rounded-sm overflow-hidden ring-1" style="--tw-ring-color:'+col+'40"><img src="'+champImg(m.champion)+'" class="h-full w-full object-cover scale-110" alt="'+m.champion+'"></span>'
+      '<span class="shrink-0 w-11"><span class="font-mono text-[11px] tracking-[0.14em] uppercase" style="color:'+col+'">'+(win?'Win':'Loss')+'</span>'
+        +'<span class="block meta !text-faint !tracking-[0.04em] tnum mt-0.5">'+mins+':'+secs+'</span></span>'
+      +'<span class="shrink-0 relative"><span class="block h-10 w-10 rounded-sm overflow-hidden ring-1" style="--tw-ring-color:'+col+'40"><img src="'+champImg(m.champion)+'" class="h-full w-full object-cover scale-110" alt="'+m.champion+'"></span>'
         +'<span class="absolute -bottom-1 -right-1 flex gap-0.5">'+spells+'</span></span>'
-      +'<span class="min-w-0 flex-1"><span class="block font-display text-bone text-[17px] leading-tight">'+m.champion+'</span>'
-        +'<span class="block meta !text-faint !tracking-[0.1em] mt-0.5">'+(m.role?roleName(m.role)+' · ':'')+(m.queueLabel||'')+'</span></span>'
-      +'<span class="shrink-0 text-right hidden sm:block"><span class="block font-mono tnum text-[14px] text-bone">'+m.kills+' / <span style="color:'+C.loss+'">'+m.deaths+'</span> / '+m.assists+'</span>'
-        +'<span class="block meta !text-faint !tracking-[0.06em] mt-0.5" style="color:'+kdaColor+'">'+kda.toFixed(2)+' KDA</span></span>'
-      +'<span class="shrink-0 text-right hidden md:block w-20"><span class="block font-mono tnum text-[13px] text-slate">'+cspm.toFixed(1)+' cs/m</span>'
-        +'<span class="block meta !text-faint !tracking-[0.06em] mt-0.5">'+(ds!=null?pc(ds)+'% dmg':'')+'</span></span>'
-      +'<span class="shrink-0 meta !text-faint">'+date+'</span>'
-      +'<span class="chev shrink-0 font-mono text-[11px] text-faint group-hover:text-slate transition-colors">▼</span>';
+      +'<span class="min-w-0 flex-1"><span class="block font-display font-500 text-bone text-[14px] leading-tight">'+m.champion+'</span>'
+        +'<span class="block meta !text-faint !tracking-[0.08em] mt-0.5">'+(m.role?roleName(m.role)+' · ':'')+(m.queueLabel||'')+'</span></span>'
+      +'<span class="shrink-0 text-right hidden sm:block"><span class="block font-mono tnum text-[13px] text-bone">'+m.kills+' / <span style="color:'+C.loss+'">'+m.deaths+'</span> / '+m.assists+'</span>'
+        +'<span class="block meta !text-faint !tracking-[0.04em] mt-0.5" style="color:'+kdaColor+'">'+kda.toFixed(2)+' KDA</span></span>'
+      +'<span class="shrink-0 text-right hidden md:block w-16"><span class="block font-mono tnum text-[12px] text-slate">'+cspm.toFixed(1)+' cs/m</span>'
+        +'<span class="block meta !text-faint !tracking-[0.04em] mt-0.5">'+(ds!=null?pc(ds)+'% dmg':'')+'</span></span>'
+      +'<span class="shrink-0 meta !text-faint hidden sm:inline">'+date+'</span>'
+      +'<span class="chev shrink-0 font-mono text-[10px] text-faint group-hover:text-slate transition-colors">▼</span>';
     card.appendChild(head);
 
-    var panel=document.createElement('div'); panel.className='hidden pb-5';
+    var panel=document.createElement('div'); panel.className='hidden pb-4';
     var items=''; for(var s=0;s<6;s++){ var id=(m.items||[])[s];
-      items+=id?'<div class="h-7 w-7 rounded-[2px] bg-ink2 overflow-hidden"><img src="'+itemImg(id)+'" class="h-full w-full" alt=""></div>':'<div class="h-7 w-7 rounded-[2px] bg-ink2/50 ring-1 ring-hair"></div>'; }
-    var trinket=m.trinket?'<div class="h-7 w-7 rounded-full bg-ink2 overflow-hidden ml-1"><img src="'+itemImg(m.trinket)+'" class="h-full w-full" alt=""></div>':'';
-    var readWrap=document.createElement('div'); readWrap.className='flex flex-wrap items-center gap-x-6 gap-y-3 mb-5';
+      items+=id?'<div class="h-6 w-6 rounded-[2px] bg-ink2 overflow-hidden"><img src="'+itemImg(id)+'" class="h-full w-full" alt=""></div>':'<div class="h-6 w-6 rounded-[2px] bg-ink2/50 ring-1 ring-hair"></div>'; }
+    var trinket=m.trinket?'<div class="h-6 w-6 rounded-full bg-ink2 overflow-hidden ml-1"><img src="'+itemImg(m.trinket)+'" class="h-full w-full" alt=""></div>':'';
+    var readWrap=document.createElement('div'); readWrap.className='flex flex-wrap items-center gap-x-5 gap-y-2.5 mb-4';
     readWrap.innerHTML='<div class="flex items-center gap-1">'+items+trinket+'</div>'
-      +'<div class="meta normal-case !tracking-[0.04em]"><span class="!tracking-[0.22em] uppercase text-goldsoft mr-2">Read</span><span style="color:'+col+'">'+matchReason(m)+'</span></div>';
+      +'<div class="meta normal-case !tracking-[0.02em]"><span class="!tracking-[0.2em] uppercase text-goldsoft mr-2">Read</span><span style="color:'+col+'">'+matchReason(m)+'</span></div>';
     panel.appendChild(readWrap); panel.appendChild(buildScoreboard(m)); card.appendChild(panel);
 
     var chev=head.querySelector('.chev');
     head.addEventListener('click',function(){ var open=panel.classList.toggle('hidden')===false; chev.textContent=open?'▲':'▼'; });
+    if(idx>=CAP){ card.dataset.more='1'; card.style.display='none'; }
     host.appendChild(card);
   });
+  if(ms.length>CAP){
+    var more=document.createElement('button');
+    more.className='mt-4 meta text-goldsoft hover:text-gold transition-colors';
+    more.textContent='+ show all '+ms.length+' engagements';
+    more.addEventListener('click',function(){ host.querySelectorAll('[data-more]').forEach(function(c){ c.style.display=''; c.removeAttribute('data-more'); }); more.remove(); });
+    host.appendChild(more);
+  }
 }
 
 function buildScoreboard(m){
   if(!m.allPlayers||!m.allPlayers.length){ var d=document.createElement('div'); d.className='meta normal-case text-slate'; d.textContent='Scoreboard unavailable for this engagement.'; return d; }
-  var wrap=document.createElement('div'); wrap.className='grid md:grid-cols-2 gap-x-10 gap-y-5';
+  var wrap=document.createElement('div'); wrap.className='grid md:grid-cols-2 gap-x-8 gap-y-4';
   [{id:100,label:'Blue side'},{id:200,label:'Red side'}].forEach(function(side){
     var players=m.allPlayers.filter(function(p){return p.teamId===side.id;}); if(!players.length) return;
     var teamWin=players[0].win, colr=document.createElement('div');
-    colr.innerHTML='<div class="flex items-center justify-between mb-2.5"><span class="meta">'+side.label+'</span><span class="font-mono text-[10px] tracking-[0.2em] uppercase" style="color:'+(teamWin?C.win:C.loss)+'">'+(teamWin?'Victory':'Defeat')+'</span></div>';
+    colr.innerHTML='<div class="flex items-center justify-between mb-2"><span class="meta">'+side.label+'</span><span class="font-mono text-[9px] tracking-[0.18em] uppercase" style="color:'+(teamWin?C.win:C.loss)+'">'+(teamWin?'Victory':'Defeat')+'</span></div>';
     players.forEach(function(p){
       var row=document.createElement('div'); row.className='sb-grid sb-row'+(p.isYou?' you':'');
       var sp=function(id){ return id?'<img src="'+spellImg(id)+'" class="h-full w-full rounded-[2px]" alt="">':''; };
-      var its=''; for(var i=0;i<6;i++){ var id=(p.items||[])[i]; its+=id?'<div class="h-5 w-5 rounded-[2px] bg-ink2 overflow-hidden"><img src="'+itemImg(id)+'" class="h-full w-full" alt=""></div>':'<div class="h-5 w-5 rounded-[2px] bg-ink2/50"></div>'; }
-      row.innerHTML='<div class="h-7 w-7 rounded-[2px] overflow-hidden ring-1 ring-hair"><img src="'+champImg(p.champion)+'" class="h-full w-full object-cover scale-110" alt="'+p.champion+'"></div>'
-        +'<div class="h-4 w-4 rounded-[2px] overflow-hidden bg-ink2">'+sp(p.spell1)+'</div>'
-        +'<div class="h-4 w-4 rounded-[2px] overflow-hidden bg-ink2">'+sp(p.spell2)+'</div>'
-        +'<div class="h-6 w-6 grid place-items-center">'+(p.keystone?'<img src="'+runeImg(p.keystone.icon)+'" class="h-5 w-5" alt="" title="'+p.keystone.name+'">':'')+'</div>'
-        +'<div class="truncate text-[12px] '+(p.isYou?'text-gold':'text-slate')+'" title="'+p.summonerName+'">'+(p.isYou?'★ ':'')+p.summonerName+'</div>'
-        +'<div class="font-mono tnum text-[12px] text-bone text-right">'+p.kills+'/'+p.deaths+'/'+p.assists+'</div>'
-        +'<div class="font-mono tnum text-[12px] text-faint text-right">'+p.cs+'</div>'
+      var its=''; for(var i=0;i<6;i++){ var id=(p.items||[])[i]; its+=id?'<div class="h-4 w-4 rounded-[2px] bg-ink2 overflow-hidden"><img src="'+itemImg(id)+'" class="h-full w-full" alt=""></div>':'<div class="h-4 w-4 rounded-[2px] bg-ink2/50"></div>'; }
+      row.innerHTML='<div class="h-6 w-6 rounded-[2px] overflow-hidden ring-1 ring-hair"><img src="'+champImg(p.champion)+'" class="h-full w-full object-cover scale-110" alt="'+p.champion+'"></div>'
+        +'<div class="h-3.5 w-3.5 rounded-[2px] overflow-hidden bg-ink2">'+sp(p.spell1)+'</div>'
+        +'<div class="h-3.5 w-3.5 rounded-[2px] overflow-hidden bg-ink2">'+sp(p.spell2)+'</div>'
+        +'<div class="h-5 w-5 grid place-items-center">'+(p.keystone?'<img src="'+runeImg(p.keystone.icon)+'" class="h-4 w-4" alt="" title="'+p.keystone.name+'">':'')+'</div>'
+        +'<div class="truncate text-[11px] '+(p.isYou?'text-gold':'text-slate')+'" title="'+p.summonerName+'">'+(p.isYou?'★ ':'')+p.summonerName+'</div>'
+        +'<div class="font-mono tnum text-[11px] text-bone text-right">'+p.kills+'/'+p.deaths+'/'+p.assists+'</div>'
+        +'<div class="font-mono tnum text-[11px] text-faint text-right">'+p.cs+'</div>'
         +'<div class="flex gap-0.5 justify-end">'+its+'</div>';
       colr.appendChild(row);
     });
@@ -718,37 +735,37 @@ function renderChampPool(ms){
   var c={}; ms.forEach(function(m){ var x=c[m.champion]||(c[m.champion]={g:0,w:0,k:0,d:0,a:0,cs:0,dmg:0,vis:0,kl:[]});
     x.g++; if(m.win)x.w++; x.k+=m.kills;x.d+=m.deaths;x.a+=m.assists;x.cs+=m.cs;x.dmg+=(m.damageDealt||0);x.vis+=(m.visionScore||0);x.kl.push(kdaOf(m)); });
   var sorted=Object.keys(c).map(function(k){return [k,c[k]];}).sort(function(a,b){return b[1].g-a[1].g;});
-  if(!sorted.length){ host.innerHTML='<p class="text-slate text-[14px] py-6">No champions in this theatre.</p>'; return; }
+  if(!sorted.length){ host.innerHTML='<p class="text-slate text-[13px] py-5">No champions in this theatre.</p>'; return; }
   var total=ms.length, topShare=Math.round(sorted[0][1].g/total*100), distinct=sorted.length;
   var conc=topShare>=50?'Concentrated — '+topShare+'% of games on '+sorted[0][0]+'.':distinct>=7?'Wide — '+distinct+' champions across '+total+' games.':'Balanced — '+distinct+' champions, top is '+topShare+'%.';
   var MIN=3;
-  var html='<p class="meta normal-case !tracking-[0.04em] text-slate mb-5"><span class="!tracking-[0.22em] uppercase text-goldsoft mr-2">Pool</span>'+conc+'</p>';
+  var html='<p class="meta normal-case !tracking-[0.02em] text-slate mb-4"><span class="!tracking-[0.2em] uppercase text-goldsoft mr-2">Pool</span>'+conc+'</p>';
   html+='<div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-hair">'
-    +['Champion','G','Win rate','KDA','Mastery','CS','Dmg','Vis'].map(function(h,i){return '<th class="meta font-normal pb-3 pr-4 '+(i>1?'text-right':'')+'">'+h+'</th>';}).join('')+'</tr></thead><tbody>';
+    +['Champion','G','Win rate','KDA','Mastery','CS','Dmg','Vis'].map(function(h,i){return '<th class="meta font-normal pb-2.5 pr-4 '+(i>1?'text-right':'')+'">'+h+'</th>';}).join('')+'</tr></thead><tbody>';
   sorted.forEach(function(e){
     var ch=e[0],s=e[1], wr=Math.round(s.w/s.g*100), kda=(s.k+s.a)/Math.max(1,s.d), gated=s.g>=MIN, wc=wr>=50?C.win:C.loss;
     var chrono=s.kl.slice().reverse(), mastery='<span class="text-faint">—</span>';
     if(s.g>=4){ var h=Math.floor(chrono.length/2), early=mean(chrono.slice(0,h)), late=mean(chrono.slice(h)), up=late>early*1.05,dn=late<early*0.95;
-      mastery='<span class="font-mono text-[12px]" style="color:'+(up?C.win:dn?C.loss:C.slate)+'">'+(up?'▲ rising':dn?'▼ falling':'→ steady')+'</span>'; }
-    var wrCell=gated?'<div class="flex items-center gap-2.5 justify-end"><div class="h-[3px] w-14 bg-ink2 overflow-hidden rounded-full"><div class="h-full rounded-full" style="width:'+wr+'%;background:'+wc+'"></div></div><span class="font-mono tnum text-[13px]" style="color:'+wc+'">'+wr+'%</span></div>'
-      :'<div class="text-right"><span class="font-mono tnum text-[13px] text-faint" title="Min '+MIN+' games to rate">'+wr+'%*</span></div>';
+      mastery='<span class="font-mono text-[11px]" style="color:'+(up?C.win:dn?C.loss:C.slate)+'">'+(up?'▲ rising':dn?'▼ falling':'→ steady')+'</span>'; }
+    var wrCell=gated?'<div class="flex items-center gap-2 justify-end"><div class="h-[3px] w-12 bg-ink2 overflow-hidden rounded-full"><div class="h-full rounded-full" style="width:'+wr+'%;background:'+wc+'"></div></div><span class="font-mono tnum text-[12px]" style="color:'+wc+'">'+wr+'%</span></div>'
+      :'<div class="text-right"><span class="font-mono tnum text-[12px] text-faint" title="Min '+MIN+' games to rate">'+wr+'%*</span></div>';
     html+='<tr class="border-b border-hair/60">'
-      +'<td class="py-3 pr-4"><div class="flex items-center gap-2.5"><img src="'+champImg(ch)+'" class="h-7 w-7 rounded-sm object-cover scale-110" alt=""><span class="font-display text-[15px] text-bone">'+ch+'</span></div></td>'
-      +'<td class="py-3 pr-4 font-mono tnum text-[13px] text-slate">'+s.g+'</td><td class="py-3 pr-4">'+wrCell+'</td>'
-      +'<td class="py-3 pr-4 font-mono tnum text-[13px] text-bone text-right">'+kda.toFixed(2)+'</td>'
-      +'<td class="py-3 pr-4 text-right">'+mastery+'</td>'
-      +'<td class="py-3 pr-4 font-mono tnum text-[13px] text-slate text-right">'+Math.round(s.cs/s.g)+'</td>'
-      +'<td class="py-3 pr-4 font-mono tnum text-[13px] text-slate text-right">'+(s.dmg/s.g/1000).toFixed(1)+'k</td>'
-      +'<td class="py-3 font-mono tnum text-[13px] text-slate text-right">'+(s.vis/s.g).toFixed(1)+'</td></tr>';
+      +'<td class="py-2.5 pr-4"><div class="flex items-center gap-2.5"><img src="'+champImg(ch)+'" class="h-6 w-6 rounded-sm object-cover scale-110" alt=""><span class="font-display font-500 text-[14px] text-bone">'+ch+'</span></div></td>'
+      +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-slate">'+s.g+'</td><td class="py-2.5 pr-4">'+wrCell+'</td>'
+      +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-bone text-right">'+kda.toFixed(2)+'</td>'
+      +'<td class="py-2.5 pr-4 text-right">'+mastery+'</td>'
+      +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-slate text-right">'+Math.round(s.cs/s.g)+'</td>'
+      +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-slate text-right">'+(s.dmg/s.g/1000).toFixed(1)+'k</td>'
+      +'<td class="py-2.5 font-mono tnum text-[12px] text-slate text-right">'+(s.vis/s.g).toFixed(1)+'</td></tr>';
   });
-  html+='</tbody></table></div><p class="meta !text-faint normal-case !tracking-[0.04em] mt-3">* Win rate not rated below '+MIN+' games — too small to read.</p>';
+  html+='</tbody></table></div><p class="meta !text-faint normal-case !tracking-[0.02em] mt-2.5">* Win rate not rated below '+MIN+' games — too small to read.</p>';
   host.innerHTML=html;
 }
 
 /* ════════════ WIRING ════════════ */
 function switchTab(which){
-  var on='font-mono text-[12px] tracking-[0.18em] uppercase text-bone border-b border-gold pb-1';
-  var off='font-mono text-[12px] tracking-[0.18em] uppercase text-faint hover:text-slate border-b border-transparent pb-1';
+  var on='font-mono text-[11px] tracking-[0.16em] uppercase text-bone border-b border-gold pb-1';
+  var off='font-mono text-[11px] tracking-[0.16em] uppercase text-faint hover:text-slate border-b border-transparent pb-1';
   var m=which==='matches';
   document.getElementById('tab-btn-matches').className=m?on:off;
   document.getElementById('tab-btn-champions').className=m?off:on;
