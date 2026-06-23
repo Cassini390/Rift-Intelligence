@@ -1,5 +1,16 @@
 # LoL Stat Tracker - Changelog
 
+## v3.2 - Classified Subject File (premium minimalist redesign)
+- Reframed the whole page as a refined intelligence dossier *about a summoner*: case-file masthead, classification stamp, and §-numbered sections.
+- **Signature moment:** a redaction bar that wipes away to reveal the subject's codename on load (respects `prefers-reduced-motion`).
+- New premium-minimalist identity: ink / parchment / hextech-gold palette (muted jade & oxblood semantics, never neon), generous whitespace, hairline structure instead of boxed cards.
+- New type system: **Fraunces** (display serif, used sparingly), **Hanken Grotesk** (body), **JetBrains Mono** (dossier metadata & tabular data).
+- Same engine underneath — Scouting Report findings, Biometric (win-condition) fingerprint, per-engagement "Read", strict per-queue partitioning, confidence stamp.
+- Removed the secondary trend-tile strip to cut clutter; findings + fingerprint carry the analysis.
+- No data or server changes from v3.1.
+
+---
+
 ## v3.1 - The Scouting Report
 - **New hero — Scouting Report:** an auto-generated set of plain-language reads mined from your last 20 games, ranked by signal strength. Findings include one-trick risk, early-game/snowball dependence, session tilt decay, carry-or-passenger, late-game closing, comfort/trap champions, and autofill (off-role) tax. Each finding suppresses itself when the sample is too thin to claim honestly.
 - **New signature visual — Win-condition Fingerprint:** diverging bars showing how each factor (KDA, kill participation, damage share, vision, CS/min, game length, deaths) separates your wins from your losses.
