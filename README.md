@@ -1,6 +1,3 @@
-![Visual Example](https://i.postimg.cc/DyDT8q8F/Github-Image.png)
-
-
 # Rift Readout — LoL Scouting Dossier
 
 A locally hosted League of Legends performance tracker that pulls live data from the Riot Games API and reads your recent games back to you like a scout. Instead of another wall of tables, it leads with plain-language insight: what your wins have in common, where your form is slipping, and which habits are costing you games. Dark, dense, and built on a tactical "scouting dossier" identity.
