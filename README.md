@@ -1,26 +1,34 @@
 ![Visual Example](https://i.postimg.cc/DyDT8q8F/Github-Image.png)
 
 
-# LoL Stat Tracker
+# Rift Readout — LoL Scouting Dossier
 
-A locally hosted League of Legends stat tracker that pulls live data from the Riot Games API and displays your match history, champion stats, item builds, and full game scoreboards in a polished dark-themed web interface.
+A locally hosted League of Legends performance tracker that pulls live data from the Riot Games API and reads your recent games back to you like a scout. Instead of another wall of tables, it leads with plain-language insight: what your wins have in common, where your form is slipping, and which habits are costing you games. Dark, dense, and built on a tactical "scouting dossier" identity.
 
 ---
 
 ## What It Does
 
-- Displays your recent match history across all queue types (Ranked, Normal, ARAM, ARAM Mayhem, etc.)
-- Shows per-match stats: champion, K/D/A, CS, damage dealt, gold earned, vision score, item builds, summoner spells, and keystone rune
-- Expandable full scoreboard for each match showing all 10 players with their stats and builds
-- Champion breakdown tab with aggregated win rate, KDA, CS, damage, and gold per champion
-- Summary stat cards: overall win rate, average KDA, CS, damage, gold, and vision score
-- KDA trend chart and rolling 5-game win rate chart
-- Win/loss streak detection
-- Best, worst, and most played champion highlights
-- Filter matches by queue type or champion
-- Auto-refresh every 5 minutes (optional)
-- Export your match history to a CSV file
-- Remembers your last search across page reloads
+**The hero — an auto-generated Scouting Report.** From your last 20 games it mines ranked, plain-language findings such as:
+- **One-trick risk** — how concentrated your champion pool is, and your off-champ win rate
+- **Early-game / snowball dependence** — win rate with vs without first blood
+- **Tilt tell** — how your results decay across a session (game 1 vs game 3+)
+- **Carry or passenger** — your damage share in wins vs losses
+- **Closing / scaling** — win rate in short vs long games
+- **Comfort & trap picks** — your best and worst champions (minimum-games gated)
+- **Autofill tax** — how often you're off-role and how you perform there
+
+Every finding suppresses itself when the sample is too thin to claim honestly, and each report carries a **LOW / MEDIUM / HIGH confidence stamp** based on sample size.
+
+**Plus the supporting readout:**
+- **Win-condition Fingerprint** — diverging bars showing how each factor (KDA, kill participation, damage share, vision, CS/min, game length, deaths) separates your wins from your losses
+- **Form Verdict + Form Ribbon** — a synthesised verdict (CLIMBING / HOLDING / SLIPPING / VOLATILE) beside a 20-game win/loss ribbon
+- **Strict per-queue view** — stats are never mixed across queues; tabs default to your most-played queue
+- Per-match cards with KDA colour thresholds, a CS/min benchmark, role tag, and a one-line "Read" of why each game was won or lost
+- Expandable full scoreboard for each match (all 10 players, builds, runes, spells)
+- Champion pool table with gated win rate, a mastery trend, and pool-concentration signal
+- Win/loss streak detection, EWMA-smoothed secondary trend tiles, CSV export, last-search memory
+- Orchestrated load animation that respects `prefers-reduced-motion`, and a responsive layout down to mobile
 
 ---
 
@@ -37,10 +45,11 @@ A locally hosted League of Legends stat tracker that pulls live data from the Ri
 
 | File | Description |
 |------|-------------|
-| `index.html` | The frontend UI — handles search, displays all stats, charts, match history, and scoreboards |
-| `server.js` | Local Node.js/Express proxy server that forwards requests to the Riot API |
+| `index.html` | The frontend UI — search, Scouting Report, fingerprint, match history, scoreboards, and the analytics engine (built on Tailwind via CDN) |
+| `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API and shapes the match data |
+| `start-tracker.bat` | **Windows one-click launcher** — prompts for your API key, saves it to `.env`, starts the server, and opens the browser |
 | `package.json` | Node.js dependencies (Express, node-fetch, cors, dotenv) |
-| `.env` | **Your API key goes here** — never committed to git |
+| `.env` | **Your API key goes here** — git-ignored, never committed |
 | `.env.example` | Template showing the required environment variables |
 | `.gitignore` | Prevents `.env` and `node_modules` from being committed |
 | `CHANGELOG.md` | Full version history |
@@ -48,7 +57,26 @@ A locally hosted League of Legends stat tracker that pulls live data from the Ri
 
 ---
 
-## Setup Instructions
+## Quick Start (Windows)
+
+The fastest way to run the tracker:
+
+1. Make sure [Node.js](https://nodejs.org) is installed.
+2. Double-click **`start-tracker.bat`**.
+
+It will:
+- install dependencies on first run,
+- prompt you to paste your Riot API key (and save it to `.env` for you — or let you keep the existing one),
+- start the server, and
+- open `http://localhost:3000` in your browser.
+
+Because free dev keys expire every 24 hours, just run the `.bat` again and paste a fresh key when prompted. To stop the tracker, close the "Rift Readout Server" window.
+
+Prefer to do it by hand, or on Mac/Linux? Follow the manual steps below.
+
+---
+
+## Setup Instructions (manual)
 
 ### 1. Install Node.js
 
@@ -218,4 +246,4 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ## Version
 
-Current version: **v1.8** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v3.1 — The Scouting Report** — see [CHANGELOG.md](CHANGELOG.md) for full history.

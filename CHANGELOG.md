@@ -1,5 +1,34 @@
 # LoL Stat Tracker - Changelog
 
+## v3.1 - The Scouting Report
+- **New hero — Scouting Report:** an auto-generated set of plain-language reads mined from your last 20 games, ranked by signal strength. Findings include one-trick risk, early-game/snowball dependence, session tilt decay, carry-or-passenger, late-game closing, comfort/trap champions, and autofill (off-role) tax. Each finding suppresses itself when the sample is too thin to claim honestly.
+- **New signature visual — Win-condition Fingerprint:** diverging bars showing how each factor (KDA, kill participation, damage share, vision, CS/min, game length, deaths) separates your wins from your losses.
+- **Confidence stamp:** every report is labelled LOW / MEDIUM / HIGH by sample size — the tool won't call a small sample a trend.
+- **Dossier voice** throughout: verdicts, empty states, per-match reads, and tooltips speak in a consistent scout/analyst register.
+- **Orchestrated load motion:** report cards stagger in, fingerprint and form-ribbon bars grow from baseline, headline numbers count up once. Fully disabled under `prefers-reduced-motion`.
+- **Match-row craft:** KDA colour thresholds, a CS/min benchmark micro-bar, a role tag, and a one-line "Read" of why each game was won or lost on expand.
+- **CSS rank emblems** (hexagon tier badges) for instant rank recognition; secondary trend tiles demoted into a collapsible panel.
+- **Server:** surfaces `role`, `firstBlood`, `killParticipation`, and `teamDmgPct` — all extracted from the match payload already fetched, with **zero additional Riot API calls**.
+
+---
+
+## v3.0 - Rift Readout (full rebuild)
+- **New identity "Rift Readout":** a tactical scouting-dossier look rooted in the actual League client palette — blue-black surfaces, hextech gold brand accent, warm parchment headings. Replaces the old multi-theme system and banner.
+- **Full Tailwind migration:** markup rebuilt on Tailwind (CDN runtime) with an inline token config for colours, type, and spacing.
+- **Signature element — Form Verdict + Form Ribbon:** a synthesised verdict word (CLIMBING / HOLDING / SLIPPING / VOLATILE / WARMING UP) beside a 20-game ribbon of win/loss bars whose height encodes per-game KDA. Answers "how am I doing?" at a glance.
+- **Noise-controlled analytics (within the 20-game data):**
+  - Rolling-window win-rate trend with a binomial confidence check — a coin-flip swing is reported as *stable*, not a trend.
+  - Minimum 10-game sample before any trend is flagged; below it, raw stats show with a "low sample" note.
+  - EWMA-smoothed sparklines (favouring recent games) on KDA, CS/min, vision, and damage share.
+  - **Strict per-queue partitioning** — queue tabs replace the old "All" aggregate so stats never mix queues.
+  - Per-champion win rate gated to a 3-game minimum, plus mastery-trend and pool-concentration signals.
+- **Typography:** Rajdhani (HUD/display) · IBM Plex Sans (body) · IBM Plex Mono (all data, tabular figures).
+- **UX/quality floor:** skeleton loaders over spinners, F-pattern match rows with a sacred win/loss left stripe, keyboard focus rings, reduced-motion support, responsive down to mobile.
+- Theme switcher and per-theme banners removed in favour of the single fixed identity.
+- Three analytics rules from the spec are not derivable from the Riot API and were intentionally omitted: gold diff @10/15 (needs the timeline endpoint), patch-boundary marking (needs more history), and true rank/role percentiles (no Riot endpoint — trends are framed against the player's own baseline instead).
+
+---
+
 ## v2.2 - Visual Redesign & Scoreboard Improvements
 - Full visual redesign: sticky glass-blur navigation bar replaces the in-page title
 - Theme switcher moved into the nav bar as compact colour dots with an active ring indicator

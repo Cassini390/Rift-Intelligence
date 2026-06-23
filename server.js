@@ -125,6 +125,20 @@ app.get('/api/summoner', async (req, res) => {
       const spell2Id = String(p.summoner2Id);
       const keystoneId = p.perks?.styles?.[0]?.selections?.[0]?.perk;
       const keystoneInfo = keystoneId && runeLookup[keystoneId] ? runeLookup[keystoneId] : null;
+
+      // ── Extra signals for the Scouting Report ──
+      // All read from the match payload we already fetched — ZERO additional API calls.
+      const ch = p.challenges || {};
+      const teamMates = m.info.participants.filter(x => x.teamId === p.teamId);
+      const teamKills = teamMates.reduce((s, x) => s + x.kills, 0);
+      const teamDmg = teamMates.reduce((s, x) => s + (x.totalDamageDealtToChampions || 0), 0);
+      const killParticipation = ch.killParticipation != null
+        ? ch.killParticipation
+        : (teamKills > 0 ? (p.kills + p.assists) / teamKills : null);
+      const teamDmgPct = ch.teamDamagePercentage != null
+        ? ch.teamDamagePercentage
+        : (teamDmg > 0 ? (p.totalDamageDealtToChampions || 0) / teamDmg : null);
+
       // Map all 10 players for the scoreboard
       const allPlayers = m.info.participants.map(pl => {
         const plItems = [pl.item0, pl.item1, pl.item2, pl.item3, pl.item4, pl.item5].filter(id => id > 0);
@@ -166,6 +180,10 @@ app.get('/api/summoner', async (req, res) => {
         ts: m.info.gameEndTimestamp,
         queueId: m.info.queueId,
         queueLabel: QUEUE_LABELS[m.info.queueId] || 'Other',
+        role: p.teamPosition || p.individualPosition || '',
+        firstBlood: !!(p.firstBloodKill || p.firstBloodAssist),
+        killParticipation,
+        teamDmgPct,
         items, trinket,
         spell1: spellData[spell1Id] || null,
         spell2: spellData[spell2Id] || null,
