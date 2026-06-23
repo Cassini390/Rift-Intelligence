@@ -1,5 +1,11 @@
 # LoL Stat Tracker - Changelog
 
+## v3.3.1 - Champion display names
+- Champion names now show their proper display form (e.g. Twisted Fate, Tahm Kench, Wukong, Kai'Sa) instead of Data Dragon's mashed-together keys.
+- Names are pulled from Data Dragon's `champion.json`, with a space-insertion fallback if that lookup is unavailable. Raw keys are still used for icons and filtering, so nothing else changes.
+
+---
+
 ## v3.3 - Type, density & navigation pass
 - Retuned the type system: **Space Grotesk** (display) / **Inter** (body) / **JetBrains Mono** (data) — replaces the earlier Fraunces serif for a sharper, more even feel.
 - Tighter, compact spacing on a regular vertical rhythm; smaller type scale throughout.

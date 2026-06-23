@@ -300,6 +300,18 @@ function spellImg(i){return DD+DD_VERSION+'/img/spell/'+i+'.png';}
 function runeImg(ic){return 'https://ddragon.leagueoflegends.com/cdn/img/'+ic;}
 function iconImg(i){return DD+DD_VERSION+'/img/profileicon/'+i+'.png';}
 
+/* Champion display names — real names from Data Dragon (e.g. TwistedFate → Twisted Fate),
+   with a space-insertion fallback if the lookup hasn't loaded. Raw key is kept for images/filters. */
+var CHAMP_NAMES={};
+function prettyChamp(k){ return k ? k.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/([A-Za-z])([0-9])/g,'$1 $2') : ''; }
+function displayChamp(k){ return CHAMP_NAMES[k] || prettyChamp(k); }
+function loadChampNames(v){
+  return fetch('https://ddragon.leagueoflegends.com/cdn/'+v+'/data/en_US/champion.json')
+    .then(function(r){ return r.json(); })
+    .then(function(j){ Object.keys(j.data).forEach(function(k){ CHAMP_NAMES[j.data[k].id]=j.data[k].name; }); })
+    .catch(function(){});
+}
+
 /* ════════════ METRICS ════════════ */
 function kdaOf(m){return (m.kills+m.assists)/Math.max(1,m.deaths);}
 function csPerMin(m){return m.cs/Math.max(1,m.duration/60);}
@@ -336,8 +348,8 @@ function f_oneTrick(ms){
   var top=Object.keys(c).sort(function(a,b){return c[b]-c[a];})[0];
   var share=c[top]/n; if(share<0.45) return null;
   var on=ms.filter(function(m){return m.champion===top;}), off=ms.filter(function(m){return m.champion!==top;});
-  var detail = off.length>=2 ? top+' holds '+pc(wrOf(on))+'% · everything else '+pc(wrOf(off))+'%.' : 'A very narrow pool this stretch.';
-  return {sev: share>=0.6?'bad':'neutral', tag:'POOL', headline:pc(share)+'% of games on '+top+'.', detail:detail, score: share*1.2};
+  var detail = off.length>=2 ? displayChamp(top)+' holds '+pc(wrOf(on))+'% · everything else '+pc(wrOf(off))+'%.' : 'A very narrow pool this stretch.';
+  return {sev: share>=0.6?'bad':'neutral', tag:'POOL', headline:pc(share)+'% of games on '+displayChamp(top)+'.', detail:detail, score: share*1.2};
 }
 function f_snowball(ms){
   var fb=ms.filter(function(m){return m.firstBlood;}), no=ms.filter(function(m){return !m.firstBlood;});
@@ -379,14 +391,14 @@ function f_comfort(ms){
   var c={}; ms.forEach(function(m){ var x=c[m.champion]||(c[m.champion]={g:0,w:0,kl:[]}); x.g++; if(m.win)x.w++; x.kl.push(kdaOf(m)); });
   var best=null; Object.keys(c).forEach(function(k){ var x=c[k]; if(x.g>=3){ var wr=x.w/x.g; if(!best||wr>best.wr||(wr===best.wr&&x.g>best.g)) best={champ:k,wr:wr,g:x.g,kda:mean(x.kl)}; } });
   if(!best||best.wr<0.55) return null;
-  return {sev:'good', tag:'ASSET', headline:'Reliable asset — '+best.champ+' at '+pc(best.wr)+'% over '+best.g+' games.',
+  return {sev:'good', tag:'ASSET', headline:'Reliable asset — '+displayChamp(best.champ)+' at '+pc(best.wr)+'% over '+best.g+' games.',
     detail:best.kda.toFixed(1)+' KDA. A dependable blind pick.', score:0.4+best.wr*0.5};
 }
 function f_trap(ms){
   var c={}; ms.forEach(function(m){ var x=c[m.champion]||(c[m.champion]={g:0,w:0}); x.g++; if(m.win)x.w++; });
   var worst=null; Object.keys(c).forEach(function(k){ var x=c[k]; if(x.g>=3){ var wr=x.w/x.g; if(!worst||wr<worst.wr) worst={champ:k,wr:wr,g:x.g}; } });
   if(!worst||worst.wr>0.4) return null;
-  return {sev:'bad', tag:'LIABILITY', headline:'Liability — '+worst.champ+' at '+pc(worst.wr)+'% over '+worst.g+' games.',
+  return {sev:'bad', tag:'LIABILITY', headline:'Liability — '+displayChamp(worst.champ)+' at '+pc(worst.wr)+'% over '+worst.g+' games.',
     detail:'Reads as comfortable, performs sour. Bench it or review the tape.', score:0.4+(1-worst.wr)*0.5};
 }
 function f_role(ms){
@@ -418,7 +430,7 @@ function fetchStats(){
   document.getElementById('export-btn').style.display='none';
   fetch('/api/summoner?name='+encodeURIComponent(name)+'&tag='+encodeURIComponent(tag)+'&region='+region)
     .then(function(r){ return r.json().then(function(d){ if(!r.ok) throw new Error(d.error||('HTTP '+r.status)); return d; }); })
-    .then(function(d){ DD_VERSION=d.ddVersion||DD_VERSION; render(d); })
+    .then(function(d){ DD_VERSION=d.ddVersion||DD_VERSION; return loadChampNames(DD_VERSION).then(function(){ render(d); }); })
     .catch(function(e){ err.textContent = e.name==='TypeError' ? 'No contact with the server. Is "node server.js" running?' : 'Error: '+e.message; })
     .finally(function(){ document.getElementById('loading').style.display='none'; });
 }
@@ -530,7 +542,7 @@ function renderChampFilters(){
     var on=ch===ACTIVE_CHAMP;
     var b=document.createElement('button');
     b.className='font-mono text-[11px] tracking-[0.04em] transition-colors '+(on?'text-bone':'text-faint hover:text-slate');
-    b.textContent=ch==='All'?'all':ch.toLowerCase();
+    b.textContent=ch==='All'?'all':displayChamp(ch).toLowerCase();
     b.addEventListener('click',function(){ ACTIVE_CHAMP=ch; renderQueue(); });
     wrap.appendChild(b);
   });
@@ -556,7 +568,7 @@ function renderAssessment(ms){
   var targets=[];
   chrono.forEach(function(m){ var bar=document.createElement('div'); bar.className='ribbon-bar '+(m.win?'win':'loss');
     var h=30+Math.min(1,kdaOf(m)/maxK)*70; targets.push({bar:bar,h:h});
-    bar.title=(m.win?'Victory':'Defeat')+' · '+m.champion+' · '+m.kills+'/'+m.deaths+'/'+m.assists; ribbon.appendChild(bar); });
+    bar.title=(m.win?'Victory':'Defeat')+' · '+displayChamp(m.champion)+' · '+m.kills+'/'+m.deaths+'/'+m.assists; ribbon.appendChild(bar); });
   var setRibbon=function(){ targets.forEach(function(t){ t.bar.style.height=t.h+'%'; }); };
   if(reducedMotion) setRibbon(); else setTimeout(setRibbon,30);
 
@@ -670,7 +682,7 @@ function renderMatchList(ms){
         +'<span class="block meta !text-faint !tracking-[0.04em] tnum mt-0.5">'+mins+':'+secs+'</span></span>'
       +'<span class="shrink-0 relative"><span class="block h-10 w-10 rounded-sm overflow-hidden ring-1" style="--tw-ring-color:'+col+'40"><img src="'+champImg(m.champion)+'" class="h-full w-full object-cover scale-110" alt="'+m.champion+'"></span>'
         +'<span class="absolute -bottom-1 -right-1 flex gap-0.5">'+spells+'</span></span>'
-      +'<span class="min-w-0 flex-1"><span class="block font-display font-500 text-bone text-[14px] leading-tight">'+m.champion+'</span>'
+      +'<span class="min-w-0 flex-1"><span class="block font-display font-500 text-bone text-[14px] leading-tight">'+displayChamp(m.champion)+'</span>'
         +'<span class="block meta !text-faint !tracking-[0.08em] mt-0.5">'+(m.role?roleName(m.role)+' · ':'')+(m.queueLabel||'')+'</span></span>'
       +'<span class="shrink-0 text-right hidden sm:block"><span class="block font-mono tnum text-[13px] text-bone">'+m.kills+' / <span style="color:'+C.loss+'">'+m.deaths+'</span> / '+m.assists+'</span>'
         +'<span class="block meta !text-faint !tracking-[0.04em] mt-0.5" style="color:'+kdaColor+'">'+kda.toFixed(2)+' KDA</span></span>'
@@ -737,7 +749,7 @@ function renderChampPool(ms){
   var sorted=Object.keys(c).map(function(k){return [k,c[k]];}).sort(function(a,b){return b[1].g-a[1].g;});
   if(!sorted.length){ host.innerHTML='<p class="text-slate text-[13px] py-5">No champions in this theatre.</p>'; return; }
   var total=ms.length, topShare=Math.round(sorted[0][1].g/total*100), distinct=sorted.length;
-  var conc=topShare>=50?'Concentrated — '+topShare+'% of games on '+sorted[0][0]+'.':distinct>=7?'Wide — '+distinct+' champions across '+total+' games.':'Balanced — '+distinct+' champions, top is '+topShare+'%.';
+  var conc=topShare>=50?'Concentrated — '+topShare+'% of games on '+displayChamp(sorted[0][0])+'.':distinct>=7?'Wide — '+distinct+' champions across '+total+' games.':'Balanced — '+distinct+' champions, top is '+topShare+'%.';
   var MIN=3;
   var html='<p class="meta normal-case !tracking-[0.02em] text-slate mb-4"><span class="!tracking-[0.2em] uppercase text-goldsoft mr-2">Pool</span>'+conc+'</p>';
   html+='<div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-hair">'
@@ -750,7 +762,7 @@ function renderChampPool(ms){
     var wrCell=gated?'<div class="flex items-center gap-2 justify-end"><div class="h-[3px] w-12 bg-ink2 overflow-hidden rounded-full"><div class="h-full rounded-full" style="width:'+wr+'%;background:'+wc+'"></div></div><span class="font-mono tnum text-[12px]" style="color:'+wc+'">'+wr+'%</span></div>'
       :'<div class="text-right"><span class="font-mono tnum text-[12px] text-faint" title="Min '+MIN+' games to rate">'+wr+'%*</span></div>';
     html+='<tr class="border-b border-hair/60">'
-      +'<td class="py-2.5 pr-4"><div class="flex items-center gap-2.5"><img src="'+champImg(ch)+'" class="h-6 w-6 rounded-sm object-cover scale-110" alt=""><span class="font-display font-500 text-[14px] text-bone">'+ch+'</span></div></td>'
+      +'<td class="py-2.5 pr-4"><div class="flex items-center gap-2.5"><img src="'+champImg(ch)+'" class="h-6 w-6 rounded-sm object-cover scale-110" alt=""><span class="font-display font-500 text-[14px] text-bone">'+displayChamp(ch)+'</span></div></td>'
       +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-slate">'+s.g+'</td><td class="py-2.5 pr-4">'+wrCell+'</td>'
       +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-bone text-right">'+kda.toFixed(2)+'</td>'
       +'<td class="py-2.5 pr-4 text-right">'+mastery+'</td>'
