@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rift Intelligence — Classified Subject File</title>
+<title>Rift Intelligence - Classified Subject File</title>
 
 <!-- Type: Space Grotesk (display) · Inter (body) · JetBrains Mono (dossier metadata/data) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,7 @@
 
   .sigil { width:24px; height:26px; }
 
-  /* Redaction reveal — signature moment */
+  /* Redaction reveal - signature moment */
   .redact-wrap { position:relative; display:inline-block; }
   .redact { position:absolute; inset:-1px -5px; background:#15171C; border-radius:2px;
     transform-origin:right center; transition:transform .9s cubic-bezier(.76,0,.24,1); }
@@ -275,9 +275,9 @@
     <div id="rn-body" style="display:none" class="mt-4 max-w-2xl">
       <p class="font-mono text-[11px] tracking-[0.1em] text-bone uppercase">v3.3 · Classified Subject File</p>
       <ul class="mt-2.5 space-y-1 text-slate text-[13px] leading-relaxed">
-        <li>— Retuned type system: Space Grotesk (display) / Inter (body) / JetBrains Mono (data)</li>
-        <li>— Tighter, compact spacing on a regular vertical rhythm</li>
-        <li>— Same intelligence-dossier framing, Scouting Report engine & biometric fingerprint</li>
+        <li>- Retuned type system: Space Grotesk (display) / Inter (body) / JetBrains Mono (data)</li>
+        <li>- Tighter, compact spacing on a regular vertical rhythm</li>
+        <li>- Same intelligence-dossier framing, Scouting Report engine & biometric fingerprint</li>
       </ul>
       <p class="meta !text-faint mt-3 normal-case">Full history in <span class="text-goldsoft">CHANGELOG.md</span>.</p>
     </div>
@@ -300,7 +300,7 @@ function spellImg(i){return DD+DD_VERSION+'/img/spell/'+i+'.png';}
 function runeImg(ic){return 'https://ddragon.leagueoflegends.com/cdn/img/'+ic;}
 function iconImg(i){return DD+DD_VERSION+'/img/profileicon/'+i+'.png';}
 
-/* Champion display names — real names from Data Dragon (e.g. TwistedFate → Twisted Fate),
+/* Champion display names - real names from Data Dragon (e.g. TwistedFate → Twisted Fate),
    with a space-insertion fallback if the lookup hasn't loaded. Raw key is kept for images/filters. */
 var CHAMP_NAMES={};
 function prettyChamp(k){ return k ? k.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/([A-Za-z])([0-9])/g,'$1 $2') : ''; }
@@ -356,7 +356,7 @@ function f_snowball(ms){
   if(fb.length<3||no.length<3) return null;
   var wF=wrOf(fb), wN=wrOf(no), d=wF-wN; if(Math.abs(d)<0.15) return null;
   return {sev: wN<0.4?'bad':'neutral', tag:'EARLY GAME',
-    headline:'Snowball-dependent — '+pc(wF)+'% with first blood, '+pc(wN)+'% without.',
+    headline:'Snowball-dependent - '+pc(wF)+'% with first blood, '+pc(wN)+'% without.',
     detail: wN<0.4 ? "The subject does not play from behind; losses cluster when the early lead slips." : 'The early lead does the heavy lifting.',
     score: Math.abs(d)*1.3};
 }
@@ -366,7 +366,7 @@ function f_tilt(ms){
   var first=tagged.filter(function(m){return m._sess===0;}), late=tagged.filter(function(m){return m._sess>=2;});
   if(first.length<3||late.length<3) return null;
   var wF=wrOf(first), wL=wrOf(late); if(wF-wL<0.15) return null;
-  return {sev:'bad', tag:'ENDURANCE', headline:'Session decay — '+pc(wF)+'% on game one, '+pc(wL)+'% by the third.',
+  return {sev:'bad', tag:'ENDURANCE', headline:'Session decay - '+pc(wF)+'% on game one, '+pc(wL)+'% by the third.',
     detail:'Performance erodes the longer the subject stays queued. '+late.length+' late-session games observed.', score:(wF-wL)*1.25};
 }
 function f_carry(ms){
@@ -375,30 +375,30 @@ function f_carry(ms){
   var dw=w.map(dmgShare).filter(function(x){return x!=null;}), dl=l.map(dmgShare).filter(function(x){return x!=null;});
   if(dw.length<2||dl.length<2) return null;
   var mw=mean(dw), ml=mean(dl), d=mw-ml; if(d<0.04) return null;
-  return {sev:'neutral', tag:'AGENCY', headline:'Wins demand carry — '+pc(mw)+'% of team damage in victories vs '+pc(ml)+'% in defeats.',
+  return {sev:'neutral', tag:'AGENCY', headline:'Wins demand carry - '+pc(mw)+'% of team damage in victories vs '+pc(ml)+'% in defeats.',
     detail:'When the subject is not the primary threat, games tend to slip. Draft for agency.', score:d*2};
 }
 function f_closing(ms){
   var s=ms.filter(function(m){return m.duration<25*60;}), lo=ms.filter(function(m){return m.duration>32*60;});
   if(s.length<3||lo.length<3) return null;
   var wS=wrOf(s), wL=wrOf(lo), d=wS-wL; if(Math.abs(d)<0.15) return null;
-  if(d>0) return {sev:'bad', tag:'TEMPO', headline:'Fades late — '+pc(wS)+'% under 25 min, '+pc(wL)+'% past 32.',
+  if(d>0) return {sev:'bad', tag:'TEMPO', headline:'Fades late - '+pc(wS)+'% under 25 min, '+pc(wL)+'% past 32.',
     detail:'Leads should be pressed early; the edge erodes the longer games run.', score:Math.abs(d)*1.1};
-  return {sev:'good', tag:'TEMPO', headline:'Scales well — '+pc(wL)+'% in long games, '+pc(wS)+'% in short ones.',
+  return {sev:'good', tag:'TEMPO', headline:'Scales well - '+pc(wL)+'% in long games, '+pc(wS)+'% in short ones.',
     detail:'Strongest in extended games; play for the long game when behind.', score:Math.abs(d)*1.1};
 }
 function f_comfort(ms){
   var c={}; ms.forEach(function(m){ var x=c[m.champion]||(c[m.champion]={g:0,w:0,kl:[]}); x.g++; if(m.win)x.w++; x.kl.push(kdaOf(m)); });
   var best=null; Object.keys(c).forEach(function(k){ var x=c[k]; if(x.g>=3){ var wr=x.w/x.g; if(!best||wr>best.wr||(wr===best.wr&&x.g>best.g)) best={champ:k,wr:wr,g:x.g,kda:mean(x.kl)}; } });
   if(!best||best.wr<0.55) return null;
-  return {sev:'good', tag:'ASSET', headline:'Reliable asset — '+displayChamp(best.champ)+' at '+pc(best.wr)+'% over '+best.g+' games.',
+  return {sev:'good', tag:'ASSET', headline:'Reliable asset - '+displayChamp(best.champ)+' at '+pc(best.wr)+'% over '+best.g+' games.',
     detail:best.kda.toFixed(1)+' KDA. A dependable blind pick.', score:0.4+best.wr*0.5};
 }
 function f_trap(ms){
   var c={}; ms.forEach(function(m){ var x=c[m.champion]||(c[m.champion]={g:0,w:0}); x.g++; if(m.win)x.w++; });
   var worst=null; Object.keys(c).forEach(function(k){ var x=c[k]; if(x.g>=3){ var wr=x.w/x.g; if(!worst||wr<worst.wr) worst={champ:k,wr:wr,g:x.g}; } });
   if(!worst||worst.wr>0.4) return null;
-  return {sev:'bad', tag:'LIABILITY', headline:'Liability — '+displayChamp(worst.champ)+' at '+pc(worst.wr)+'% over '+worst.g+' games.',
+  return {sev:'bad', tag:'LIABILITY', headline:'Liability - '+displayChamp(worst.champ)+' at '+pc(worst.wr)+'% over '+worst.g+' games.',
     detail:'Reads as comfortable, performs sour. Bench it or review the tape.', score:0.4+(1-worst.wr)*0.5};
 }
 function f_role(ms){
@@ -408,7 +408,7 @@ function f_role(ms){
   var off=withRole.filter(function(m){return m.role!==main;}); if(off.length<3) return null;
   var offShare=off.length/withRole.length, offWR=wrOf(off), mainWR=wrOf(withRole.filter(function(m){return m.role===main;}));
   if(offShare<0.25) return null;
-  return {sev:'bad', tag:'POSTING', headline:'Off-posting tax — '+pc(offShare)+'% of games off '+roleName(main)+', winning '+pc(offWR)+'%.',
+  return {sev:'bad', tag:'POSTING', headline:'Off-posting tax - '+pc(offShare)+'% of games off '+roleName(main)+', winning '+pc(offWR)+'%.',
     detail:'On '+roleName(main)+' the subject wins '+pc(mainWR)+'%. Hold the assigned role.', score:offShare*(0.5+Math.max(0,mainWR-offWR))};
 }
 function roleName(r){ return ({TOP:'top',JUNGLE:'jungle',MIDDLE:'mid',BOTTOM:'bot',UTILITY:'support'})[r] || r.toLowerCase(); }
@@ -551,17 +551,17 @@ function renderChampFilters(){
 /* ── Assessment ── */
 function renderAssessment(ms){
   var trend=winRateTrend(ms), vw=document.getElementById('verdict-word'), vn=document.getElementById('verdict-note'), verdict;
-  if(trend.state==='insufficient') verdict={w:'Inconclusive',c:C.slate,n:'Sample too thin for a confident assessment — '+MIN_TREND_GAMES+'+ games required in this theatre.'};
+  if(trend.state==='insufficient') verdict={w:'Inconclusive',c:C.slate,n:'Sample too thin for a confident assessment - '+MIN_TREND_GAMES+'+ games required in this theatre.'};
   else if(trend.state==='improving') verdict={w:'Ascending',c:C.win,n:'Win rate up '+trend.deltaPts+' points across the recent window, beyond ordinary variance.'};
   else if(trend.state==='declining') verdict={w:'Declining',c:C.loss,n:'Win rate down '+Math.abs(trend.deltaPts)+' points across the recent window, beyond ordinary variance.'};
   else { var flips=0; for(var i=1;i<ms.length;i++) if(ms[i].win!==ms[i-1].win) flips++;
-    verdict=(ms.length>1&&flips/(ms.length-1)>0.6)?{w:'Volatile',c:C.gold,n:'Results swing game to game; no directional trend beyond variance.'}:{w:'Holding',c:C.gold,n:'Form is steady — recent and prior windows sit within ordinary variance.'}; }
+    verdict=(ms.length>1&&flips/(ms.length-1)>0.6)?{w:'Volatile',c:C.gold,n:'Results swing game to game; no directional trend beyond variance.'}:{w:'Holding',c:C.gold,n:'Form is steady - recent and prior windows sit within ordinary variance.'}; }
   vw.textContent=verdict.w; vw.style.color=verdict.c; vn.textContent=verdict.n;
 
   var conf=confidenceOf(ms.length), stamp=document.getElementById('confidence-stamp');
   stamp.textContent='Confidence · '+conf.lvl; stamp.style.color=conf.c;
 
-  document.getElementById('ribbon-queue').textContent=ACTIVE_QUEUE||'—';
+  document.getElementById('ribbon-queue').textContent=ACTIVE_QUEUE||'-';
   var chrono=ms.slice().reverse(), kdas=chrono.map(kdaOf), maxK=Math.max(3,Math.min(8,kdas.length?Math.max.apply(null,kdas):3));
   var ribbon=document.getElementById('form-ribbon'); ribbon.innerHTML='';
   if(!chrono.length) ribbon.innerHTML='<span class="meta">No engagements in this theatre.</span>';
@@ -581,12 +581,12 @@ function renderAssessment(ms){
 
   countUp(document.getElementById('hl-kda'), n?mean(ms.map(kdaOf)):0, 2);
   var tk=0,td=0,ta=0; ms.forEach(function(m){tk+=m.kills;td+=m.deaths;ta+=m.assists;});
-  document.getElementById('hl-kda-sub').textContent=n?(tk/n).toFixed(1)+' / '+(td/n).toFixed(1)+' / '+(ta/n).toFixed(1):'—';
+  document.getElementById('hl-kda-sub').textContent=n?(tk/n).toFixed(1)+' / '+(td/n).toFixed(1)+' / '+(ta/n).toFixed(1):'-';
 
   var ranked=window._RANKED||{}, rk=ACTIVE_QUEUE==='Ranked Solo'?ranked.solo:ACTIVE_QUEUE==='Ranked Flex'?ranked.flex:null;
   var lbl=document.getElementById('hl-third-lbl'), val=document.getElementById('hl-third'), tsub=document.getElementById('hl-third-sub');
   if(rk){ lbl.textContent='Rank'; val.style.color='var(--t-'+(rk.tier||'UNRANKED').toUpperCase()+',var(--t-UNRANKED))'; val.innerHTML=rk.lp+'<span class="text-[15px]"> LP</span>'; tsub.textContent=rk.tier+' '+rk.rank; }
-  else { var st=getStreak(ms); lbl.textContent='Streak'; if(st){ val.style.color=st.type?C.win:C.loss; val.textContent=st.count+(st.type?'W':'L'); tsub.textContent=st.type?'consecutive wins':'consecutive losses'; } else { val.style.color=C.slate; val.textContent='—'; tsub.textContent='no active streak'; } }
+  else { var st=getStreak(ms); lbl.textContent='Streak'; if(st){ val.style.color=st.type?C.win:C.loss; val.textContent=st.count+(st.type?'W':'L'); tsub.textContent=st.type?'consecutive wins':'consecutive losses'; } else { val.style.color=C.slate; val.textContent='-'; tsub.textContent='no active streak'; } }
 }
 
 /* ── Findings ── */
@@ -595,7 +595,7 @@ function renderReport(ms){
   var moreBtn=document.getElementById('report-more');
   if(!findings.length){
     host.innerHTML='<p class="text-slate text-[13px] leading-relaxed max-w-lg">'
-      +(ms.length<6?'Insufficient intelligence — scout more engagements in this theatre for a full assessment.':'No standout patterns this stretch. The subject is unremarkable — itself a kind of stability.')+'</p>';
+      +(ms.length<6?'Insufficient intelligence - scout more engagements in this theatre for a full assessment.':'No standout patterns this stretch. The subject is unremarkable - itself a kind of stability.')+'</p>';
     moreBtn.style.display='none'; return;
   }
   var SHOW=4, cards=[];
@@ -652,13 +652,13 @@ function renderFingerprint(ms){
 /* ── Per-engagement read ── */
 function matchReason(m){
   var ds=dmgShare(m), kda=kdaOf(m), kp=kpOf(m);
-  if(m.win){ if(ds!=null&&ds>=0.30) return 'Carried — '+pc(ds)+'% of team damage.';
-    if(kda>=4) return 'Clean execution — '+kda.toFixed(1)+' KDA.';
-    if(kp!=null&&kp>=0.6) return 'Omnipresent — '+pc(kp)+'% kill participation.';
+  if(m.win){ if(ds!=null&&ds>=0.30) return 'Carried - '+pc(ds)+'% of team damage.';
+    if(kda>=4) return 'Clean execution - '+kda.toFixed(1)+' KDA.';
+    if(kp!=null&&kp>=0.6) return 'Omnipresent - '+pc(kp)+'% kill participation.';
     if(m.firstBlood) return 'Drew first blood and pressed it.'; return 'Secured the win.'; }
-  if(m.deaths>=8) return 'Overextended — '+m.deaths+' deaths.';
-  if(kda<1.5) return 'Outclassed — '+kda.toFixed(1)+' KDA.';
-  if(ds!=null&&ds<0.18) return 'Passenger — only '+pc(ds)+'% of team damage.'; return 'Lost the engagement.';
+  if(m.deaths>=8) return 'Overextended - '+m.deaths+' deaths.';
+  if(kda<1.5) return 'Outclassed - '+kda.toFixed(1)+' KDA.';
+  if(ds!=null&&ds<0.18) return 'Passenger - only '+pc(ds)+'% of team damage.'; return 'Lost the engagement.';
 }
 
 /* ── Field record ── */
@@ -749,14 +749,14 @@ function renderChampPool(ms){
   var sorted=Object.keys(c).map(function(k){return [k,c[k]];}).sort(function(a,b){return b[1].g-a[1].g;});
   if(!sorted.length){ host.innerHTML='<p class="text-slate text-[13px] py-5">No champions in this theatre.</p>'; return; }
   var total=ms.length, topShare=Math.round(sorted[0][1].g/total*100), distinct=sorted.length;
-  var conc=topShare>=50?'Concentrated — '+topShare+'% of games on '+displayChamp(sorted[0][0])+'.':distinct>=7?'Wide — '+distinct+' champions across '+total+' games.':'Balanced — '+distinct+' champions, top is '+topShare+'%.';
+  var conc=topShare>=50?'Concentrated - '+topShare+'% of games on '+displayChamp(sorted[0][0])+'.':distinct>=7?'Wide - '+distinct+' champions across '+total+' games.':'Balanced - '+distinct+' champions, top is '+topShare+'%.';
   var MIN=3;
   var html='<p class="meta normal-case !tracking-[0.02em] text-slate mb-4"><span class="!tracking-[0.2em] uppercase text-goldsoft mr-2">Pool</span>'+conc+'</p>';
   html+='<div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-hair">'
     +['Champion','G','Win rate','KDA','Mastery','CS','Dmg','Vis'].map(function(h,i){return '<th class="meta font-normal pb-2.5 pr-4 '+(i>1?'text-right':'')+'">'+h+'</th>';}).join('')+'</tr></thead><tbody>';
   sorted.forEach(function(e){
     var ch=e[0],s=e[1], wr=Math.round(s.w/s.g*100), kda=(s.k+s.a)/Math.max(1,s.d), gated=s.g>=MIN, wc=wr>=50?C.win:C.loss;
-    var chrono=s.kl.slice().reverse(), mastery='<span class="text-faint">—</span>';
+    var chrono=s.kl.slice().reverse(), mastery='<span class="text-faint">-</span>';
     if(s.g>=4){ var h=Math.floor(chrono.length/2), early=mean(chrono.slice(0,h)), late=mean(chrono.slice(h)), up=late>early*1.05,dn=late<early*0.95;
       mastery='<span class="font-mono text-[11px]" style="color:'+(up?C.win:dn?C.loss:C.slate)+'">'+(up?'▲ rising':dn?'▼ falling':'→ steady')+'</span>'; }
     var wrCell=gated?'<div class="flex items-center gap-2 justify-end"><div class="h-[3px] w-12 bg-ink2 overflow-hidden rounded-full"><div class="h-full rounded-full" style="width:'+wr+'%;background:'+wc+'"></div></div><span class="font-mono tnum text-[12px]" style="color:'+wc+'">'+wr+'%</span></div>'
@@ -770,7 +770,7 @@ function renderChampPool(ms){
       +'<td class="py-2.5 pr-4 font-mono tnum text-[12px] text-slate text-right">'+(s.dmg/s.g/1000).toFixed(1)+'k</td>'
       +'<td class="py-2.5 font-mono tnum text-[12px] text-slate text-right">'+(s.vis/s.g).toFixed(1)+'</td></tr>';
   });
-  html+='</tbody></table></div><p class="meta !text-faint normal-case !tracking-[0.02em] mt-2.5">* Win rate not rated below '+MIN+' games — too small to read.</p>';
+  html+='</tbody></table></div><p class="meta !text-faint normal-case !tracking-[0.02em] mt-2.5">* Win rate not rated below '+MIN+' games - too small to read.</p>';
   host.innerHTML=html;
 }
 
