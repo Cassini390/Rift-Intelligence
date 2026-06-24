@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { setVersion, loadChampNames } from './lib/ddragon.js'
 import { mockData } from './lib/mock.js'
 import Masthead from './components/Masthead.jsx'
@@ -8,6 +9,76 @@ import Findings from './components/Findings.jsx'
 import Fingerprint from './components/Fingerprint.jsx'
 import FieldRecord from './components/FieldRecord.jsx'
 import { Eyebrow, Meta } from './components/primitives.jsx'
+
+// Fixed corner registration ticks + diagonal CONFIDENTIAL watermark
+function PageDecor() {
+  const corners = [
+    { top: 16, left: 16, borderTop: '1px solid rgba(199,168,106,0.16)', borderLeft: '1px solid rgba(199,168,106,0.16)' },
+    { top: 16, right: 16, borderTop: '1px solid rgba(199,168,106,0.16)', borderRight: '1px solid rgba(199,168,106,0.16)' },
+    { bottom: 16, left: 16, borderBottom: '1px solid rgba(199,168,106,0.16)', borderLeft: '1px solid rgba(199,168,106,0.16)' },
+    { bottom: 16, right: 16, borderBottom: '1px solid rgba(199,168,106,0.16)', borderRight: '1px solid rgba(199,168,106,0.16)' },
+  ]
+  return (
+    <div className="fixed inset-0 pointer-events-none select-none" style={{ zIndex: 9997 }} aria-hidden="true">
+      {corners.map((s, i) => <div key={i} className="absolute w-4 h-4" style={s} />)}
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <div style={{
+          fontFamily: 'var(--font-mono)', fontSize: '11vw', fontWeight: 700,
+          color: 'rgba(233,230,221,0.016)', letterSpacing: '0.55em',
+          textTransform: 'uppercase', transform: 'rotate(-25deg)', whiteSpace: 'nowrap',
+        }}>CONFIDENTIAL</div>
+      </div>
+    </div>
+  )
+}
+
+// Full-screen loading overlay with typewriter + scan line + flickering case number
+function LoadingScreen({ name }) {
+  const [text, setText] = useState('')
+  const [flicker, setFlicker] = useState(true)
+  const target = `DECRYPTING SUBJECT FILE — ${(name || 'SUBJECT').toUpperCase()}`
+
+  useEffect(() => {
+    let i = 0
+    const id = setInterval(() => { i++; setText(target.slice(0, i)); if (i >= target.length) clearInterval(id) }, 38)
+    return () => clearInterval(id)
+  }, [target])
+
+  useEffect(() => {
+    const id = setInterval(() => setFlicker(Math.random() > 0.12), 90)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+      className="fixed inset-0 bg-ink flex flex-col items-center justify-center"
+      style={{ zIndex: 9999 }}>
+      {/* Scan-line sweep */}
+      <motion.div className="absolute inset-x-0 h-px"
+        style={{ background: 'linear-gradient(90deg,transparent,rgba(199,168,106,0.35),transparent)' }}
+        initial={{ top: '0%' }} animate={{ top: '100%' }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }} />
+      <div className="text-center px-6">
+        <div className="font-mono text-[9px] tracking-[0.42em] text-goldsoft mb-7 uppercase">Rift Intelligence</div>
+        <div className="font-mono text-[11px] sm:text-[13px] tracking-[0.1em] text-gold" style={{ minHeight: '1.5em' }}>
+          {text}<motion.span animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.9, repeat: Infinity }}>_</motion.span>
+        </div>
+        <div className="font-mono text-[9px] tracking-[0.22em] mt-5 uppercase"
+          style={{ color: `rgba(86,94,107,${flicker ? 0.9 : 0.2})`, transition: 'color 0.05s' }}>
+          Case No. — — — — —
+        </div>
+        <div className="flex gap-2 justify-center mt-8">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <motion.div key={i} className="rounded-full" style={{ width: 3, height: 3, background: '#9A7F4E' }}
+              animate={{ opacity: [0.15, 1, 0.15], scaleY: [0.7, 1.6, 0.7] }}
+              transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.18, ease: 'easeInOut' }} />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 function caseNumber(name) {
   let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0
@@ -81,6 +152,10 @@ export default function App() {
 
   return (
     <>
+      <PageDecor />
+      <AnimatePresence>
+        {loading && <LoadingScreen key="loading" name={lastQuery.current?.name} />}
+      </AnimatePresence>
       <Masthead caseNo={caseNumber((data.gameName || '') + (data.tagLine || ''))} showNav />
       <div className="mx-auto max-w-[980px] px-5 sm:px-7 pb-24">
 

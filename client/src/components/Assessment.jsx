@@ -44,11 +44,15 @@ export default function Assessment({ matches, queueLabel, ranked }) {
     <section id="sec-assess" className="py-7 border-b border-hair">
       <div className="flex items-center justify-between mb-5">
         <Eyebrow>§ Assessment</Eyebrow>
-        <span ref={stampRef} className="font-mono text-[9px] tracking-[0.2em] uppercase border rounded-sm px-2 py-[3px] inline-flex items-center gap-1.5"
-              style={{ color: conf.c, borderColor: conf.c }}>
+        <motion.span ref={stampRef}
+          initial={{ opacity: 0, scale: 1.4, rotate: -3 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.35 }}
+          className="font-mono text-[9px] tracking-[0.2em] uppercase border rounded-sm px-2 py-[3px] inline-flex items-center gap-1.5"
+          style={{ color: conf.c, borderColor: conf.c, transformOrigin: 'center' }}>
           <span className="inline-block h-1 w-1 rounded-full" style={{ background: conf.c }} />
           Confidence · {conf.lvl}
-        </span>
+        </motion.span>
       </div>
 
       <div className="grid lg:grid-cols-[1.1fr_1fr] gap-7 lg:gap-10 items-start">

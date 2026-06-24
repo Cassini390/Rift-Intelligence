@@ -17,7 +17,10 @@ export default function Masthead({ caseNo, showNav }) {
             <circle cx="12" cy="11.5" r="1.4" fill="#C7A86A" />
           </svg>
           <div className="leading-tight">
-            <div className="font-mono text-[11px] tracking-[0.26em] text-bone uppercase">Rift Intelligence</div>
+            <div className="font-mono text-[11px] tracking-[0.26em] uppercase" style={{
+              background: 'linear-gradient(105deg, #9A7F4E 0%, #C7A86A 35%, #E9E6DD 58%, #C7A86A 78%, #9A7F4E 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>Rift Intelligence</div>
             <Meta className="!text-[8px] !tracking-[0.22em] hidden sm:block">Summoner Reconnaissance Division</Meta>
           </div>
         </div>
