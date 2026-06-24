@@ -85,8 +85,15 @@ function caseNumber(name) {
   return 'Case No. ' + (1000 + (h % 8999))
 }
 
+const BLANK_DATA = { gameName: '', tagLine: '', summonerLevel: 0, profileIconId: 29, region: '', rankedStats: {}, matches: [], ddVersion: '14.24.1' }
+
+function getSamplePref() {
+  try { return localStorage.getItem('lol_sample_data') !== 'off' } catch { return true }
+}
+
 export default function App() {
-  const [data, setData] = useState(() => mockData(1735689600000)) // fixed timestamp → deterministic sample
+  const [useSample, setUseSample] = useState(getSamplePref)
+  const [data, setData] = useState(() => getSamplePref() ? mockData(1735689600000) : BLANK_DATA)
   const [name, setName] = useState('')
   const [tag, setTag] = useState('')
   const [region, setRegion] = useState('euw1')
@@ -141,6 +148,16 @@ export default function App() {
       setError(err.message === 'Failed to fetch' ? 'No contact with the server. Is "node server.js" running?' : 'Error: ' + err.message)
     } finally { setLoading(false) }
   }
+  function toggleSample() {
+    setUseSample((prev) => {
+      const next = !prev
+      try { localStorage.setItem('lol_sample_data', next ? 'on' : 'off') } catch { /* ignore */ }
+      if (next) { setData(mockData(1735689600000)); setActiveQueue(null); setActiveChamp('All') }
+      else { setData(BLANK_DATA); setActiveQueue(null); setActiveChamp('All') }
+      return next
+    })
+  }
+
   function scout(e) {
     e?.preventDefault()
     if (!name.trim()) { setError('Enter a subject codename.'); return }
@@ -191,8 +208,12 @@ export default function App() {
               className={`font-mono text-[10px] tracking-[0.14em] uppercase transition-colors ${autoRefresh ? 'text-gold' : 'text-faint hover:text-slate'}`}>
               ↻ Auto-refresh: {autoRefresh ? 'On' : 'Off'}
             </button>
+            <button type="button" onClick={toggleSample}
+              className={`font-mono text-[10px] tracking-[0.14em] uppercase transition-colors ${useSample ? 'text-gold' : 'text-faint hover:text-slate'}`}>
+              ◈ Sample data: {useSample ? 'On' : 'Off'}
+            </button>
             <Meta className="!text-faint normal-case !tracking-[0.04em]">
-              {autoRefresh ? 'Re-running your last search every 5 minutes.' : 'Showing sample data — run a search against your local server for live results.'}
+              {autoRefresh ? 'Re-running your last search every 5 minutes.' : useSample ? 'Showing sample data — run a search for live results.' : 'Blank slate — run a search to load a subject file.'}
             </Meta>
           </div>
         </section>
