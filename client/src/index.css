@@ -43,6 +43,16 @@ html { scroll-behavior: smooth; }
 .emblem { width:18px; height:20px; clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
   display:inline-grid; place-items:center; font-family:var(--font-mono); font-weight:500; font-size:10px; color:#0B0D11; }
 
+/* Match row: gold hairline draws in from left on hover + subtle bg lift */
+.match-row { position: relative; transition: background-color 0.15s ease; }
+.match-row::before {
+  content: ''; position: absolute; left: 0; top: 0; right: 0; height: 1px;
+  background: #C7A86A; transform: scaleX(0); transform-origin: left;
+  transition: transform 0.22s ease;
+}
+.match-row:hover { background-color: rgba(199,168,106,0.025); }
+.match-row:hover::before { transform: scaleX(1); }
+
 /* Scoreboard grid */
 .sb-grid { display:grid; grid-template-columns:24px 14px 14px 22px minmax(0,1fr) 58px 38px auto; gap:6px; align-items:center; }
 .sb-row { padding:3px 7px; }

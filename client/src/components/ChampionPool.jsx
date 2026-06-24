@@ -4,6 +4,24 @@ import { Meta } from './primitives.jsx'
 
 const MIN = 3
 
+function Sparkline({ values }) {
+  if (values.length < 2) return <span className="text-faint font-mono text-[11px]">—</span>
+  const W = 44, H = 16
+  const mn = Math.min(...values), mx = Math.max(...values)
+  const range = mx - mn || 0.01
+  const pts = values.map((v, i) =>
+    `${((i / (values.length - 1)) * W).toFixed(1)},${(H - 2 - ((v - mn) / range) * (H - 4)).toFixed(1)}`
+  ).join(' ')
+  const half = Math.floor(values.length / 2)
+  const early = mean(values.slice(0, half)), late = mean(values.slice(half))
+  const color = late > early * 1.05 ? '#4FA890' : late < early * 0.95 ? '#C75D54' : '#8A93A0'
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={{ display: 'block' }}>
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" opacity="0.9" />
+    </svg>
+  )
+}
+
 export default function ChampionPool({ matches }) {
   const c = {}
   matches.forEach((m) => {
@@ -41,13 +59,6 @@ export default function ChampionPool({ matches }) {
               const gated = s.g >= MIN
               const wc = wr >= 50 ? '#4FA890' : '#C75D54'
               const chrono = s.kl.slice().reverse()
-              let mastery = <span className="text-faint">—</span>
-              if (s.g >= 4) {
-                const h = Math.floor(chrono.length / 2)
-                const early = mean(chrono.slice(0, h)), late = mean(chrono.slice(h))
-                const up = late > early * 1.05, dn = late < early * 0.95
-                mastery = <span className="font-mono text-[11px]" style={{ color: up ? '#4FA890' : dn ? '#C75D54' : '#8A93A0' }}>{up ? '▲ rising' : dn ? '▼ falling' : '→ steady'}</span>
-              }
               return (
                 <tr key={ch} className="border-b border-hair/60">
                   <td className="py-2.5 pr-4">
@@ -68,7 +79,7 @@ export default function ChampionPool({ matches }) {
                     )}
                   </td>
                   <td className="py-2.5 pr-4 font-mono tnum text-[12px] text-bone text-right">{kda.toFixed(2)}</td>
-                  <td className="py-2.5 pr-4 text-right">{mastery}</td>
+                  <td className="py-2.5 pr-4"><div className="flex justify-end"><Sparkline values={chrono} /></div></td>
                   <td className="py-2.5 pr-4 font-mono tnum text-[12px] text-slate text-right">{Math.round(s.cs / s.g)}</td>
                   <td className="py-2.5 pr-4 font-mono tnum text-[12px] text-slate text-right">{(s.dmg / s.g / 1000).toFixed(1)}k</td>
                   <td className="py-2.5 font-mono tnum text-[12px] text-slate text-right">{(s.vis / s.g).toFixed(1)}</td>

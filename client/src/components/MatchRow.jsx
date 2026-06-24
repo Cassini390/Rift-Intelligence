@@ -14,7 +14,7 @@ export default function MatchRow({ m }) {
   const kdaColor = kda >= 4 ? '#4FA890' : kda >= 2.5 ? '#E9E6DD' : kda >= 1.5 ? '#8A93A0' : '#C75D54'
 
   return (
-    <div className="border-b border-hair">
+    <div className="match-row border-b border-hair">
       <button onClick={() => setOpen((o) => !o)} className="w-full text-left flex items-center gap-3 sm:gap-4 py-2.5 group">
         <span className="shrink-0 w-11">
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase" style={{ color: col }}>{win ? 'Win' : 'Loss'}</span>

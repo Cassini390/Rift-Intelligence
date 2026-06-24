@@ -86,16 +86,23 @@ export default function Assessment({ matches, queueLabel, ranked }) {
             <Meta>Engagement log · {queueLabel}</Meta>
             <Meta>older → newer</Meta>
           </div>
-          <div className="flex items-end gap-[3px] h-[34px]">
-            {chrono.map((m, i) => {
-              const h = 30 + Math.min(1, kdaOf(m) / maxK) * 70
-              return (
-                <motion.div key={i} title={`${m.win ? 'Victory' : 'Defeat'} · ${displayChamp(m.champion)} · ${m.kills}/${m.deaths}/${m.assists}`}
-                  initial={{ height: 0 }} animate={{ height: h + '%' }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.025, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex-1 min-w-[4px] rounded-[1px]" style={{ background: m.win ? '#4FA890' : '#C75D54', opacity: 0.85 }} />
-              )
-            })}
+          <div className="relative overflow-hidden">
+            <div className="flex items-end gap-[3px] h-[34px]">
+              {chrono.map((m, i) => {
+                const h = 30 + Math.min(1, kdaOf(m) / maxK) * 70
+                return (
+                  <motion.div key={i} title={`${m.win ? 'Victory' : 'Defeat'} · ${displayChamp(m.champion)} · ${m.kills}/${m.deaths}/${m.assists}`}
+                    initial={{ height: 0 }} animate={{ height: h + '%' }}
+                    transition={{ duration: 0.5, delay: 0.2 + i * 0.025, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex-1 min-w-[4px] rounded-[1px]" style={{ background: m.win ? '#4FA890' : '#C75D54', opacity: 0.85 }} />
+                )
+              })}
+            </div>
+            {/* One-time shimmer sweep after bars have risen */}
+            <motion.div className="absolute inset-0 pointer-events-none"
+              style={{ background: 'linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.07) 50%,transparent 100%)' }}
+              initial={{ x: '-100%' }} animate={{ x: '120%' }}
+              transition={{ duration: 0.65, delay: 0.2 + chrono.length * 0.025 + 0.55, ease: 'easeInOut' }} />
           </div>
         </div>
       </div>
