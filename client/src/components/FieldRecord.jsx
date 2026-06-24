@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import MatchRow from './MatchRow.jsx'
 import ChampionPool from './ChampionPool.jsx'
-import { Eyebrow } from './primitives.jsx'
+import { Eyebrow, GhostedNumeral } from './primitives.jsx'
 
 const CAP = 8
 
@@ -32,7 +32,7 @@ export default function FieldRecord({ matches }) {
   return (
     <section id="sec-rec" className="py-7">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
-        <Eyebrow>§ Field record</Eyebrow>
+        <GhostedNumeral n={4}><Eyebrow>§ Field record</Eyebrow></GhostedNumeral>
         <div className="flex gap-4">{tab('matches', 'Engagements')}{tab('champions', 'Champion dossier')}</div>
       </div>
       {view === 'matches' ? <Engagements matches={matches} /> : <ChampionPool matches={matches} />}

@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { Meta } from './primitives.jsx'
 
 const NAV = [
@@ -7,9 +8,21 @@ const NAV = [
 ]
 
 export default function Masthead({ caseNo, showNav }) {
+  const headerRef = useRef(null)
+  const [spot, setSpot] = useState(null)
+  const onMove = (e) => {
+    const r = headerRef.current?.getBoundingClientRect()
+    if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top })
+  }
+
   return (
-    <header className="sticky top-0 z-50 bg-ink/90 backdrop-blur-md border-b border-hair">
-      <div className="mx-auto max-w-[980px] px-5 sm:px-7 flex items-center justify-between gap-4 py-3">
+    <header ref={headerRef} onMouseMove={onMove} onMouseLeave={() => setSpot(null)}
+      className="sticky top-0 z-50 bg-ink/90 backdrop-blur-md border-b border-hair relative overflow-hidden">
+      {spot && (
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: `radial-gradient(180px circle at ${spot.x}px ${spot.y}px, rgba(199,168,106,0.08) 0%, transparent 70%)` }} />
+      )}
+      <div className="relative mx-auto max-w-[980px] px-5 sm:px-7 flex items-center justify-between gap-4 py-3">
         <div className="flex items-center gap-2.5">
           <svg width="24" height="26" viewBox="0 0 24 26" fill="none" aria-hidden="true">
             <path d="M12 1L22 6.5v13L12 25 2 19.5v-13L12 1z" stroke="#C7A86A" strokeWidth="1" fill="rgba(199,168,106,0.06)" />
@@ -20,6 +33,7 @@ export default function Masthead({ caseNo, showNav }) {
             <div className="font-mono text-[11px] tracking-[0.26em] uppercase" style={{
               background: 'linear-gradient(105deg, #9A7F4E 0%, #C7A86A 35%, #E9E6DD 58%, #C7A86A 78%, #9A7F4E 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              filter: 'drop-shadow(0 1px 0 rgba(0,0,0,0.9)) drop-shadow(0 -0.5px 0 rgba(255,255,255,0.07))',
             }}>Rift Intelligence</div>
             <Meta className="!text-[8px] !tracking-[0.22em] hidden sm:block">Summoner Reconnaissance Division</Meta>
           </div>

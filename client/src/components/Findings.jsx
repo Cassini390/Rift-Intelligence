@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { scoutingReport } from '../lib/analytics.js'
-import { Eyebrow } from './primitives.jsx'
+import { Eyebrow, GhostedNumeral } from './primitives.jsx'
 
 const DOT = { good: '#4FA890', bad: '#C75D54', neutral: '#C7A86A' }
 
@@ -15,7 +15,7 @@ export default function Findings({ matches }) {
   if (!findings.length) {
     return (
       <div id="sec-find">
-        <Eyebrow className="block mb-5">§ Field findings</Eyebrow>
+        <GhostedNumeral n={2}><Eyebrow className="block mb-5">§ Field findings</Eyebrow></GhostedNumeral>
         <p className="text-slate text-[13px] leading-relaxed max-w-lg">
           {matches.length < 6
             ? 'Insufficient intelligence — scout more engagements in this theatre for a full assessment.'
@@ -27,7 +27,7 @@ export default function Findings({ matches }) {
 
   return (
     <div id="sec-find">
-      <Eyebrow className="block mb-5">§ Field findings</Eyebrow>
+      <GhostedNumeral n={2}><Eyebrow className="block mb-5">§ Field findings</Eyebrow></GhostedNumeral>
       <div>
         {visible.map((f, i) => (
           <motion.div key={f.tag + i}

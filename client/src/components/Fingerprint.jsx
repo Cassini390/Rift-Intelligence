@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { fingerprint } from '../lib/analytics.js'
-import { Eyebrow, Meta, useTip, tip } from './primitives.jsx'
+import { Eyebrow, Meta, useTip, tip, GhostedNumeral } from './primitives.jsx'
 
 function Row({ r }) {
   const ref = useTip(tip(
@@ -13,12 +13,16 @@ function Row({ r }) {
         <span className="text-[12px] text-slate">{r.k}</span>
         <Meta>{r.posWin ? 'in wins' : 'in losses'}</Meta>
       </div>
-      <div className="relative h-3">
-        <span className="absolute left-1/2 top-0 bottom-0 w-px bg-hair" />
+      <div className="relative h-4">
+        {/* Boundary ticks */}
+        <span className="absolute left-0 top-1 bottom-1 w-px bg-hair" />
+        <span className="absolute right-0 top-1 bottom-1 w-px bg-hair" />
+        {/* Center axis — visible enough to read as a measurement zero-line */}
+        <span className="absolute left-1/2 top-0 bottom-0 w-px" style={{ background: 'rgba(86,94,107,0.5)' }} />
         <motion.span
           initial={{ width: 0 }} animate={{ width: r.widthPct + '%' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          className="absolute top-[3px] bottom-[3px] rounded-[1px]"
+          className="absolute top-[4px] bottom-[4px] rounded-[1px]"
           style={{ [r.posWin ? 'left' : 'right']: '50%', background: r.good ? '#4FA890' : '#C75D54' }}
         />
       </div>
@@ -30,7 +34,7 @@ export default function Fingerprint({ matches }) {
   const rows = fingerprint(matches)
   return (
     <div id="sec-prof">
-      <Eyebrow className="block mb-1.5">§ Biometric profile</Eyebrow>
+      <GhostedNumeral n={3}><Eyebrow className="block mb-1.5">§ Biometric profile</Eyebrow></GhostedNumeral>
       <p className="text-slate text-[13px] mb-6 max-w-lg">How each trait separates the subject's victories from defeats, in this theatre.</p>
       {rows
         ? <div className="space-y-3.5">{rows.map((r) => <Row key={r.k} r={r} />)}</div>

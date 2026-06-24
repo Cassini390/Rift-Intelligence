@@ -85,6 +85,19 @@ export function useTip(html) {
   return ref
 }
 
+// Large ghost numeral behind a section header — pure editorial background texture.
+export function GhostedNumeral({ n, children }) {
+  return (
+    <div className="relative">
+      <span aria-hidden="true" className="absolute select-none pointer-events-none font-mono font-bold leading-none"
+        style={{ top: '-1.4rem', left: 0, fontSize: '5rem', color: 'rgba(199,168,106,0.055)', letterSpacing: '-0.03em' }}>
+        {String(n).padStart(2, '0')}
+      </span>
+      {children}
+    </div>
+  )
+}
+
 export function tip(label, desc, extra = '') {
   return `<div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#C7A86A;margin-bottom:4px">${label}</div><div style="font-size:12px;line-height:1.45;color:#C2C8D2">${desc}</div>${extra}`
 }

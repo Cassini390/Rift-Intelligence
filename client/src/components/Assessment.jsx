@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { kdaOf, mean, pc, verdictOf, winRateTrend, getStreak, confidenceOf } from '../lib/analytics.js'
 import { displayChamp } from '../lib/ddragon.js'
-import { Eyebrow, Meta, CountUp, useTip, tip, tierColor } from './primitives.jsx'
+import { Eyebrow, Meta, CountUp, useTip, tip, tierColor, GhostedNumeral } from './primitives.jsx'
 
 function Stat({ label, children, sub, tipRef }) {
   return (
@@ -43,7 +43,7 @@ export default function Assessment({ matches, queueLabel, ranked }) {
   return (
     <section id="sec-assess" className="py-7 border-b border-hair">
       <div className="flex items-center justify-between mb-5">
-        <Eyebrow>§ Assessment</Eyebrow>
+        <GhostedNumeral n={1}><Eyebrow>§ Assessment</Eyebrow></GhostedNumeral>
         <motion.span ref={stampRef}
           initial={{ opacity: 0, scale: 1.4, rotate: -3 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
