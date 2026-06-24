@@ -102,9 +102,12 @@ export default function App() {
   const [activeQueue, setActiveQueue] = useState(null)
   const [activeChamp, setActiveChamp] = useState('All')
   const [autoRefresh, setAutoRefresh] = useState(false)
+  const [, setChampNamesVersion] = useState(0)
   const lastQuery = useRef(null)
 
-  useEffect(() => { loadChampNames(data.ddVersion) }, [data.ddVersion])
+  useEffect(() => {
+    loadChampNames(data.ddVersion).then(() => setChampNamesVersion((v) => v + 1))
+  }, [data.ddVersion])
 
   // Restore the last search into the inputs (shared key with the vanilla build).
   useEffect(() => {

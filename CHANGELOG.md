@@ -2,7 +2,7 @@
 
 ## v4.4 - UX refinements
 - **Sample data toggle** — a "◈ Sample data: On/Off" button sits alongside the auto-refresh toggle below the search form. Switching it off clears the dossier to a blank slate so the app starts empty; switching it on restores the deterministic sample dossier. Preference is saved to `localStorage` and restored on reload.
-- **Champion filter display names** — champion names in the queue filter now use the same `displayChamp()` lookup as the match rows, giving correct capitalisation and spacing (e.g. Tahm Kench, Twisted Fate, Kai'Sa) instead of lowercased internal Data Dragon keys.
+- **Champion filter display names** — champion names in the queue filter now use the same `displayChamp()` lookup as the match rows, giving correct capitalisation and spacing (e.g. Tahm Kench, Twisted Fate, Kai'Sa) instead of lowercased internal Data Dragon keys. A state-version bump after `loadChampNames` resolves ensures names like Kai'Sa are correct on the very first render, not only after an interaction.
 
 ---
 
