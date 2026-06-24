@@ -1,5 +1,29 @@
 # LoL Stat Tracker - Changelog
 
+## v4.3 - Editorial pass
+- **Ghost section numerals** — a faint oversized `01`–`04` sits behind each section eyebrow (Assessment, Field findings, Biometric profile, Field record). Pure editorial texture, pointer-events-none.
+- **Masthead cursor spotlight** — a radial gold highlight follows the cursor across the sticky header in real time, giving it a physical light-source feel.
+- **Letterpress on the foil wordmark** — `drop-shadow` filter adds depth to the gradient "RIFT INTELLIGENCE" title (dark shadow below, faint highlight above). Works correctly on `background-clip:text` where `text-shadow` would not.
+- **Fingerprint measurement axis** — the centre zero-line is now visible (`rgba(faint, 0.5)` instead of near-invisible `bg-hair`); boundary ticks added at track edges; track height increased to `h-4`. Reads as a calibrated measurement instrument.
+
+---
+
+## v4.2 - Micro-interactions
+- **Match row hover hairline** — a 1px gold line draws in from the left edge on hover (`::before` scaleX 0→1); row background lifts subtly. CSS-only, zero JS overhead.
+- **Champion dossier sparklines** — inline SVG polylines replace the text-based mastery trend (▲/▼/→). Color-coded by first/second-half KDA comparison: jade rising, oxblood falling, slate steady. Em-dash fallback for <2 data points.
+- **Win/loss ribbon shimmer** — a translucent highlight sweeps left-to-right across the engagement ribbon once, timed to fire right after the last bar finishes rising.
+
+---
+
+## v4.1 - Atmosphere pass
+- **Film grain** — `body::after` SVG `feTurbulence` fractalNoise overlay at 4% opacity; hidden under `prefers-reduced-motion`.
+- **Corner registration marks + CONFIDENTIAL watermark** — fixed `PageDecor` component: four gold hairline ticks in the viewport corners and a large diagonal ghost watermark behind the content column.
+- **Foil metallic wordmark** — "RIFT INTELLIGENCE" uses `background-clip:text` with a goldsoft→bone→goldsoft gradient; reads as gold leaf.
+- **Confidence stamp animation** — Framer Motion spring entrance (scale 1.4→1, rotate −3°→0°), like a rubber stamp landing on paper.
+- **Loading screen** — full-screen `AnimatePresence` overlay while scouting: a scan-line sweep, `DECRYPTING SUBJECT FILE` typewriter, flickering case number, and pulsing dots. Turns the 10–20s API wait into an atmospheric moment.
+
+---
+
 ## v4.0 - React interface (cutover)
 - The **React build is now the frontend.** `server.js` serves the production build from `client/dist` (with an SPA fallback for client-side routes); `/api` is unchanged.
 - The vanilla single-file `index.html` has been **retired and removed** — the React app fully replaces it.
