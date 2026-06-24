@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { setVersion, loadChampNames } from './lib/ddragon.js'
+import { setVersion, loadChampNames, displayChamp } from './lib/ddragon.js'
 import { mockData } from './lib/mock.js'
 import Masthead from './components/Masthead.jsx'
 import Subject from './components/Subject.jsx'
@@ -235,7 +235,7 @@ export default function App() {
             {['All', ...champsInQueue].map((ch) => (
               <button key={ch} onClick={() => setActiveChamp(ch)}
                 className={`font-mono text-[11px] tracking-[0.04em] transition-colors ${ch === activeChamp ? 'text-bone' : 'text-faint hover:text-slate'}`}>
-                {ch === 'All' ? 'all' : ch.toLowerCase()}
+                {ch === 'All' ? 'All' : displayChamp(ch)}
               </button>
             ))}
           </div>
