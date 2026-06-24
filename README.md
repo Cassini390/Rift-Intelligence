@@ -43,6 +43,7 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 | File | Description |
 |------|-------------|
 | `index.html` | The frontend UI — search, Scouting Report, fingerprint, match history, scoreboards, and the analytics engine (built on Tailwind via CDN) |
+| `client/` | **React + Vite rebuild** of the same dossier (Tailwind v4 + Framer Motion). Feature-parity with `index.html` plus richer motion. See [The React build](#the-react-build) |
 | `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API and shapes the match data |
 | `start-tracker.bat` | **Windows one-click launcher** — prompts for your API key, saves it to `.env`, starts the server, and opens the browser |
 | `package.json` | Node.js dependencies (Express, node-fetch, cors, dotenv) |
@@ -51,6 +52,20 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 | `.gitignore` | Prevents `.env` and `node_modules` from being committed |
 | `CHANGELOG.md` | Full version history |
 | `README.md` | This file |
+
+---
+
+## The React build
+
+`client/` is a parallel rebuild of the dossier on **React + Vite + Tailwind v4 + Framer Motion**. It has feature parity with the vanilla `index.html` (Scouting Report, fingerprint, field record, filtering, tooltips, last-search memory, auto-refresh toggle) with smoother, more capable animation. CSV export and on-site release notes were intentionally dropped from the rebuild.
+
+```bash
+cd client
+npm install
+npm run dev      # dev server on http://localhost:5173, proxies /api → :3000
+```
+
+Run `node server.js` (port 3000) alongside it so the React app has an API to call. `client/node_modules` and `client/dist` are git-ignored.
 
 ---
 

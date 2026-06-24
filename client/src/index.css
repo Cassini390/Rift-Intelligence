@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/* ── Design tokens (Tailwind v4 @theme → utilities like bg-ink, text-gold, font-display) ── */
+@theme {
+  --color-ink:      #0B0D11;
+  --color-ink2:     #10131A;
+  --color-bone:     #E9E6DD;
+  --color-gold:     #C7A86A;
+  --color-goldsoft: #9A7F4E;
+  --color-slate:    #8A93A0;
+  --color-faint:    #565E6B;
+  --color-hair:     #1C2027;
+  --color-jade:     #4FA890;
+  --color-oxblood:  #C75D54;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans:    "Inter", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+}
+
+html, body { background: var(--color-ink); }
+body {
+  color: var(--color-slate);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(ellipse 100% 55% at 50% -15%, rgba(199,168,106,0.05) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* Sticky-nav jump offset so sections clear the masthead */
+html { scroll-behavior: smooth; }
+[id^="sec-"] { scroll-margin-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Tier accents for rank emblems */
+:root {
+  --t-IRON:#7C7C8A; --t-BRONZE:#A0744B; --t-SILVER:#9AA3AD; --t-GOLD:#C7A86A;
+  --t-PLATINUM:#4FB0A0; --t-EMERALD:#4FA890; --t-DIAMOND:#6FA8E6;
+  --t-MASTER:#B068E0; --t-GRANDMASTER:#D2615A; --t-CHALLENGER:#E6CE8E; --t-UNRANKED:#565E6B;
+}
+.emblem { width:18px; height:20px; clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  display:inline-grid; place-items:center; font-family:var(--font-mono); font-weight:500; font-size:10px; color:#0B0D11; }
+
+/* Scoreboard grid */
+.sb-grid { display:grid; grid-template-columns:24px 14px 14px 22px minmax(0,1fr) 58px 38px auto; gap:6px; align-items:center; }
+.sb-row { padding:3px 7px; }
+.sb-row.you { box-shadow:inset 2px 0 0 #C7A86A; background:rgba(199,168,106,0.06); }
+
+::selection { background:rgba(199,168,106,0.25); color:#E9E6DD; }
+*::-webkit-scrollbar { height:7px; width:7px; }
+*::-webkit-scrollbar-thumb { background:#242A33; border-radius:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+:focus-visible { outline:1.5px solid #C7A86A; outline-offset:3px; }

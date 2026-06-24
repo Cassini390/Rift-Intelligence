@@ -1,5 +1,14 @@
 # LoL Stat Tracker - Changelog
 
+## v4.0-beta - React + Vite rebuild (parallel)
+- New `client/` app: the Rift Intelligence dossier rebuilt on **React + Vite + Tailwind v4 + Framer Motion**, for a higher animation/interaction ceiling than the CDN-Tailwind single file allowed.
+- Feature parity with the vanilla core — Subject reveal, Assessment, Scouting findings, Win-condition fingerprint, Field record (engagements + champion dossier), queue/champion filtering, hover tooltips, last-search persistence (shared `lol_last_search` key), and an auto-refresh toggle (defaults Off, re-runs the last search every 5 min).
+- Dropped from the rebuild by design: **CSV export** and on-site **release notes**.
+- Motion handled by Framer Motion (count-ups, redaction wipe, bar fills, expand/collapse), so the old `setTimeout`-vs-rAF background-tab issue no longer applies.
+- The vanilla `index.html` remains the served frontend until the cutover; `client/node_modules` and `client/dist` are git-ignored.
+
+---
+
 ## v3.3.2 - Explanatory tooltips & setup docs
 - Added hover/focus tooltips that explain each data point. The Biometric profile bars now describe the metric, show your actual win-vs-loss averages, and read out what the bar means; the confidence stamp and the Win rate / KDA / Rank figures get short explanations too.
 - Tooltips are styled to match the dossier (ink panel, gold label, mono figures), keyboard-accessible, viewport-clamped, and don't double-bind on re-render.
