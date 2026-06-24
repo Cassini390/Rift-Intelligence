@@ -1,5 +1,13 @@
 # LoL Stat Tracker - Changelog
 
+## v4.0 - React interface (cutover)
+- The **React build is now the frontend.** `server.js` serves the production build from `client/dist` (with an SPA fallback for client-side routes); `/api` is unchanged.
+- The vanilla single-file `index.html` has been **retired and removed** — the React app fully replaces it.
+- `start-tracker.bat` now installs the `client/` dependencies on first run, **builds the interface**, then prompts for the key and starts the server in the same console as before.
+- README updated: file tree, project-files table, manual setup (build step), and the new "The interface" section covering production build vs. `npm run dev` hot reload.
+
+---
+
 ## v4.0-beta - React + Vite rebuild (parallel)
 - New `client/` app: the Rift Intelligence dossier rebuilt on **React + Vite + Tailwind v4 + Framer Motion**, for a higher animation/interaction ceiling than the CDN-Tailwind single file allowed.
 - Feature parity with the vanilla core — Subject reveal, Assessment, Scouting findings, Win-condition fingerprint, Field record (engagements + champion dossier), queue/champion filtering, hover tooltips, last-search persistence (shared `lol_last_search` key), and an auto-refresh toggle (defaults Off, re-runs the last search every 5 min).

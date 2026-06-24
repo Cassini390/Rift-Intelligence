@@ -24,7 +24,7 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 - Per-engagement rows with KDA colour thresholds, a CS/min figure, role tag, and a one-line "Read" of why each game was won or lost (match list capped at 8 with a show-all toggle)
 - Expandable full scoreboard for each match (all 10 players, builds, runes, spells)
 - Champion dossier with gated win rate, a mastery trend, and pool-concentration signal
-- Win/loss streak detection, CSV export, last-search memory
+- Win/loss streak detection, last-search memory, and an optional auto-refresh of your last search
 - Sticky section nav, orchestrated load animation that respects `prefers-reduced-motion`, and a responsive layout down to mobile
 
 ---
@@ -42,9 +42,8 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 
 | File | Description |
 |------|-------------|
-| `index.html` | The frontend UI — search, Scouting Report, fingerprint, match history, scoreboards, and the analytics engine (built on Tailwind via CDN) |
-| `client/` | **React + Vite rebuild** of the same dossier (Tailwind v4 + Framer Motion). Feature-parity with `index.html` plus richer motion. See [The React build](#the-react-build) |
-| `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API and shapes the match data |
+| `client/` | **The frontend** — a React + Vite + Tailwind v4 + Framer Motion app: search, Scouting Report, fingerprint, match history, scoreboards, and the analytics engine. Built to `client/dist`, which the server serves. See [The interface](#the-interface) |
+| `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API, shapes the match data, and serves the built React app from `client/dist` |
 | `start-tracker.bat` | **Windows one-click launcher** — prompts for your API key, saves it to `.env`, starts the server, and opens the browser |
 | `package.json` | Node.js dependencies (Express, node-fetch, cors, dotenv) |
 | `.env.example` | Template showing the required environment variables — **this is in the repo; copy it to `.env`** |
@@ -55,17 +54,26 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 
 ---
 
-## The React build
+## The interface
 
-`client/` is a parallel rebuild of the dossier on **React + Vite + Tailwind v4 + Framer Motion**. It has feature parity with the vanilla `index.html` (Scouting Report, fingerprint, field record, filtering, tooltips, last-search memory, auto-refresh toggle) with smoother, more capable animation. CSV export and on-site release notes were intentionally dropped from the rebuild.
+The frontend lives in `client/` and is built with **React + Vite + Tailwind v4 + Framer Motion**. `server.js` serves the production build from `client/dist`, so the app is always available at `http://localhost:3000` once built. The Windows launcher (`start-tracker.bat`) builds it for you; for manual setup you build it once with `npm run build` (see step 5 below).
+
+**Production (what the server serves):**
 
 ```bash
 cd client
-npm install
-npm run dev      # dev server on http://localhost:5173, proxies /api → :3000
+npm install        # first run only
+npm run build      # outputs client/dist, served by node server.js on :3000
 ```
 
-Run `node server.js` (port 3000) alongside it so the React app has an API to call. `client/node_modules` and `client/dist` are git-ignored.
+**Live development (hot reload):** run the Vite dev server alongside `node server.js`:
+
+```bash
+cd client
+npm run dev        # http://localhost:5173, proxies /api → :3000
+```
+
+`client/node_modules` and `client/dist` are git-ignored.
 
 ---
 
@@ -77,7 +85,8 @@ The fastest way to run the tracker:
 2. Double-click **`start-tracker.bat`**.
 
 It will:
-- install dependencies on first run,
+- install dependencies on first run (server + `client/`),
+- build the React interface,
 - prompt you to paste your Riot API key (and save it to `.env` for you — or let you keep the existing one),
 - start the server, and
 - open `http://localhost:3000` in your browser.
@@ -108,7 +117,7 @@ Place all files into the same folder on your computer:
 
 ```
 lol-tracker/
-├── index.html
+├── client/           ← React + Vite frontend (built to client/dist)
 ├── server.js
 ├── package.json
 ├── start-tracker.bat
@@ -178,6 +187,17 @@ npm install
 ```
 
 This installs Express, node-fetch, cors, and dotenv into a `node_modules` folder. You only need to do this once (or again after deleting `node_modules`).
+
+Then install the interface's dependencies and build it (the server serves the built output from `client/dist`):
+
+```
+cd client
+npm install
+npm run build
+cd ..
+```
+
+You only need to rebuild after changing files under `client/src`. For live development with hot reload, run `npm run dev` in `client/` instead (see [The interface](#the-interface)).
 
 ---
 
@@ -276,4 +296,4 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ## Version
 
-Current version: **v3.1 — The Scouting Report** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.0 — React interface** — see [CHANGELOG.md](CHANGELOG.md) for full history.

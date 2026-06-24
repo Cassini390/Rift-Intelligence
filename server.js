@@ -3,12 +3,21 @@ const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: /^http:\/\/localhost(:\d+)?$/ }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+
+// Serve the React build (client/dist). Run "npm run build" in client/ to produce it.
+const CLIENT_DIST = path.join(__dirname, 'client', 'dist');
+const hasClientBuild = fs.existsSync(path.join(CLIENT_DIST, 'index.html'));
+if (hasClientBuild) {
+  app.use(express.static(CLIENT_DIST));
+} else {
+  console.warn('\n  ⚠  client/dist not found — run "npm install && npm run build" in client/.\n');
+}
 
 const ROUTING = {
   na1:'americas', euw1:'europe', eune1:'europe', kr:'asia',
@@ -201,6 +210,13 @@ app.get('/api/summoner', async (req, res) => {
     console.log('  Error:', e.message);
     res.status(e.status || 500).json({ error: e.message || 'Server error' });
   }
+});
+
+// SPA fallback — any non-API route serves the React app's index.html.
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) return res.status(404).json({ error: 'Not found' });
+  if (hasClientBuild) return res.sendFile(path.join(CLIENT_DIST, 'index.html'));
+  res.status(503).send('<h1>Frontend not built</h1><p>Run <code>npm install &amp;&amp; npm run build</code> in the <code>client/</code> folder, then restart the server.</p>');
 });
 
 app.listen(PORT, () => {

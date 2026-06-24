@@ -44,6 +44,27 @@ if not exist "node_modules" (
   echo.
 )
 
+REM ── React client: install deps (first run) then build the interface ──
+if not exist "client\node_modules" (
+  echo  %DIM%Installing interface dependencies, this only happens once...%R%
+  call npm --prefix client install
+  if errorlevel 1 (
+    echo  %RED%client npm install failed - see the messages above.%R%
+    pause
+    exit /b 1
+  )
+  echo.
+)
+echo  %DIM%Building the interface...%R%
+call npm --prefix client run build
+if errorlevel 1 (
+  echo  %RED%Interface build failed - see the messages above.%R%
+  pause
+  exit /b 1
+)
+echo  %GREEN%Interface ready.%R%
+echo.
+
 REM ── Is a real key already saved? ──
 set "HASKEY="
 if exist ".env" (
