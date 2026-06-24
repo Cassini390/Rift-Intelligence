@@ -46,8 +46,8 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 | `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API and shapes the match data |
 | `start-tracker.bat` | **Windows one-click launcher** — prompts for your API key, saves it to `.env`, starts the server, and opens the browser |
 | `package.json` | Node.js dependencies (Express, node-fetch, cors, dotenv) |
-| `.env` | **Your API key goes here** — git-ignored, never committed |
-| `.env.example` | Template showing the required environment variables |
+| `.env.example` | Template showing the required environment variables — **this is in the repo; copy it to `.env`** |
+| `.env` | **Your API key lives here.** *Not* shipped in the repo (git-ignored so your key is never committed). On Windows the launcher creates it for you; for manual setup you copy `.env.example` to `.env` — see [Create your `.env`](#3-create-your-env-and-add-your-api-key) |
 | `.gitignore` | Prevents `.env` and `node_modules` from being committed |
 | `CHANGELOG.md` | Full version history |
 | `README.md` | This file |
@@ -67,7 +67,7 @@ It will:
 - start the server, and
 - open `http://localhost:3000` in your browser.
 
-Because free dev keys expire every 24 hours, just run the `.bat` again and paste a fresh key when prompted. To stop the tracker, close the "Rift Readout Server" window.
+The server runs right in that same window (no extra console pops up). Because free dev keys expire every 24 hours, just run the `.bat` again and paste a fresh key when prompted. To stop the tracker, press `Ctrl+C` in the window.
 
 Prefer to do it by hand, or on Mac/Linux? Follow the manual steps below.
 
@@ -96,18 +96,34 @@ lol-tracker/
 ├── index.html
 ├── server.js
 ├── package.json
-├── .env
-├── .env.example
+├── start-tracker.bat
+├── .env.example      ← template (you copy this to .env in step 3)
 ├── .gitignore
 ├── CHANGELOG.md
 └── README.md
 ```
 
+> There is no `.env` file yet — it's intentionally not included so nobody's API key ends up in the repo. You create it in step 3.
+
 ---
 
-### 3. Add Your API Key
+### 3. Create your `.env` and add your API key
 
-Open the `.env` file in any text editor (Notepad, VS Code, etc.) and replace the placeholder with your actual key:
+The repo ships a template called `.env.example`. **Copy it to a new file named `.env`** — the app reads `.env`, which is git-ignored so your key is never committed. (There is no `.env` in the repo until you make one.)
+
+**Windows (Command Prompt):**
+
+```
+copy .env.example .env
+```
+
+**Mac / Linux:**
+
+```
+cp .env.example .env
+```
+
+Then open `.env` in any text editor (Notepad, VS Code, etc.) and replace the placeholder with your actual key:
 
 ```
 RIOT_API_KEY=RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -116,7 +132,9 @@ PORT=3000
 
 Get a free key at [developer.riotgames.com](https://developer.riotgames.com) — log in, and click **Generate API Key** on the dashboard. The key starts with `RGAPI-`.
 
-> **Important:** Keep your `.env` file private. It is listed in `.gitignore` so it will not be accidentally committed if you use git.
+> **On Windows you can skip this step** — `start-tracker.bat` creates and updates `.env` automatically from the key you paste in when it runs. You only need to copy the template by hand when setting up manually or on Mac/Linux.
+>
+> Keep your `.env` private. It's listed in `.gitignore`, so it won't be committed if you use git.
 
 ---
 

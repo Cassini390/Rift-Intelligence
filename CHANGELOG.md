@@ -1,5 +1,12 @@
 # LoL Stat Tracker - Changelog
 
+## v3.3.2 - Explanatory tooltips & setup docs
+- Added hover/focus tooltips that explain each data point. The Biometric profile bars now describe the metric, show your actual win-vs-loss averages, and read out what the bar means; the confidence stamp and the Win rate / KDA / Rank figures get short explanations too.
+- Tooltips are styled to match the dossier (ink panel, gold label, mono figures), keyboard-accessible, viewport-clamped, and don't double-bind on re-render.
+- README: clarified that `.env` is **not** shipped in the repo — you create it by copying `.env.example` to `.env` (or let `start-tracker.bat` create it for you on Windows). Updated the file list and file tree accordingly.
+
+---
+
 ## v3.3.1 - Champion display names
 - Champion names now show their proper display form (e.g. Twisted Fate, Tahm Kench, Wukong, Kai'Sa) instead of Data Dragon's mashed-together keys.
 - Names are pulled from Data Dragon's `champion.json`, with a space-insertion fallback if that lookup is unavailable. Raw keys are still used for icons and filtering, so nothing else changes.

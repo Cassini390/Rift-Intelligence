@@ -80,6 +80,17 @@
   .fp-bar.good { background:#4FA890; }
   .fp-bar.bad  { background:#C75D54; }
 
+  /* Tooltips */
+  #tip { position:fixed; z-index:200; pointer-events:none; opacity:0; transform:translateY(3px);
+    transition:opacity .12s ease, transform .12s ease; max-width:260px; }
+  #tip.show { opacity:1; transform:none; }
+  .tip-card { background:#10131A; border:1px solid #2A313B; border-radius:6px; padding:9px 11px; box-shadow:0 12px 30px rgba(0,0,0,.55); }
+  .tip-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:#C7A86A; margin-bottom:4px; }
+  .tip-desc { font-size:12px; line-height:1.45; color:#C2C8D2; }
+  .tip-nums { display:flex; gap:14px; margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:11px; }
+  .tip-nums .w { color:#4FA890; } .tip-nums .l { color:#C75D54; }
+  .tip-read { font-size:11px; line-height:1.4; color:#8A93A0; margin-top:6px; font-style:italic; }
+
   .reveal { opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease; }
   .reveal.in { opacity:1; transform:none; }
 
@@ -468,6 +479,25 @@ function countUp(node,to,dec,suffix){
 }
 function caseNumber(name){ var h=0; for(var i=0;i<name.length;i++){ h=(h*31+name.charCodeAt(i))>>>0; } return 'Case No. '+String(1000+(h%8999)); }
 
+/* ════════════ TOOLTIPS ════════════ */
+var TIP;
+function tipEl(){ if(!TIP){ TIP=document.createElement('div'); TIP.id='tip'; document.body.appendChild(TIP); } return TIP; }
+function moveTip(e){ var t=tipEl(), r=t.getBoundingClientRect(), pad=14;
+  var left=Math.min(Math.max(8,e.clientX+pad), window.innerWidth-r.width-8);
+  var top=e.clientY-r.height-pad; if(top<8) top=e.clientY+pad;
+  t.style.left=left+'px'; t.style.top=top+'px'; }
+function showTipFor(el,e){ var t=tipEl(); t.innerHTML='<div class="tip-card">'+el._tipHTML+'</div>'; t.classList.add('show');
+  if(e){ moveTip(e); } else { var r=el.getBoundingClientRect(); t.style.left=Math.min(r.left, window.innerWidth-268)+'px'; t.style.top=(r.bottom+8)+'px'; } }
+function hideTip(){ if(TIP) TIP.classList.remove('show'); }
+function attachTip(el, html){ if(!el) return; el._tipHTML=html; el.style.cursor='help';
+  if(el._tipBound) return; el._tipBound=true; if(el.tabIndex<0) el.tabIndex=0;
+  el.addEventListener('mouseenter',function(e){ showTipFor(el,e); });
+  el.addEventListener('mousemove',moveTip);
+  el.addEventListener('mouseleave',hideTip);
+  el.addEventListener('focus',function(){ showTipFor(el,null); });
+  el.addEventListener('blur',hideTip);
+}
+
 /* ════════════ RENDER ════════════ */
 function queueMatches(){ return ALL_MATCHES.filter(function(m){ return m.queueLabel===ACTIVE_QUEUE && (ACTIVE_CHAMP==='All'||m.champion===ACTIVE_CHAMP); }); }
 
@@ -560,6 +590,7 @@ function renderAssessment(ms){
 
   var conf=confidenceOf(ms.length), stamp=document.getElementById('confidence-stamp');
   stamp.textContent='Confidence · '+conf.lvl; stamp.style.color=conf.c;
+  attachTip(stamp, '<div class="tip-label">Confidence</div><div class="tip-desc">How far to trust this assessment, set by how many games are in this queue.</div><div class="tip-read">16+ games High · 10–15 Medium · under 10 Low.</div>');
 
   document.getElementById('ribbon-queue').textContent=ACTIVE_QUEUE||'-';
   var chrono=ms.slice().reverse(), kdas=chrono.map(kdaOf), maxK=Math.max(3,Math.min(8,kdas.length?Math.max.apply(null,kdas):3));
@@ -587,6 +618,12 @@ function renderAssessment(ms){
   var lbl=document.getElementById('hl-third-lbl'), val=document.getElementById('hl-third'), tsub=document.getElementById('hl-third-sub');
   if(rk){ lbl.textContent='Rank'; val.style.color='var(--t-'+(rk.tier||'UNRANKED').toUpperCase()+',var(--t-UNRANKED))'; val.innerHTML=rk.lp+'<span class="text-[15px]"> LP</span>'; tsub.textContent=rk.tier+' '+rk.rank; }
   else { var st=getStreak(ms); lbl.textContent='Streak'; if(st){ val.style.color=st.type?C.win:C.loss; val.textContent=st.count+(st.type?'W':'L'); tsub.textContent=st.type?'consecutive wins':'consecutive losses'; } else { val.style.color=C.slate; val.textContent='-'; tsub.textContent='no active streak'; } }
+
+  attachTip(document.getElementById('hl-winrate').parentElement, '<div class="tip-label">Win rate</div><div class="tip-desc">Wins divided by games in this queue. The arrow marks the recent-window trend - shown only when it beats normal variance.</div>');
+  attachTip(document.getElementById('hl-kda').parentElement, '<div class="tip-label">KDA</div><div class="tip-desc">(Kills + Assists) divided by Deaths, averaged across these games.</div>');
+  attachTip(document.getElementById('hl-third').parentElement, rk
+    ? '<div class="tip-label">Rank</div><div class="tip-desc">Current ranked tier, division and League Points in this queue.</div>'
+    : '<div class="tip-label">Streak</div><div class="tip-desc">Consecutive wins or losses, counting back from your most recent game.</div>');
 }
 
 /* ── Findings ── */
@@ -625,23 +662,36 @@ function renderFingerprint(ms){
   var host=document.getElementById('fingerprint-host'); host.innerHTML='';
   var w=ms.filter(function(m){return m.win;}), l=ms.filter(function(m){return !m.win;});
   if(w.length<3||l.length<3){ host.innerHTML='<p class="meta normal-case !tracking-[0.04em] text-slate">Need at least three victories and three defeats to profile.</p>'; return; }
-  var factors=[ {k:'KDA',get:kdaOf,hi:true},{k:'Kill participation',get:kpOf,hi:true},{k:'Damage share',get:dmgShare,hi:true},
-    {k:'Vision score',get:function(m){return m.visionScore||0;},hi:true},{k:'CS / min',get:csPerMin,hi:true},
-    {k:'Game length',get:function(m){return m.duration;},hi:null},{k:'Deaths',get:function(m){return m.deaths;},hi:false} ];
+  var fmtKda=function(v){return v.toFixed(2);}, fmtPct=function(v){return pc(v)+'%';}, fmt1=function(v){return v.toFixed(1);},
+      fmtDur=function(v){return Math.floor(v/60)+':'+String(Math.round(v%60)).padStart(2,'0');};
+  var factors=[
+    {k:'KDA',get:kdaOf,hi:true,fmt:fmtKda,desc:'(Kills + Assists) ÷ Deaths. Higher means more impact per death.'},
+    {k:'Kill participation',get:kpOf,hi:true,fmt:fmtPct,desc:"Share of your team's kills you took part in."},
+    {k:'Damage share',get:dmgShare,hi:true,fmt:fmtPct,desc:"Your share of your team's damage to champions."},
+    {k:'Vision score',get:function(m){return m.visionScore||0;},hi:true,fmt:fmt1,desc:'Wards placed and cleared, plus overall vision contribution.'},
+    {k:'CS / min',get:csPerMin,hi:true,fmt:fmt1,desc:'Minions and monsters killed per minute — farming efficiency.'},
+    {k:'Game length',get:function(m){return m.duration;},hi:null,fmt:fmtDur,desc:'Match duration — reveals whether you favour short or long games.'},
+    {k:'Deaths',get:function(m){return m.deaths;},hi:false,fmt:fmt1,desc:'Average deaths per game. Lower is better.'}
+  ];
   var rows=[];
   factors.forEach(function(f){
     var all=ms.map(f.get).filter(function(x){return x!=null;}), ww=w.map(f.get).filter(function(x){return x!=null;}), ll=l.map(f.get).filter(function(x){return x!=null;});
     if(ww.length<2||ll.length<2) return; var sd=std(all); if(!sd) return;
-    rows.push({k:f.k, eff:(mean(ww)-mean(ll))/sd, hi:f.hi});
+    rows.push({k:f.k, eff:(mean(ww)-mean(ll))/sd, hi:f.hi, fmt:f.fmt, desc:f.desc, mw:mean(ww), ml:mean(ll)});
   });
   rows.sort(function(a,b){return Math.abs(b.eff)-Math.abs(a.eff);}); rows=rows.slice(0,6);
   var maxAbs=Math.max.apply(null, rows.map(function(r){return Math.abs(r.eff);}).concat([0.8]));
   rows.forEach(function(r){
     var posWin=r.eff>0, good=r.hi===null?posWin:(posWin===r.hi), pctw=Math.min(1,Math.abs(r.eff)/maxAbs)*50;
+    var mag=pctw>=38?'strongly':pctw>=20?'clearly':'slightly';
+    var read=good ? 'Runs '+mag+' higher when you win — lean into it.' : 'Runs '+mag+' higher when you lose — worth watching.';
     var row=document.createElement('div');
     row.innerHTML='<div class="flex items-center justify-between mb-1"><span class="text-[12px] text-slate">'+r.k+'</span>'
       +'<span class="meta !text-faint !tracking-[0.06em]">'+(posWin?'in wins':'in losses')+'</span></div>'
       +'<div class="fp-track"><div class="fp-center"></div><div class="fp-bar '+(good?'good':'bad')+'" style="'+(posWin?'left:50%;':'right:50%;')+'width:0" data-w="'+pctw+'"></div></div>';
+    attachTip(row, '<div class="tip-label">'+r.k+'</div><div class="tip-desc">'+r.desc+'</div>'
+      +'<div class="tip-nums"><span class="w">Wins '+r.fmt(r.mw)+'</span><span class="l">Losses '+r.fmt(r.ml)+'</span></div>'
+      +'<div class="tip-read">'+read+'</div>');
     host.appendChild(row);
   });
   var bars=host.querySelectorAll('.fp-bar');
