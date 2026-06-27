@@ -14,6 +14,14 @@ A locally hosted League of Legends performance tracker that pulls live data from
 - **Closing / scaling** — win rate in short vs long games
 - **Comfort & trap picks** — your best and worst champions (minimum-games gated)
 - **Autofill tax** — how often you're off-role and how you perform there
+- **Lane dominance** — your peak CS lead over your direct lane opponent (Summoner's Rift)
+- **Posture** — whether your wins are built on hunting solo-kill picks, or those picks are dragging you out of position
+- **Mechanics** — whether skillshots and crowd-control landed track your wins (a trainable edge)
+- **Discipline** — how much of each loss is spent on the respawn timer vs your wins
+- **Teamfight impact** — healing/shielding for enchanters, multikills for damage dealers (works in ARAM)
+- **Objective priority** — dragon/herald/baron takedowns in wins vs losses (Summoner's Rift)
+
+The last six are **Tier-1 reads**: mined entirely from data already in each match payload (the `challenges` block), so they cost no extra API calls. Lane and objective reads suppress automatically on ARAM modes where they don't apply.
 
 Every finding suppresses itself when the sample is too thin to claim honestly, and each report carries a **LOW / MEDIUM / HIGH confidence stamp** based on sample size.
 
@@ -297,4 +305,4 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ## Version
 
-Current version: **v4.4 — UX refinements** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.5 — Tier-1 Field Findings** — see [CHANGELOG.md](CHANGELOG.md) for full history.

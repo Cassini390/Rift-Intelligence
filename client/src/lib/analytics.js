@@ -138,8 +138,112 @@ function fRole(ms) {
   if (offShare < 0.25) return null
   return { sev: 'bad', tag: 'POSTING', headline: `Off-posting tax — ${pc(offShare)}% of games off ${roleName(main)}, winning ${pc(offWR)}%.`, detail: `On ${roleName(main)} the subject wins ${pc(mainWR)}%. Hold the assigned role.`, score: offShare * (0.5 + Math.max(0, mainWR - offWR)) }
 }
+/* ── Tier-1 findings: mined from per-match `signals` (challenges + participant) ──
+   Every value below already rides along in the match payload — zero extra API
+   calls. Each read compares the win window against the loss window (the same
+   effect-size logic the fingerprint uses) so it self-calibrates per player and
+   per champion rather than leaning on absolute, role-dependent thresholds.
+   All findings tolerate missing data: a signal the payload omits (older games,
+   or the match-v4 LCU path) simply drops out of the sample. */
+const sig = (m, k) => (m.signals ? m.signals[k] : null)
+// Mean of a signal in wins vs losses; null unless both windows clear `minEach`.
+function splitMean(ms, get, minEach = 3) {
+  const w = [], l = []
+  ms.forEach((m) => { const v = get(m); if (v == null) return; (m.win ? w : l).push(v) })
+  if (w.length < minEach || l.length < minEach) return null
+  return { mw: mean(w), ml: mean(l), nw: w.length, nl: l.length }
+}
+// Plain mean of a signal across games with the field present.
+function avgOf(ms, get, min = 5) {
+  const v = ms.map(get).filter((x) => x != null)
+  return v.length < min ? null : { m: mean(v), n: v.length }
+}
+// ARAM-family theatres have no lanes/epic objectives — suppress those reads.
+const isAramSet = (ms) => ms.length > 0 && ms.every((m) => m.queueId === 450 || m.queueId === 2400 || /ARAM/i.test(m.queueLabel || ''))
+
+// LANE — do you win the matchup outright? (max CS lead over your lane opponent)
+function fLaneDominance(ms) {
+  if (isAramSet(ms)) return null
+  const laners = ms.filter((m) => m.role)
+  const r = avgOf(laners, (m) => sig(m, 'maxCsAdvantage'), 5)
+  if (!r) return null
+  const cs = Math.round(r.m)
+  if (cs >= 10) return { sev: 'good', tag: 'LANE', headline: `Lane bully — peaks at +${cs} CS on your opponent.`, detail: 'You win the matchup outright. Cash the lead into plates and roams before it normalises.', score: 0.5 + Math.min(0.6, cs / 60) }
+  if (cs <= -10) return { sev: 'bad', tag: 'LANE', headline: `Losing lane — down ${Math.abs(cs)} CS to your opponent at peak.`, detail: 'The early matchup runs against you. Review trades, wave management and recall timing.', score: 0.5 + Math.min(0.6, Math.abs(cs) / 60) }
+  return null
+}
+
+// POSTURE — are your wins built on winning isolated duels?
+function fAggression(ms) {
+  const s = splitMean(ms, (m) => sig(m, 'soloKills'))
+  if (!s) return null
+  const d = s.mw - s.ml
+  if (Math.abs(d) < 0.5) return null
+  if (d > 0) return { sev: 'neutral', tag: 'POSTURE', headline: `Pick-driven — ${s.mw.toFixed(1)} solo kills a game in wins vs ${s.ml.toFixed(1)} in losses.`, detail: 'Your wins are built on winning isolated duels. Hunt picks; decline even 50/50s when behind.', score: 0.4 + Math.min(0.5, d / 3) }
+  return { sev: 'bad', tag: 'POSTURE', headline: `Forcing duels — more solo kills in losses (${s.ml.toFixed(1)}) than wins (${s.mw.toFixed(1)}).`, detail: 'Hunting picks is pulling you out of position when it counts. Group and play for objectives instead.', score: 0.4 + Math.min(0.5, -d / 3) }
+}
+
+// MECHANICS — when your hands show up (skillshots / CC landed), do you win?
+function fMechanics(ms) {
+  const cand = []
+  const cc = splitMean(ms, (m) => sig(m, 'enemyImmobilizations'))
+  const sk = splitMean(ms, (m) => sig(m, 'skillshotsHit'))
+  if (cc) cand.push({ ...cc, label: 'crowd-control landed', fmt: (v) => v.toFixed(1) })
+  if (sk) cand.push({ ...sk, label: 'skillshots landed', fmt: (v) => String(Math.round(v)) })
+  if (!cand.length) return null
+  cand.forEach((c) => { c.rel = (c.mw - c.ml) / Math.max(0.5, (c.mw + c.ml) / 2) })
+  cand.sort((a, b) => b.rel - a.rel)
+  const c = cand[0]
+  if (c.rel < 0.15) return null
+  return { sev: 'good', tag: 'MECHANICS', headline: `Hands win games — ${c.fmt(c.mw)} ${c.label} in wins vs ${c.fmt(c.ml)} in losses.`, detail: 'A trainable, repeatable edge: when your mechanics land, results follow. Warm up before you queue.', score: 0.4 + Math.min(0.5, c.rel) }
+}
+
+// DISCIPLINE — how much of a loss is spent waiting on the respawn timer?
+function fDeadWeight(ms) {
+  const s = splitMean(ms, (m) => { const t = sig(m, 'timeSpentDead'); return t != null && m.duration ? t / m.duration : null })
+  if (!s) return null
+  const lossPct = pc(s.ml), winPct = pc(s.mw), gap = s.ml - s.mw
+  if (lossPct < 18 || gap < 0.05) return null
+  return { sev: 'bad', tag: 'DISCIPLINE', headline: `Dead weight — ${lossPct}% of every loss spent waiting to respawn.`, detail: `In wins that falls to ${winPct}%. Death timers, not teamfights, are deciding these — spend your life only on objectives.`, score: 0.45 + Math.min(0.5, gap) }
+}
+
+// TEAMFIGHT — fight impact that survives ARAM (no lanes/objectives needed).
+function fTeamfight(ms) {
+  // Enchanter/tank expression first: sustain output that tracks wins.
+  const healAvg = avgOf(ms, (m) => sig(m, 'effectiveHealAndShielding'), 5)
+  if (healAvg && healAvg.m > 3000) {
+    const h = splitMean(ms, (m) => sig(m, 'effectiveHealAndShielding'))
+    if (h && h.mw > h.ml) {
+      const rel = (h.mw - h.ml) / Math.max(1, h.ml)
+      if (rel >= 0.1) return { sev: 'good', tag: 'TEAMFIGHT', headline: `Keeps the team alive — ${Math.round(h.mw).toLocaleString()} effective healing & shielding in wins.`, detail: `Versus ${Math.round(h.ml).toLocaleString()} in losses. Your wins track your sustain — peel for the carries and stay in range.`, score: 0.45 + Math.min(0.45, rel) }
+    }
+  }
+  // Damage-dealer expression: multikills that cluster in wins.
+  const mk = splitMean(ms, (m) => sig(m, 'multikills')) || splitMean(ms, (m) => sig(m, 'largestMultiKill'))
+  if (mk) {
+    const d = mk.mw - mk.ml
+    if (d >= 0.25) return { sev: 'good', tag: 'TEAMFIGHT', headline: `Fight-winner — bigger multikills in wins (${mk.mw.toFixed(1)} vs ${mk.ml.toFixed(1)}).`, detail: 'You convert teamfights into multikills when you win. Itemise and position to be the one who cleans up.', score: 0.4 + Math.min(0.4, d / 2) }
+  }
+  return null
+}
+
+// OBJECTIVES — do dragons, heralds and barons track your wins? (SR only)
+function fObjectives(ms) {
+  if (isAramSet(ms)) return null
+  const s = splitMean(ms, (m) => {
+    const sg = m.signals; if (!sg) return null
+    const parts = ['dragonTakedowns', 'riftHeraldTakedowns', 'baronTakedowns'].map((k) => sg[k]).filter((x) => x != null)
+    return parts.length ? parts.reduce((a, b) => a + b, 0) : null
+  })
+  if (!s) return null
+  const d = s.mw - s.ml
+  if (d < 0.4) return null
+  return { sev: 'good', tag: 'OBJECTIVES', headline: `Plays the map — ${s.mw.toFixed(1)} epic-objective takedowns in wins vs ${s.ml.toFixed(1)} in losses.`, detail: 'Dragons, heralds and barons track your wins. Keep prioritising tempo and objective setups over chasing kills.', score: 0.4 + Math.min(0.45, d / 3) }
+}
+
 export function scoutingReport(ms) {
-  return [fOneTrick, fSnowball, fTilt, fCarry, fClosing, fComfort, fTrap, fRole]
+  return [fOneTrick, fSnowball, fTilt, fCarry, fClosing, fComfort, fTrap, fRole,
+    fLaneDominance, fAggression, fMechanics, fDeadWeight, fTeamfight, fObjectives]
     .map((b) => { try { return b(ms) } catch { return null } })
     .filter(Boolean)
     .sort((a, b) => b.score - a.score)

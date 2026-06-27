@@ -148,6 +148,37 @@ app.get('/api/summoner', async (req, res) => {
         ? ch.teamDamagePercentage
         : (teamDmg > 0 ? (p.totalDamageDealtToChampions || 0) / teamDmg : null);
 
+      // ── Tier-1 intelligence signals (Field Findings) ──
+      // Every value is already inside this match payload (p.challenges + the
+      // participant record) — surfacing them costs ZERO additional API calls.
+      // analytics.js mines these for lane/posture/mechanics/discipline/
+      // teamfight/objective reads. Null where the payload omits a field (older
+      // games), which the findings tolerate.
+      const signals = {
+        soloKills: ch.soloKills ?? null,
+        killsNearEnemyTurret: ch.killsNearEnemyTurret ?? null,
+        killsUnderOwnTurret: ch.killsUnderOwnTurret ?? null,
+        skillshotsHit: ch.skillshotsHit ?? null,
+        skillshotsDodged: ch.skillshotsDodged ?? null,
+        enemyImmobilizations: ch.enemyChampionImmobilizations ?? null,
+        maxCsAdvantage: ch.maxCsAdvantageOnLaneOpponent ?? null,
+        maxLevelLead: ch.maxLevelLeadLaneOpponent ?? null,
+        laneGoldXpAdv: ch.laningPhaseGoldExpAdvantage ?? null,
+        timeSpentDead: p.totalTimeSpentDead ?? null,
+        largestKillingSpree: p.largestKillingSpree ?? null,
+        largestMultiKill: p.largestMultiKill ?? null,
+        multikills: ch.multikills ?? null,
+        immobilizeAndKillWithAlly: ch.immobilizeAndKillWithAlly ?? null,
+        saveAllyFromDeath: ch.saveAllyFromDeath ?? null,
+        effectiveHealAndShielding: ch.effectiveHealAndShielding ?? null,
+        timeCCingOthers: p.timeCCingOthers ?? null,
+        dragonTakedowns: ch.dragonTakedowns ?? null,
+        riftHeraldTakedowns: ch.riftHeraldTakedowns ?? null,
+        baronTakedowns: ch.baronTakedowns ?? null,
+        turretPlatesTaken: ch.turretPlatesTaken ?? null,
+        damageToObjectives: p.damageDealtToObjectives ?? null,
+      };
+
       // Map all 10 players for the scoreboard
       const allPlayers = m.info.participants.map(pl => {
         const plItems = [pl.item0, pl.item1, pl.item2, pl.item3, pl.item4, pl.item5].filter(id => id > 0);
@@ -193,6 +224,7 @@ app.get('/api/summoner', async (req, res) => {
         firstBlood: !!(p.firstBloodKill || p.firstBloodAssist),
         killParticipation,
         teamDmgPct,
+        signals,
         items, trinket,
         spell1: spellData[spell1Id] || null,
         spell2: spellData[spell2Id] || null,

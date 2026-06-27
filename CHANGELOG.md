@@ -1,5 +1,18 @@
 # LoL Stat Tracker - Changelog
 
+## v4.5 - Tier-1 Field Findings
+- **Six new Scouting Report reads, mined from data already in every match payload** (the Match-V5 `challenges` block plus participant fields) — **zero additional API calls**. Each compares your win window against your loss window, the same effect-size logic the fingerprint uses, so it self-calibrates per player and champion rather than relying on absolute, role-dependent thresholds:
+  - **LANE** — *Lane bully / Losing lane*: average peak CS lead over your direct lane opponent (`maxCsAdvantageOnLaneOpponent`). Summoner's Rift only.
+  - **POSTURE** — *Pick-driven / Forcing duels*: whether solo kills (`soloKills`) cluster in your wins or your losses.
+  - **MECHANICS** — *Hands win games*: skillshots landed (`skillshotsHit`) and crowd-control landed (`enemyChampionImmobilizations`), win window vs loss window.
+  - **DISCIPLINE** — *Dead weight*: share of each game spent on the respawn timer (`totalTimeSpentDead` ÷ duration), wins vs losses.
+  - **TEAMFIGHT** — *Keeps the team alive / Fight-winner*: effective healing & shielding for enchanters/tanks, multikills for damage dealers. Works in ARAM, where lane and objective reads don't apply.
+  - **OBJECTIVES** — *Plays the map*: dragon + herald + baron takedowns in wins vs losses. Summoner's Rift only.
+- **Mode-aware** — lane and objective reads suppress on ARAM theatres where they're meaningless; combat reads run everywhere. Every finding tolerates missing data, so older games simply drop out of a read's sample rather than breaking it.
+- Plumbed through a per-match `signals` object in `server.js`; consumed by new finding builders in `client/src/lib/analytics.js`. Rendering is unchanged — the new reads flow into the existing Field Findings list and rank by score alongside the originals.
+
+---
+
 ## v4.4 - UX refinements
 - **Sample data toggle** — a "◈ Sample data: On/Off" button sits alongside the auto-refresh toggle below the search form. Switching it off clears the dossier to a blank slate so the app starts empty; switching it on restores the deterministic sample dossier. Preference is saved to `localStorage` and restored on reload.
 - **Champion filter display names** — champion names in the queue filter now use the same `displayChamp()` lookup as the match rows, giving correct capitalisation and spacing (e.g. Tahm Kench, Twisted Fate, Kai'Sa) instead of lowercased internal Data Dragon keys. A state-version bump after `loadChampNames` resolves ensures names like Kai'Sa are correct on the very first render, not only after an interaction.
