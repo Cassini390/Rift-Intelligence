@@ -1,5 +1,13 @@
 # LoL Stat Tracker - Changelog
 
+## v4.9 - Riot legal compliance
+- **Added the disclaimer Riot's "Legal Jibber Jabber" policy requires on every shared fan project.** A new in-theme `Footer` component (`client/src/components/Footer.jsx`) renders it verbatim — "Rift Intelligence was created under Riot Games' 'Legal Jibber Jabber' policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project." — on every screen, including the blank intake state. Styled as a `§ Notice` ink/gold footer so it fits the dossier identity.
+- The footer also carries a trademark line clarifying this is an unofficial, non-commercial tool with no affiliation to Riot, and that all champion/item/rune/spell data come from the official Riot API and Data Dragon.
+- New **Legal** section in the README covering the disclaimer, trademark attribution, and the API Terms of Use / API Policies obligations (key confidentiality, rate limits, no commercial use without a production key).
+- No functional or data changes — this release is documentation and a compliance notice only. Full audit of `server.js` (stateless proxy, key in git-ignored `.env`, rate-limited batching), asset sourcing (Data Dragon only, nothing redistributed), and prohibited-use rules confirmed already compliant.
+
+---
+
 ## v4.8 - LCU integration removed
 - **The optional local-client (LCU) hook is gone entirely.** `server.js` no longer conditionally loads `lcu-local/`, the `buildChampionMap()` helper and the match-merge block are removed, and the API response no longer carries an `lcu` field. The `2400` ARAM Mayhem queue label is dropped too — it was only reachable through the local client.
 - `.env.example` and `.gitignore` no longer reference `ENABLE_LCU` / `LCU_*` or the `lcu-local/` / `lcu-archive/` folders; `start-tracker.bat` no longer preserves `ENABLE_LCU` across `.env` rewrites.

@@ -8,6 +8,7 @@ import Assessment from './components/Assessment.jsx'
 import Findings from './components/Findings.jsx'
 import Fingerprint from './components/Fingerprint.jsx'
 import FieldRecord from './components/FieldRecord.jsx'
+import Footer from './components/Footer.jsx'
 import { Eyebrow, Meta } from './components/primitives.jsx'
 
 // Fixed corner registration ticks + diagonal CONFIDENTIAL watermark
@@ -257,6 +258,7 @@ export default function App() {
 
         <FieldRecord matches={matches} />
       </div>
+      <Footer />
     </>
   )
 }

@@ -303,6 +303,16 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ---
 
+## Legal
+
+Rift Intelligence was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.
+
+League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. This is an unofficial, non-commercial tool with no affiliation to Riot Games. All match, champion, item, rune and summoner-spell data are retrieved at runtime from the official [Riot Games API](https://developer.riotgames.com) and [Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon); none of Riot's assets are redistributed in this repository.
+
+Use of the Riot Games API is subject to the [API Terms of Use](https://developer.riotgames.com/terms) and [API Policies](https://developer.riotgames.com/policies/general). Keep your API key private (it lives in the git-ignored `.env`), respect the rate limits, and do not use this project for any commercial purpose without a valid production key and Riot's approval.
+
+---
+
 ## Version
 
-Current version: **v4.8 — LCU integration removed** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.9 — Riot legal compliance** — see [CHANGELOG.md](CHANGELOG.md) for full history.
