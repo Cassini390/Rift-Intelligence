@@ -318,4 +318,4 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ## Version
 
-Current version: **v4.6 — Optional local-client hook** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.7 — Dossier, Refined (design pass)** — see [CHANGELOG.md](CHANGELOG.md) for full history.

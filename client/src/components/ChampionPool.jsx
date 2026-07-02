@@ -43,7 +43,7 @@ export default function ChampionPool({ matches }) {
   return (
     <div>
       <p className="text-slate text-[13px] mb-4"><span className="font-mono text-[10px] tracking-[0.2em] uppercase text-goldsoft mr-2">Pool</span>{conc}</p>
-      <div className="overflow-x-auto">
+      <div className="card overflow-x-auto px-4.5 sm:px-5 py-3">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-hair">

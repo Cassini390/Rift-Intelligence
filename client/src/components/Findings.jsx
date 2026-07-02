@@ -28,7 +28,7 @@ export default function Findings({ matches }) {
   return (
     <div id="sec-find">
       <GhostedNumeral n={2}><Eyebrow className="block mb-5">§ Field findings</Eyebrow></GhostedNumeral>
-      <div>
+      <div className="card px-4.5 sm:px-5 py-1">
         {visible.map((f, i) => (
           <motion.div key={f.tag + i}
             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}

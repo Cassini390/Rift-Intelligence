@@ -1,5 +1,14 @@
 # LoL Stat Tracker - Changelog
 
+## v4.7 - Dossier, Refined (design pass)
+- **Card surfaces** — the subject header, assessment stats, field findings, biometric profile, champion dossier table and every match row now sit on physical card panels: `#12151C` stock with a hairline border and a 1px inner top-light (`.card` / `.match-card` in `index.css`). Hairline token brightened `#1C2027` → `#1E232C` so borders actually read.
+- **Win/loss spine on match rows** — each engagement is its own card with a 3px jade/oxblood left edge; the expanded scoreboard is separated by an internal hairline. Replaces the old flat list with hover-drawn gold underline.
+- **"FILE OPENED" ink stamp** — a distressed red date stamp slams onto the top-right corner of the subject card when a file loads (Framer Motion keyframes: scale 2.6→0.96→1 with rotation settle; edge distress via an SVG-noise luminance mask with graceful fallback). Re-keyed per subject so every new search gets stamped; honors `prefers-reduced-motion`; hidden on mobile.
+- **Boxed intake form** — search inputs and the Open File button move from bare underlines to bordered, filled fields with gold focus states; reads as a proper console rather than a sketch.
+- **Type hierarchy pass** — stat values up to 27px on cards, card sub-lines out of all-caps mono into quiet sans, subject meta line de-mono'd. Loading screen and decrypt sequence unchanged.
+
+---
+
 ## v4.6 - Optional local-client hook
 - **`server.js` now supports an optional, self-contained local-client integration** without any branch split. If a (not included, untracked) `lcu-local/` folder is present and `ENABLE_LCU=true`, `server.js` loads it via a conditional `require` and calls `getLcuMatches(searched, ctx)` to augment match history — otherwise this is a complete no-op.
 - Corrected the queue-label table: `900` is `ARURF`, not `ARAM Mayhem`. Mayhem's real queue id is `2400`, which the public Riot API doesn't serve at all — the label is included so any future or local-client source that does surface it renders correctly.

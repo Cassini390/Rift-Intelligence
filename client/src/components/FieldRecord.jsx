@@ -10,7 +10,7 @@ function Engagements({ matches }) {
   if (!matches.length) return <p className="text-slate text-[13px] py-5">No engagements in this theatre.</p>
   const visible = showAll ? matches : matches.slice(0, CAP)
   return (
-    <div>
+    <div className="space-y-2">
       {visible.map((m, i) => <MatchRow key={(m.ts || 0) + '-' + i} m={m} />)}
       {matches.length > CAP && !showAll && (
         <button onClick={() => setShowAll(true)} className="mt-4 font-mono text-[10px] tracking-[0.14em] uppercase text-goldsoft hover:text-gold transition-colors">

@@ -4,12 +4,13 @@
 @theme {
   --color-ink:      #0B0D11;
   --color-ink2:     #10131A;
+  --color-card:     #12151C;
   --color-bone:     #E9E6DD;
   --color-gold:     #C7A86A;
   --color-goldsoft: #9A7F4E;
   --color-slate:    #8A93A0;
   --color-faint:    #565E6B;
-  --color-hair:     #1C2027;
+  --color-hair:     #1E232C;
   --color-jade:     #4FA890;
   --color-oxblood:  #C75D54;
 
@@ -43,15 +44,52 @@ html { scroll-behavior: smooth; }
 .emblem { width:18px; height:20px; clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
   display:inline-grid; place-items:center; font-family:var(--font-mono); font-weight:500; font-size:10px; color:#0B0D11; }
 
-/* Match row: gold hairline draws in from left on hover + subtle bg lift */
-.match-row { position: relative; transition: background-color 0.15s ease; }
-.match-row::before {
-  content: ''; position: absolute; left: 0; top: 0; right: 0; height: 1px;
-  background: #C7A86A; transform: scaleX(0); transform-origin: left;
-  transition: transform 0.22s ease;
+/* Card surface — hairline border + inner top-light so panels read as physical stock */
+.card {
+  background: var(--color-card);
+  border: 1px solid var(--color-hair);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(233,230,221,0.04);
 }
-.match-row:hover { background-color: rgba(199,168,106,0.025); }
-.match-row:hover::before { transform: scaleX(1); }
+
+/* Match card: win/loss spine on the left edge (color set inline), subtle lift on hover */
+.match-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-hair);
+  border-left-width: 3px;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(233,230,221,0.04);
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.match-card:hover { background-color: #151A23; }
+
+/* Ink stamp — distressed edge via luminance noise mask where supported */
+.stamp {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #C75D54;
+  border: 2px solid rgba(199,93,84,0.85);
+  border-radius: 3px;
+  padding: 6px 13px 5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.stamp::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(199,93,84,0.45);
+  border-radius: 2px;
+}
+@supports (mask-mode: luminance) {
+  .stamp {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='3' stitchTiles='stitch'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.6' intercept='0.25'/%3E%3CfeFuncG type='linear' slope='1.6' intercept='0.25'/%3E%3CfeFuncB type='linear' slope='1.6' intercept='0.25'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23s)'/%3E%3C/svg%3E");
+    mask-mode: luminance;
+    mask-size: 130px 130px;
+  }
+}
 
 /* Scoreboard grid */
 .sb-grid { display:grid; grid-template-columns:24px 14px 14px 22px minmax(0,1fr) 58px 38px auto; gap:6px; align-items:center; }

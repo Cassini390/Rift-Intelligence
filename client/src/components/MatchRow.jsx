@@ -14,8 +14,8 @@ export default function MatchRow({ m }) {
   const kdaColor = kda >= 4 ? '#4FA890' : kda >= 2.5 ? '#E9E6DD' : kda >= 1.5 ? '#8A93A0' : '#C75D54'
 
   return (
-    <div className="match-row border-b border-hair">
-      <button onClick={() => setOpen((o) => !o)} className="w-full text-left flex items-center gap-3 sm:gap-4 py-2.5 group">
+    <div className="match-card" style={{ borderLeftColor: col }}>
+      <button onClick={() => setOpen((o) => !o)} className="w-full text-left flex items-center gap-3 sm:gap-4 py-3 px-3.5 sm:px-4 group">
         <span className="shrink-0 w-11">
           <span className="font-mono text-[11px] tracking-[0.14em] uppercase" style={{ color: col }}>{win ? 'Win' : 'Loss'}</span>
           <span className="block font-mono text-[10px] tracking-[0.04em] text-faint tnum mt-0.5">{mins}:{secs}</span>
@@ -49,7 +49,7 @@ export default function MatchRow({ m }) {
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: 'easeOut' }} style={{ overflow: 'hidden' }}>
-            <div className="pb-4">
+            <div className="pb-4 px-3.5 sm:px-4 pt-3 border-t border-hair/70">
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 mb-4">
                 <div className="flex items-center gap-1">
                   {Array.from({ length: 6 }).map((_, i) => {

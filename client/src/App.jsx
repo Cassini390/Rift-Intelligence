@@ -186,22 +186,22 @@ export default function App() {
             <div className="flex-1">
               <Meta className="block mb-1.5">Subject codename</Meta>
               <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Summoner name"
-                className="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors font-display font-medium text-bone text-xl sm:text-2xl placeholder:text-faint pb-1.5" />
-            </div>
-            <div className="w-full sm:w-20">
-              <Meta className="block mb-1.5">Tag</Meta>
-              <input value={tag} onChange={(e) => setTag(e.target.value)} placeholder="EUW"
-                className="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors font-mono text-bone text-base placeholder:text-faint pb-1.5" />
+                className="w-full bg-ink2/70 border border-hair rounded-md focus:border-gold outline-none transition-colors font-display font-medium text-bone text-lg placeholder:text-faint px-3.5 py-2" />
             </div>
             <div className="w-full sm:w-24">
+              <Meta className="block mb-1.5">Tag</Meta>
+              <input value={tag} onChange={(e) => setTag(e.target.value)} placeholder="EUW"
+                className="w-full bg-ink2/70 border border-hair rounded-md focus:border-gold outline-none transition-colors font-mono text-bone text-sm placeholder:text-faint px-3.5 py-[13px]" />
+            </div>
+            <div className="w-full sm:w-28">
               <Meta className="block mb-1.5">Server</Meta>
               <select value={region} onChange={(e) => setRegion(e.target.value)}
-                className="w-full bg-transparent border-b border-hair focus:border-gold outline-none transition-colors font-mono text-bone text-base pb-1.5 cursor-pointer">
+                className="w-full bg-ink2/70 border border-hair rounded-md focus:border-gold outline-none transition-colors font-mono text-bone text-sm px-3 py-[13px] cursor-pointer">
                 {['na1', 'euw1', 'eune1', 'kr', 'br1', 'la1', 'la2', 'oc1', 'tr1', 'ru'].map((r) => <option key={r} className="bg-ink" value={r}>{r.replace(/\d/g, '').toUpperCase()}</option>)}
               </select>
             </div>
             <button type="submit" disabled={loading}
-              className="group shrink-0 font-mono text-[11px] tracking-[0.2em] uppercase text-gold hover:text-bone transition-colors pb-2 flex items-center gap-2">
+              className="group shrink-0 font-mono text-[11px] tracking-[0.2em] uppercase text-gold border border-goldsoft/60 rounded-md px-4 py-[13px] hover:border-gold hover:bg-gold/10 transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
               {loading ? 'Scouting…' : <>Open file <span className="transition-transform group-hover:translate-x-1">→</span></>}
             </button>
           </form>

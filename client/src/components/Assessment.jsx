@@ -5,10 +5,10 @@ import { Eyebrow, Meta, CountUp, useTip, tip, tierColor, GhostedNumeral } from '
 
 function Stat({ label, children, sub, tipRef }) {
   return (
-    <div ref={tipRef}>
-      <Meta className="block mb-1">{label}</Meta>
-      <div className="font-display font-semibold tnum text-bone text-2xl leading-none">{children}</div>
-      <Meta className="block mt-1 normal-case !tracking-[0.04em]">{sub}</Meta>
+    <div ref={tipRef} className="card flex-1 min-w-[128px] px-4 py-3.5">
+      <Meta className="block mb-1.5">{label}</Meta>
+      <div className="font-display font-semibold tnum text-bone text-[27px] leading-none">{children}</div>
+      <span className="block mt-1.5 text-[12px] text-faint tnum">{sub}</span>
     </div>
   )
 }
@@ -64,7 +64,7 @@ export default function Assessment({ matches, queueLabel, ranked }) {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }}
             className="text-slate text-[13px] leading-relaxed mt-3 max-w-md">{v.note}</motion.p>
 
-          <div className="flex gap-7 mt-6">
+          <div className="flex flex-wrap gap-3 mt-6">
             <Stat tipRef={wrRef} label="Win rate" sub={wrSub}>
               <CountUp value={pc(wr)} suffix="%" style={{ color: wr >= 0.5 ? '#4FA890' : '#C75D54' }} />
             </Stat>

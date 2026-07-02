@@ -37,7 +37,7 @@ export default function Fingerprint({ matches }) {
       <GhostedNumeral n={3}><Eyebrow className="block mb-1.5">§ Biometric profile</Eyebrow></GhostedNumeral>
       <p className="text-slate text-[13px] mb-6 max-w-lg">How each trait separates the subject's victories from defeats, in this theatre.</p>
       {rows
-        ? <div className="space-y-3.5">{rows.map((r) => <Row key={r.k} r={r} />)}</div>
+        ? <div className="card px-4.5 sm:px-5 py-4 space-y-3.5">{rows.map((r) => <Row key={r.k} r={r} />)}</div>
         : <Meta className="normal-case !tracking-[0.04em] text-slate">Need at least three victories and three defeats to profile.</Meta>}
     </div>
   )
