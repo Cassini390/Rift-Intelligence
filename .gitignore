@@ -4,8 +4,3 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
-
-# Optional local League Client (LCU) integration — never committed.
-# See "Local Client (LCU) match history" in README.md.
-lcu-local/
-lcu-archive/

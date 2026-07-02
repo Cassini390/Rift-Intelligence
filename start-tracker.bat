@@ -82,7 +82,7 @@ if defined HASKEY (
 )
 
 if defined RIOTKEY (
-  powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=3000; $lcu='false'; if(Test-Path '.env'){$mp=Select-String -Path '.env' -Pattern '^PORT=(.+)$' -ErrorAction SilentlyContinue; if($mp){$p=$mp.Matches[0].Groups[1].Value}; $ml=Select-String -Path '.env' -Pattern '^ENABLE_LCU=(.+)$' -ErrorAction SilentlyContinue; if($ml){$lcu=$ml.Matches[0].Groups[1].Value}}; Set-Content -Path '.env' -Value @(('RIOT_API_KEY='+$env:RIOTKEY.Trim()),('PORT='+$p),('ENABLE_LCU='+$lcu)) -Encoding ascii"
+  powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=3000; if(Test-Path '.env'){$mp=Select-String -Path '.env' -Pattern '^PORT=(.+)$' -ErrorAction SilentlyContinue; if($mp){$p=$mp.Matches[0].Groups[1].Value}}; Set-Content -Path '.env' -Value @(('RIOT_API_KEY='+$env:RIOTKEY.Trim()),('PORT='+$p)) -Encoding ascii"
   echo   %GREEN%Key saved to .env%R%
 ) else (
   if not defined HASKEY echo   %RED%No key set - searches will fail until one is added.%R%

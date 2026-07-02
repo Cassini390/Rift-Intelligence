@@ -1,5 +1,13 @@
 # LoL Stat Tracker - Changelog
 
+## v4.8 - LCU integration removed
+- **The optional local-client (LCU) hook is gone entirely.** `server.js` no longer conditionally loads `lcu-local/`, the `buildChampionMap()` helper and the match-merge block are removed, and the API response no longer carries an `lcu` field. The `2400` ARAM Mayhem queue label is dropped too — it was only reachable through the local client.
+- `.env.example` and `.gitignore` no longer reference `ENABLE_LCU` / `LCU_*` or the `lcu-local/` / `lcu-archive/` folders; `start-tracker.bat` no longer preserves `ENABLE_LCU` across `.env` rewrites.
+- README's "Local Client (LCU) match history" section and the `lcu-local/` project-files row are removed.
+- The untracked `lcu-local/` and `lcu-archive/` folders and the `local` git branch that carried the feature have been deleted.
+
+---
+
 ## v4.7 - Dossier, Refined (design pass)
 - **Card surfaces** — the subject header, assessment stats, field findings, biometric profile, champion dossier table and every match row now sit on physical card panels: `#12151C` stock with a hairline border and a 1px inner top-light (`.card` / `.match-card` in `index.css`). Hairline token brightened `#1C2027` → `#1E232C` so borders actually read.
 - **Win/loss spine on match rows** — each engagement is its own card with a 3px jade/oxblood left edge; the expanded scoreboard is separated by an internal hairline. Replaces the old flat list with hover-drawn gold underline.
@@ -15,7 +23,7 @@
 - Added a `buildChampionMap()` helper (numeric championId → Data Dragon key), needed by any integration that receives numeric champion ids instead of names.
 - `.env.example` documents `ENABLE_LCU` (default `false`) and the optional `LCU_INSTALL_DIR` / `LCU_LOCKFILE` overrides; `start-tracker.bat` now preserves `ENABLE_LCU` across `.env` rewrites, the same way it already preserves `PORT`.
 - `.gitignore` excludes `lcu-local/` and `lcu-archive/` — neither the integration code nor any locally captured match data can ever be committed to this repo.
-- New README section: [Local Client (LCU) match history](README.md#local-client-lcu-match-history).
+- New README section: "Local Client (LCU) match history" *(feature and section removed again in v4.8)*.
 
 ---
 

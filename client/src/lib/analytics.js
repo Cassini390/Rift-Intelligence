@@ -143,8 +143,8 @@ function fRole(ms) {
    calls. Each read compares the win window against the loss window (the same
    effect-size logic the fingerprint uses) so it self-calibrates per player and
    per champion rather than leaning on absolute, role-dependent thresholds.
-   All findings tolerate missing data: a signal the payload omits (older games,
-   or the match-v4 LCU path) simply drops out of the sample. */
+   All findings tolerate missing data: a signal the payload omits (older games)
+   simply drops out of the sample. */
 const sig = (m, k) => (m.signals ? m.signals[k] : null)
 // Mean of a signal in wins vs losses; null unless both windows clear `minEach`.
 function splitMean(ms, get, minEach = 3) {
