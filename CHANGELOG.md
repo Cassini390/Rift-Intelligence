@@ -1,5 +1,15 @@
 # LoL Stat Tracker - Changelog
 
+## v4.6 - Optional local-client hook
+- **`server.js` now supports an optional, self-contained local-client integration** without any branch split. If a (not included, untracked) `lcu-local/` folder is present and `ENABLE_LCU=true`, `server.js` loads it via a conditional `require` and calls `getLcuMatches(searched, ctx)` to augment match history — otherwise this is a complete no-op.
+- Corrected the queue-label table: `900` is `ARURF`, not `ARAM Mayhem`. Mayhem's real queue id is `2400`, which the public Riot API doesn't serve at all — the label is included so any future or local-client source that does surface it renders correctly.
+- Added a `buildChampionMap()` helper (numeric championId → Data Dragon key), needed by any integration that receives numeric champion ids instead of names.
+- `.env.example` documents `ENABLE_LCU` (default `false`) and the optional `LCU_INSTALL_DIR` / `LCU_LOCKFILE` overrides; `start-tracker.bat` now preserves `ENABLE_LCU` across `.env` rewrites, the same way it already preserves `PORT`.
+- `.gitignore` excludes `lcu-local/` and `lcu-archive/` — neither the integration code nor any locally captured match data can ever be committed to this repo.
+- New README section: [Local Client (LCU) match history](README.md#local-client-lcu-match-history).
+
+---
+
 ## v4.5 - Tier-1 Field Findings
 - **Six new Scouting Report reads, mined from data already in every match payload** (the Match-V5 `challenges` block plus participant fields) — **zero additional API calls**. Each compares your win window against your loss window, the same effect-size logic the fingerprint uses, so it self-calibrates per player and champion rather than relying on absolute, role-dependent thresholds:
   - **LANE** — *Lane bully / Losing lane*: average peak CS lead over your direct lane opponent (`maxCsAdvantageOnLaneOpponent`). Summoner's Rift only.

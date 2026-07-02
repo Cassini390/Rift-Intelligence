@@ -5,6 +5,21 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 
+// Optional: pull match history from a running local League Client for modes
+// the public Riot API won't serve (e.g. ARAM Mayhem). Entirely opt-in and
+// self-contained — see "Local Client (LCU) match history" in README.md. The
+// lcu-local/ folder is never committed (git-ignored); the app runs exactly
+// the same without it. Off unless ENABLE_LCU=true in .env.
+const LCU_ENABLED = process.env.ENABLE_LCU === 'true';
+let getLcuMatches = null;
+if (LCU_ENABLED) {
+  try {
+    ({ getLcuMatches } = require('./lcu-local'));
+  } catch (e) {
+    console.warn('  ENABLE_LCU is true but lcu-local/ is missing or broken — LCU augmentation disabled.');
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: /^http:\/\/localhost(:\d+)?$/ }));
@@ -25,7 +40,9 @@ const ROUTING = {
 };
 const QUEUE_LABELS = {
   420:'Ranked Solo', 440:'Ranked Flex', 400:'Normal Draft',
-  430:'Normal Blind', 450:'ARAM', 900:'ARAM Mayhem', 700:'Clash'
+  430:'Normal Blind', 450:'ARAM', 900:'ARURF', 700:'Clash',
+  2400:'ARAM Mayhem' // Riot's public API doesn't serve this queue at all; only
+                      // reachable via the optional local-client integration.
 };
 
 async function riotFetch(url, apiKey) {
@@ -33,6 +50,17 @@ async function riotFetch(url, apiKey) {
   const data = await res.json();
   if (!res.ok) throw { status: res.status, message: data?.status?.message || 'Riot API error' };
   return data;
+}
+
+// Numeric championId -> Data Dragon key (e.g. 266 -> "Aatrox"). Only needed for
+// LCU games, which carry numeric ids rather than the names Match-V5 returns.
+async function buildChampionMap(ver) {
+  const map = {};
+  try {
+    const j = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ver}/data/en_US/champion.json`).then(r => r.json());
+    Object.values(j.data).forEach(c => { map[c.key] = c.id; });
+  } catch (_) {}
+  return map;
 }
 
 app.get('/api/summoner', async (req, res) => {
@@ -237,7 +265,33 @@ app.get('/api/summoner', async (req, res) => {
     console.log(`  Done: ${matches.length} matches for ${account.gameName}#${account.tagLine}`);
     if (matches[0]) console.log(`  Sample items:`, matches[0].items, `trinket:`, matches[0].trinket);
 
-    res.json({ gameName: account.gameName, tagLine: account.tagLine, summonerLevel: summoner.summonerLevel, profileIconId: summoner.profileIconId, rankInfo, rankTier, rankedStats, matches, ddVersion });
+    // ── LCU augmentation (optional, self-contained) ─────────────────────────
+    // Merge in games captured from the local client (e.g. ARAM Mayhem) that the
+    // public API doesn't return. Fully isolated: any failure leaves the Riot
+    // result untouched, and this whole block is a no-op without lcu-local/.
+    let lcu = null;
+    if (getLcuMatches) {
+      try {
+        const championMap = await buildChampionMap(ddVersion);
+        const ctx = { championMap, spellData, runeLookup, ddVersion, queueLabels: QUEUE_LABELS };
+        const searched = { puuid, gameName: account.gameName, tagLine: account.tagLine };
+        const { matches: lcuMatches, captured } = await getLcuMatches(searched, ctx);
+        // De-dupe against Riot games by approximate start time + champion, so a
+        // game returned by both sources isn't listed twice. Riot wins ties.
+        const keyOf = m => `${Math.round((m.ts - (m.duration || 0) * 1000) / 60000)}|${m.champion}`;
+        const seen = new Set(matches.map(keyOf));
+        const additions = lcuMatches.filter(m => !seen.has(keyOf(m)));
+        matches.push(...additions);
+        matches.sort((a, b) => b.ts - a.ts);
+        lcu = { enabled: true, captured, archived: lcuMatches.length, merged: additions.length };
+        console.log(`  LCU: +${additions.length} merged (captured ${captured} live, ${lcuMatches.length} in archive)`);
+      } catch (e) {
+        lcu = { enabled: true, error: e.message };
+        console.log('  LCU augmentation skipped:', e.message);
+      }
+    }
+
+    res.json({ gameName: account.gameName, tagLine: account.tagLine, summonerLevel: summoner.summonerLevel, profileIconId: summoner.profileIconId, rankInfo, rankTier, rankedStats, matches, ddVersion, lcu });
   } catch (e) {
     console.log('  Error:', e.message);
     res.status(e.status || 500).json({ error: e.message || 'Server error' });

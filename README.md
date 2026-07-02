@@ -53,6 +53,7 @@ Every finding suppresses itself when the sample is too thin to claim honestly, a
 |------|-------------|
 | `client/` | **The frontend** — a React + Vite + Tailwind v4 + Framer Motion app: search, Scouting Report, fingerprint, match history, scoreboards, and the analytics engine. Built to `client/dist`, which the server serves. See [The interface](#the-interface) |
 | `server.js` | Local Node.js/Express proxy that forwards requests to the Riot API, shapes the match data, and serves the built React app from `client/dist` |
+| `lcu-local/` | **Optional, not included in this repo.** If you drop in a local-client integration and set `ENABLE_LCU=true`, `server.js` will load it automatically — otherwise this does nothing. See [Local Client (LCU) match history](#local-client-lcu-match-history) |
 | `start-tracker.bat` | **Windows one-click launcher** — prompts for your API key, saves it to `.env`, starts the server, and opens the browser |
 | `package.json` | Node.js dependencies (Express, node-fetch, cors, dotenv) |
 | `.env.example` | Template showing the required environment variables — **this is in the repo; copy it to `.env`** |
@@ -292,6 +293,18 @@ The app will show a clear error message if the key is missing or expired.
 
 ---
 
+## Local Client (LCU) match history
+
+`server.js` includes an **optional hook** for augmenting match history from a running local League Client — useful for game modes the public Riot API refuses to serve (notably ARAM Mayhem, queue `2400`, which returns `403 Forbidden` from Match-V5). This is purely a personal convenience feature and **the integration code itself is not part of this repo**.
+
+- Off by default (`ENABLE_LCU=false` in `.env.example`). With it off, or with the optional `lcu-local/` folder simply absent, the hook is inert — `server.js` behaves exactly as if the code didn't exist.
+- If you build your own `lcu-local/index.js` exporting `getLcuMatches(searched, ctx)`, `server.js` will load and call it automatically once you set `ENABLE_LCU=true`. Any failure inside it is caught and never affects the normal Riot API result.
+- The folder is git-ignored, so nothing about a personal implementation — or any locally captured match data — is ever committed to this repo.
+
+If you're not building this yourself, you can ignore this section entirely.
+
+---
+
 ## API Rate Limits
 
 This project uses a free Riot development API key which has the following limits:
@@ -305,4 +318,4 @@ Match data is fetched in batches of 5 with a short pause between each batch to s
 
 ## Version
 
-Current version: **v4.5 — Tier-1 Field Findings** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.6 — Optional local-client hook** — see [CHANGELOG.md](CHANGELOG.md) for full history.
