@@ -60,7 +60,7 @@ app.get('/api/summoner', async (req, res) => {
     let rankedStats = {};
     try {
       const ranked = await riotFetch(
-        `https://${region}.api.riotgames.com/lol/league/v4/entries/by-summoner/${summoner.id}`, apiKey);
+        `https://${region}.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`, apiKey);
       const solo = ranked.find(r => r.queueType === 'RANKED_SOLO_5x5');
       const flex = ranked.find(r => r.queueType === 'RANKED_FLEX_SR');
       if (solo) {
@@ -69,7 +69,7 @@ app.get('/api/summoner', async (req, res) => {
         rankedStats.solo = { tier: solo.tier, rank: solo.rank, lp: solo.leaguePoints, wins: solo.wins, losses: solo.losses };
       }
       if (flex) rankedStats.flex = { tier: flex.tier, rank: flex.rank, lp: flex.leaguePoints, wins: flex.wins, losses: flex.losses };
-    } catch (_) {}
+    } catch (e) { console.log('  Rank lookup failed:', e.message); }
 
     let ddVersion = '14.24.1';
     try {
