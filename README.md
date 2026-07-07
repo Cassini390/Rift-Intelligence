@@ -315,4 +315,4 @@ Use of the Riot Games API is subject to the [API Terms of Use](https://developer
 
 ## Version
 
-Current version: **v4.9 — Riot legal compliance** — see [CHANGELOG.md](CHANGELOG.md) for full history.
+Current version: **v4.10 — Navigation & readability pass** — see [CHANGELOG.md](CHANGELOG.md) for full history.

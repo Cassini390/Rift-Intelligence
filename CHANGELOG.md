@@ -1,5 +1,15 @@
 # LoL Stat Tracker - Changelog
 
+## v4.10 - Navigation & readability pass (UX feedback)
+- **Section nav now shows where you are.** The masthead nav (`client/src/components/Masthead.jsx`) tracks the section in view via an `IntersectionObserver` scrollspy and marks the active item gold with an underline (`aria-current` for accessibility) — previously every item read the same and gave no positional cue.
+- **Nav no longer double-links the same row.** `Findings` and `Profile` both pointed into the same side-by-side grid row, so two nav items scrolled to one spot. `Profile` is replaced by `Record`, which jumps to the Field Record match history (`#sec-rec`) — the three nav items now land on three distinct sections.
+- **Tag accepts `#EUW` or `EUW`.** The intake form strips a leading `#` from the tag on submit, and the placeholder now shows `#EUW` by example (`client/src/App.jsx`).
+- **Removed the full-screen `CONFIDENTIAL` background watermark** — it was distracting behind the content. The confidential marking is retained in the masthead top-right label and the "File opened" ink stamp; the corner registration ticks stay.
+- **Long summoner names wrap on mobile.** The subject header name is given `min-w-0` + `break-words` so long Riot IDs wrap inside the card instead of overflowing the layout (`client/src/components/Subject.jsx`).
+- Behaviour-only pass — no analytics, data-shape, or API changes.
+
+---
+
 ## v4.9 - Riot legal compliance
 - **Added the disclaimer Riot's "Legal Jibber Jabber" policy requires on every shared fan project.** A new in-theme `Footer` component (`client/src/components/Footer.jsx`) renders it verbatim — "Rift Intelligence was created under Riot Games' 'Legal Jibber Jabber' policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project." — on every screen, including the blank intake state. Styled as a `§ Notice` ink/gold footer so it fits the dossier identity.
 - The footer also carries a trademark line clarifying this is an unofficial, non-commercial tool with no affiliation to Riot, and that all champion/item/rune/spell data come from the official Riot API and Data Dragon.

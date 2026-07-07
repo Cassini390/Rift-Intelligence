@@ -25,7 +25,7 @@ export default function Subject({ data }) {
     <section id="sec-subject" className="relative card mt-7 px-5 sm:px-6 py-5">
       {data.gameName && <Stamp key={data.gameName + '#' + data.tagLine} />}
       <div className="flex items-center justify-between gap-5 flex-wrap">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -35,9 +35,9 @@ export default function Subject({ data }) {
               ? <img src={iconImg(data.profileIconId)} alt="" className="h-full w-full object-cover" />
               : (data.gameName || '?')[0].toUpperCase()}
           </motion.div>
-          <div>
+          <div className="min-w-0">
             <Meta className="block mb-1.5 !text-goldsoft">Subject</Meta>
-            <h1 className="relative inline-block font-display font-semibold text-bone leading-none tracking-tight"
+            <h1 className="relative inline-block max-w-full break-words font-display font-semibold text-bone leading-none tracking-tight"
                 style={{ fontSize: 'clamp(1.8rem,4vw,2.4rem)' }}>
               {data.gameName}
               {/* Redaction reveal — wipes away left→right */}

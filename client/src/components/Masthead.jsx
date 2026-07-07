@@ -1,19 +1,38 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Meta } from './primitives.jsx'
 
 const NAV = [
-  ['#sec-assess', 'Assessment'],
-  ['#sec-find', 'Findings'],
-  ['#sec-prof', 'Profile'],
+  ['sec-assess', 'Assessment'],
+  ['sec-find', 'Findings'],
+  ['sec-rec', 'Record'],
 ]
 
 export default function Masthead({ caseNo, showNav }) {
   const headerRef = useRef(null)
   const [spot, setSpot] = useState(null)
+  const [active, setActive] = useState(NAV[0][0])
   const onMove = (e) => {
     const r = headerRef.current?.getBoundingClientRect()
     if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top })
   }
+
+  // Scrollspy — highlight the nav item for whichever section is currently in view.
+  useEffect(() => {
+    if (!showNav) return
+    const sections = NAV.map(([id]) => document.getElementById(id)).filter(Boolean)
+    if (!sections.length) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        if (visible[0]) setActive(visible[0].target.id)
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
+    )
+    sections.forEach((s) => io.observe(s))
+    return () => io.disconnect()
+  }, [showNav])
 
   return (
     <header ref={headerRef} onMouseMove={onMove} onMouseLeave={() => setSpot(null)}
@@ -40,9 +59,16 @@ export default function Masthead({ caseNo, showNav }) {
         </div>
         {showNav && (
           <nav className="hidden md:flex items-center gap-5">
-            {NAV.map(([href, label]) => (
-              <a key={href} href={href} className="font-mono text-[11px] tracking-[0.14em] uppercase text-faint hover:text-gold transition-colors">{label}</a>
-            ))}
+            {NAV.map(([id, label]) => {
+              const on = active === id
+              return (
+                <a key={id} href={'#' + id} aria-current={on ? 'true' : undefined}
+                  className={`relative font-mono text-[11px] tracking-[0.14em] uppercase transition-colors ${on ? 'text-gold' : 'text-faint hover:text-gold'}`}>
+                  {label}
+                  <span className={`absolute -bottom-1 left-0 right-0 h-px bg-gold transition-opacity ${on ? 'opacity-100' : 'opacity-0'}`} />
+                </a>
+              )
+            })}
           </nav>
         )}
         <div className="text-right">

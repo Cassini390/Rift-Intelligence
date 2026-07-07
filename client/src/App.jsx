@@ -11,7 +11,7 @@ import FieldRecord from './components/FieldRecord.jsx'
 import Footer from './components/Footer.jsx'
 import { Eyebrow, Meta } from './components/primitives.jsx'
 
-// Fixed corner registration ticks + diagonal CONFIDENTIAL watermark
+// Fixed corner registration ticks
 function PageDecor() {
   const corners = [
     { top: 16, left: 16, borderTop: '1px solid rgba(199,168,106,0.16)', borderLeft: '1px solid rgba(199,168,106,0.16)' },
@@ -22,13 +22,6 @@ function PageDecor() {
   return (
     <div className="fixed inset-0 pointer-events-none select-none" style={{ zIndex: 9997 }} aria-hidden="true">
       {corners.map((s, i) => <div key={i} className="absolute w-4 h-4" style={s} />)}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div style={{
-          fontFamily: 'var(--font-mono)', fontSize: '11vw', fontWeight: 700,
-          color: 'rgba(233,230,221,0.016)', letterSpacing: '0.55em',
-          textTransform: 'uppercase', transform: 'rotate(-25deg)', whiteSpace: 'nowrap',
-        }}>CONFIDENTIAL</div>
-      </div>
     </div>
   )
 }
@@ -165,7 +158,8 @@ export default function App() {
   function scout(e) {
     e?.preventDefault()
     if (!name.trim()) { setError('Enter a subject codename.'); return }
-    const q = { name: name.trim(), tag: tag.trim(), region }
+    // Accept the tag with or without a leading '#' (e.g. "#EUW" or "EUW").
+    const q = { name: name.trim(), tag: tag.trim().replace(/^#+/, ''), region }
     lastQuery.current = q
     try { localStorage.setItem('lol_last_search', JSON.stringify(q)) } catch { /* ignore */ }
     doFetch(q)
@@ -191,7 +185,7 @@ export default function App() {
             </div>
             <div className="w-full sm:w-24">
               <Meta className="block mb-1.5">Tag</Meta>
-              <input value={tag} onChange={(e) => setTag(e.target.value)} placeholder="EUW"
+              <input value={tag} onChange={(e) => setTag(e.target.value)} placeholder="#EUW"
                 className="w-full bg-ink2/70 border border-hair rounded-md focus:border-gold outline-none transition-colors font-mono text-bone text-sm placeholder:text-faint px-3.5 py-[13px]" />
             </div>
             <div className="w-full sm:w-28">
